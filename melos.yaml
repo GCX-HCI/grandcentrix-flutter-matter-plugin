@@ -1,0 +1,158 @@
+name: flutter_matter
+# repository: https://github.com/
+
+sdkPath: .fvm/flutter_sdk
+
+packages:
+  # - flutter_matter_platfrom_interface
+  # - flutter_matter
+  # - flutter_matter_android
+  # - flutter_matter_ios
+  - ./**
+
+ignore:
+  - .fvm/**
+
+command:
+  bootstrap:
+    # It seems so that running "pub get" in parallel has some issues (like
+    # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
+    # makes the CI much more stable.
+    # runPubGetInParallel: false
+    hooks:
+      # Run build_runner after bootstrap
+      post: melos run run:build_runner --no-select
+
+  version:
+    # Only allow versioning to happen on main branch.
+    branch: main
+    # Generate commit links in package changelogs.
+    # linkToCommits: true
+    # Generates a link to a prefilled GitHub release creation page.
+    releaseUrl: true
+    # Additionally build a changelog at the root of the workspace.
+    workspaceChangelog: true
+
+scripts:
+  lint:all:
+    run: melos run analyze && melos run format
+    description: Run all static analysis checks.
+
+  analyze:
+    exec:
+      # We are setting the concurrency to 1 because a higher concurrency can crash
+      # the analysis server on low performance machines (like GitHub Actions).
+      concurrency: 1
+      failFast: true
+    run: dart analyze . --fatal-infos
+    description: |
+      Run `dart analyze` in all packages.
+       - Note: you can also rely on your IDEs Dart Analysis / Issues window.
+
+  format:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: dart format . --fix
+    description: Run `dart format` for all packages.
+
+  format-check:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: dart format . --set-exit-if-changed
+    description: Run `dart format` checks for all packages.
+
+  dartdoc:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: flutter pub run dartdoc
+    description: Run dartdoc checks for all packages.
+
+  test:select:
+    exec:
+      concurrency: 1
+      failFast: true
+    run: flutter test
+    packageFilters:
+      dirExists: test
+    description: Run `flutter test` for selected packages.
+
+  test:
+    run: melos run test:select --no-select
+    description: Run all Flutter tests in this project.
+
+  coverage:
+    run: |
+      melos exec -- flutter test --coverage &&
+      melos exec -- genhtml coverage/lcov.info --output-directory=coverage/
+    packageFilters:
+      dirExists: test
+    description: Generate coverage for the selected package.
+
+  generate:pigeon:
+    run: |
+      melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
+      melos run format --no-select
+    packageFilters:
+      fileExists: "pigeons/messages.dart"
+    description: Generate the pigeon messages for all the supported packages.
+
+  run:build_runner:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: flutter pub run build_runner build --delete-conflicting-outputs
+    description: Runs the build_runner to generate files from all dependencies which hook in as generators
+
+  build:all:
+    run: |
+      melos run build:example_ios_pub --no-select && \
+      melos run build:example_android_pub --no-select
+    description: Build all example apps.
+
+  build:example_android:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: |
+      flutter build apk
+    description: Build a specific example app for Android.
+    packageFilters:
+      dirExists:
+        - android
+      scope: "*example*"
+
+  build:example_android_pub:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: flutter build apk
+    description: Build a specific example app for Android.
+    packageFilters:
+      dirExists:
+        - android
+      scope: "*example*"
+
+  build:example_ios:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: flutter build ios --no-codesign
+    description: Build a specific example app for iOS.
+    packageFilters:
+      dirExists:
+        - ios
+      scope: "*example*"
+
+  build:example_ios_pub:
+    exec:
+      concurrency: 6
+      failFast: true
+    run: flutter build ios --no-codesign
+    description: Build a specific example app for iOS.
+    packageFilters:
+      dirExists:
+        - ios
+      scope: "*example*"
