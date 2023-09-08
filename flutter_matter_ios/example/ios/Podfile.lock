@@ -4,11 +4,20 @@ PODS:
     - Flutter
   - integration_test (0.0.1):
     - Flutter
+  - Nimble (12.2.0)
+  - Quick (7.2.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_matter_ios (from `.symlinks/plugins/flutter_matter_ios/ios`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - Nimble (~> 12.2.0)
+  - Quick (~> 7.2.0)
+
+SPEC REPOS:
+  trunk:
+    - Nimble
+    - Quick
 
 EXTERNAL SOURCES:
   Flutter:
@@ -20,9 +29,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
-  flutter_matter_ios: 709079eecf2b476165676e12715cbfbfffb03bef
+  flutter_matter_ios: 40e478ef1ef99f2dc92a3cdc6fe97e0e44aef97d
   integration_test: 13825b8a9334a850581300559b8839134b124670
+  Nimble: d67da24eb9da4227b2dbbf4eb49cc29073c9066b
+  Quick: 73ac215f23a6a0eaa59f4ee142802b3f4dba86bb
 
-PODFILE CHECKSUM: 70d9d25280d0dd177a5f637cdb0f0b0b12c6a189
+PODFILE CHECKSUM: 58f54c3e2bf7317b23798c02e7d543e1e2e5262d
 
 COCOAPODS: 1.12.1

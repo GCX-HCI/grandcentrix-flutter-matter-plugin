@@ -93,10 +93,10 @@ scripts:
 
   generate:pigeon:
     run: |
-      melos exec -- "flutter pub run pigeon --input ./pigeons/messages.dart" && \
+      melos exec -- "flutter pub run pigeon --input ./pigeons/flutter_matter.dart" && \
       melos run format --no-select
     packageFilters:
-      fileExists: "pigeons/messages.dart"
+      fileExists: "pigeons/flutter_matter.dart"
     description: Generate the pigeon messages for all the supported packages.
 
   run:build_runner:

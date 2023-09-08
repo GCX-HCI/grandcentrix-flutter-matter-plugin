@@ -1,28 +1,22 @@
 import 'package:checks/checks.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_matter_ios/flutter_matter_ios.dart';
+import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
+import './flutter_matter_ios_test.mocks.dart';
+
+@GenerateMocks([FlutterMatterHostApi])
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  FlutterMatterIos platform = FlutterMatterIos();
-  const MethodChannel channel = MethodChannel('flutter_matter');
+  late MockFlutterMatterHostApi mockFlutterMatterHostApi;
 
   setUp(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-      channel,
-      (MethodCall methodCall) async {
-        return '42';
-      },
-    );
-  });
+    mockFlutterMatterHostApi = MockFlutterMatterHostApi();
 
-  tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(channel, null);
+    when(mockFlutterMatterHostApi.getPlatformVersion())
+        .thenAnswer((realInvocation) async => '42');
   });
 
   test('$FlutterMatterIos.registerWith sets $FlutterMatterIos as instance', () {
@@ -31,6 +25,8 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    await check(platform.getPlatformVersion()).completes(it()..equals('42'));
+    final sut =
+        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
+    await check(sut.getPlatformVersion()).completes(it()..equals('42'));
   });
 }
