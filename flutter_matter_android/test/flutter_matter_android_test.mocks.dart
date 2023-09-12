@@ -19,6 +19,26 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeMatterDevice_0 extends _i1.SmartFake implements _i2.MatterDevice {
+  _FakeMatterDevice_0(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeObject_1 extends _i1.SmartFake implements Object {
+  _FakeObject_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [FlutterMatterHostApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -29,11 +49,63 @@ class MockFlutterMatterHostApi extends _i1.Mock
   }
 
   @override
-  _i3.Future<String?> getPlatformVersion() => (super.noSuchMethod(
+  _i3.Future<String> getPlatformVersion() => (super.noSuchMethod(
         Invocation.method(
           #getPlatformVersion,
           [],
         ),
-        returnValue: _i3.Future<String?>.value(),
-      ) as _i3.Future<String?>);
+        returnValue: _i3.Future<String>.value(''),
+      ) as _i3.Future<String>);
+  @override
+  _i3.Future<_i2.MatterDevice> commission(_i2.CommissionRequest? arg_request) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #commission,
+          [arg_request],
+        ),
+        returnValue: _i3.Future<_i2.MatterDevice>.value(_FakeMatterDevice_0(
+          this,
+          Invocation.method(
+            #commission,
+            [arg_request],
+          ),
+        )),
+      ) as _i3.Future<_i2.MatterDevice>);
+}
+
+/// A class which mocks [MatterDevice].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMatterDevice extends _i1.Mock implements _i2.MatterDevice {
+  MockMatterDevice() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  int get id => (super.noSuchMethod(
+        Invocation.getter(#id),
+        returnValue: 0,
+      ) as int);
+  @override
+  set id(int? _id) => super.noSuchMethod(
+        Invocation.setter(
+          #id,
+          _id,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  Object encode() => (super.noSuchMethod(
+        Invocation.method(
+          #encode,
+          [],
+        ),
+        returnValue: _FakeObject_1(
+          this,
+          Invocation.method(
+            #encode,
+            [],
+          ),
+        ),
+      ) as Object);
 }

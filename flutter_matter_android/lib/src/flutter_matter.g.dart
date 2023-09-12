@@ -8,6 +8,76 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+class MatterDevice {
+  MatterDevice({
+    required this.id,
+  });
+
+  int id;
+
+  Object encode() {
+    return <Object?>[
+      id,
+    ];
+  }
+
+  static MatterDevice decode(Object result) {
+    result as List<Object?>;
+    return MatterDevice(
+      id: result[0]! as int,
+    );
+  }
+}
+
+class CommissionRequest {
+  CommissionRequest({
+    required this.id,
+  });
+
+  int id;
+
+  Object encode() {
+    return <Object?>[
+      id,
+    ];
+  }
+
+  static CommissionRequest decode(Object result) {
+    result as List<Object?>;
+    return CommissionRequest(
+      id: result[0]! as int,
+    );
+  }
+}
+
+class _FlutterMatterHostApiCodec extends StandardMessageCodec {
+  const _FlutterMatterHostApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is CommissionRequest) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else if (value is MatterDevice) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return CommissionRequest.decode(readValue(buffer)!);
+      case 129:
+        return MatterDevice.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
 class FlutterMatterHostApi {
   /// Constructor for [FlutterMatterHostApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
@@ -16,7 +86,7 @@ class FlutterMatterHostApi {
       : _binaryMessenger = binaryMessenger;
   final BinaryMessenger? _binaryMessenger;
 
-  static const MessageCodec<Object?> codec = StandardMessageCodec();
+  static const MessageCodec<Object?> codec = _FlutterMatterHostApiCodec();
 
   Future<String> getPlatformVersion() async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
@@ -42,6 +112,34 @@ class FlutterMatterHostApi {
       );
     } else {
       return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<MatterDevice> commission(CommissionRequest arg_request) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.commission',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_request]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as MatterDevice?)!;
     }
   }
 }

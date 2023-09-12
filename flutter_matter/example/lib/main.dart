@@ -47,6 +47,15 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> commissonMatterDevice() async {
+    try {
+      final device = await _flutterMatterPlugin.commission(deviceId: 123);
+      print('Comissioned $device');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,7 +64,18 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: [
+              Text('Running on: $_platformVersion\n'),
+              const SizedBox(
+                height: 24,
+              ),
+              TextButton(
+                onPressed: () => commissonMatterDevice,
+                child: const Text('Start commissoning'),
+              )
+            ],
+          ),
         ),
       ),
     );

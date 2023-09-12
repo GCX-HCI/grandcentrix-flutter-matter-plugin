@@ -8,15 +8,24 @@ import 'package:mockito/mockito.dart';
 
 import './flutter_matter_android_test.mocks.dart';
 
-@GenerateMocks([FlutterMatterHostApi])
+@GenerateMocks([
+  FlutterMatterHostApi,
+  MatterDevice,
+])
 void main() {
+  late MockMatterDevice mockMatterDevice;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
 
   setUp(() {
+    mockMatterDevice = MockMatterDevice();
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
+
+    when(mockMatterDevice.id).thenReturn(123);
 
     when(mockFlutterMatterHostApi.getPlatformVersion())
         .thenAnswer((realInvocation) async => '42');
+    when(mockFlutterMatterHostApi.commission(any))
+        .thenAnswer((realInvocation) async => mockMatterDevice);
   });
 
   test(
@@ -30,5 +39,13 @@ void main() {
     final sut =
         FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
     await check(sut.getPlatformVersion()).completes(it()..equals('42'));
+  });
+
+  test('commission', () async {
+    final sut =
+        FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
+
+    await check(sut.commission(deviceId: 123))
+        .completes(it()..equals(FlutterMatterDevice(id: 123)));
   });
 }

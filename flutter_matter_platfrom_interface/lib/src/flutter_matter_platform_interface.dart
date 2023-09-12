@@ -1,3 +1,4 @@
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_method_channel.dart';
@@ -31,9 +32,17 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Sanity check test method
   Future<String?> getPlatformVersion() async {
     return Future.error(
       UnimplementedError('platformVersion() has not been implemented.'),
+    );
+  }
+
+  /// Commission a matter device with the provided `deviceId`
+  Future<FlutterMatterDevice> commission({required int deviceId}) async {
+    return Future.error(
+      UnimplementedError('commission() has not been implemented.'),
     );
   }
 }

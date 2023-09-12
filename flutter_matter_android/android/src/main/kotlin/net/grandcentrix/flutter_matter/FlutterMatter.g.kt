@@ -43,14 +43,85 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
+/** Generated class from Pigeon that represents data sent in messages. */
+data class MatterDevice (
+  val id: Long
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): MatterDevice {
+      val id = list[0].let { if (it is Int) it.toLong() else it as Long }
+      return MatterDevice(id)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      id,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class CommissionRequest (
+  val id: Long
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): CommissionRequest {
+      val id = list[0].let { if (it is Int) it.toLong() else it as Long }
+      return CommissionRequest(id)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      id,
+    )
+  }
+}
+
+@Suppress("UNCHECKED_CAST")
+private object FlutterMatterHostApiCodec : StandardMessageCodec() {
+  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
+    return when (type) {
+      128.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          CommissionRequest.fromList(it)
+        }
+      }
+      129.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          MatterDevice.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
+  }
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+    when (value) {
+      is CommissionRequest -> {
+        stream.write(128)
+        writeValue(stream, value.toList())
+      }
+      is MatterDevice -> {
+        stream.write(129)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
+  }
+}
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FlutterMatterHostApi {
   fun getPlatformVersion(callback: (Result<String>) -> Unit)
+  fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit)
 
   companion object {
     /** The codec used by FlutterMatterHostApi. */
     val codec: MessageCodec<Any?> by lazy {
-      StandardMessageCodec()
+      FlutterMatterHostApiCodec
     }
     /** Sets up an instance of `FlutterMatterHostApi` to handle messages through the `binaryMessenger`. */
     @Suppress("UNCHECKED_CAST")
@@ -60,6 +131,26 @@ interface FlutterMatterHostApi {
         if (api != null) {
           channel.setMessageHandler { _, reply ->
             api.getPlatformVersion() { result: Result<String> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.commission", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val requestArg = args[0] as CommissionRequest
+            api.commission(requestArg) { result: Result<MatterDevice> ->
               val error = result.exceptionOrNull()
               if (error != null) {
                 reply.reply(wrapError(error))
