@@ -65,13 +65,15 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Center(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text('Running on: $_platformVersion\n'),
               const SizedBox(
                 height: 24,
               ),
               TextButton(
-                onPressed: () => commissonMatterDevice,
+                onPressed: () => commissonMatterDevice(),
                 child: const Text('Start commissoning'),
               )
             ],

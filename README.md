@@ -4,11 +4,11 @@ Commission, control and share matter devices.
 
 ## Platform Support
 
-This plugin needs at least Android 8.1 (API level 27) and iOS 16.1+ 
+This plugin needs at least Android 8.1 (API level 27) and iOS 16.4+ 
 
 | Feature                | Android | iOS |
 | :--------------------: | :-----: | :-: |
-| Commissioning          | ✅      | ⛔  |
+| Commissioning          | ✅      | ✅  |
 | Control On/Off cluster | ⛔      | ⛔  |
 | Share                  | ⛔      | ⛔  |
 
@@ -30,11 +30,22 @@ try {
 } catch (e) {
     print('Error: $e');
 }
+
+// Send toggle command on on/off cluster
+try {
+    await _flutterMatterPlugin.onOffCluster.toggle(
+        deviceId: 123,
+        endpointId: 1,
+      );
+    print('Toggeld on/off cluster for device id 123 and enpoint id 1');
+} catch (e) {
+    print('Error: $e');
+}
 ```
 
 ### Setup for Android
 
-Add permissions to your `AndroidManifest.xml` and don't forget to include the tools namespace in the `manifest`-Tag `xmlns:tools="http://schemas.android.com/tools"`:
+1. Add permissions to your `AndroidManifest.xml` and don't forget to include the tools namespace in the `manifest`-Tag `xmlns:tools="http://schemas.android.com/tools"`:
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -67,7 +78,7 @@ Add permissions to your `AndroidManifest.xml` and don't forget to include the to
 </manifest>
 ```
 
-Add the commissioning service to your `AndroidManisfest.xml`:
+2. Add the commissioning service to your `AndroidManisfest.xml`:
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -83,7 +94,7 @@ Add the commissioning service to your `AndroidManisfest.xml`:
 </manifest>
 ```
 
-To enable linking the app add the following `intent-filter` to your `AndroidManifest.xml`:
+3. To enable linking the app add the following `intent-filter` to your `AndroidManifest.xml`:
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
@@ -103,4 +114,222 @@ To enable linking the app add the following `intent-filter` to your `AndroidMani
 ```
 
 ### Setup for iOS
-*TODO*
+1. Add `Matter Extension` to your Project
+    1. Open the default Xcode workspace in your project by running open ios/Runner.xcworkspace in a terminal window from your Flutter project directory.
+
+    2. In Xcode, select File -> New -> Target from the menu bar. <br/> ![File -> New -> Target](docs/setup_ios_1_2.png)
+
+    3. Select `Matter Extension`, click next. <br/> ![Matter Extension](docs/setup_ios_1_3.png)
+    
+    4. Enter a `Product Name`, select your `Team` and make sure the selected `Project` and `Embed in Application` is the Flutter Runner Application <br/> ![Settings for the Extension](docs/setup_ios_1_4.png)
+
+2. Add to your *apps's* **and** *extension's* `Info.plist` or add them by choosing the targets, click on info and add them in the `Custom iOS Target Properties`:
+
+    1. Bonjour services
+    ```xml
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_matter._tcp</string>
+        <string>_matterc._udp</string>
+        <string>_matterd._udp</string>
+    </array>
+    ```
+   
+    2. Privacy - Local Network Usage Description
+    ```xml
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>Network usage is required for discovering accessories</string>
+    ```
+    ![Custom properties](docs/setup_ios_2_1.png)
+
+3. Add App Groups to to your *app* **and** *extension*:
+    1. Select your app/extension as target and choose the `Signing & Capabilities` tab, then click on `+ Capabilities`
+    ![Add capabilities](docs/setup_ios_3_1.png)
+
+    2. Search for `App Groups` and double click it
+    ![Add App Groups](docs/setup_ios_3_2.png)
+
+    3. On the Runner's target add new App Groups. On the extension's target just select it.
+    ![Create new App Groups](docs/setup_ios_3_3_1.png)
+    ![Name the new App Groups](docs/setup_ios_3_3_2.png)
+
+4. Add files to your extension
+
+    4.1 Add the [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) group to your extension. <br/>
+    The easist way to do this is to right click the extension's folder -> Add files to "Runner"... -> Select the  [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) folder -> Make shure to select `Copy items if needed`, `Create groups` and your extension is selected as target -> Click Add
+     ![Create new App Groups](docs/setup_ios_4_1.png)
+
+    4.2 Edit your [RequestHandler.swift](/flutter_matter/example/ios/FlutterMatterExtension/RequestHandler.swift), created by the Xcode while creating the extension.<br/>
+     You also can finde the code in the example app [here](/flutter_matter/example/ios/FlutterMatterExtension/RequestHandler.swift)
+    <!-- TODO: Use linked code like here: https://github.com/stevemar/code-reference-in-readme -->
+    ```swift
+    //
+    //  RequestHandler.swift
+    //  FlutterMatterExtension
+    //
+    //  Created by Philipp Manstein on 12.09.23.
+    //
+
+    import OSLog
+    import MatterSupport
+    import Matter
+    import Security
+
+    // The extension is launched in response to `MatterAddDeviceRequest.perform()` and this class is the entry point
+    // for the extension operations.
+    class RequestHandler: MatterAddDeviceExtensionRequestHandler {
+        
+        private var deviceCommissioningCheckedThrowingContinuation: CheckedContinuation<Bool, Error>?
+        
+        private var deviceID: Int64 = 0
+        
+        override func validateDeviceCredential(_ deviceCredential: MatterAddDeviceExtensionRequestHandler.DeviceCredential) async throws {
+            // Use this function to perform additional attestation checks if that is useful for your ecosystem.
+            os_log(.default, "Received request to validate device credential: %{public}@",String(describing: deviceCredential))
+        }
+
+        override func selectWiFiNetwork(from wifiScanResults: [MatterAddDeviceExtensionRequestHandler.WiFiScanResult]) async throws -> MatterAddDeviceExtensionRequestHandler.WiFiNetworkAssociation {
+            // Use this function to select a Wi-Fi network for the device if your ecosystem has special requirements.
+            // Or, return `.defaultSystemNetwork` to use the iOS device's current network.
+            
+            os_log(.default, "Received WiFi scan results: %{public}@", String(describing: wifiScanResults))
+            
+            return .defaultSystemNetwork
+        }
+
+        override func selectThreadNetwork(from threadScanResults: [MatterAddDeviceExtensionRequestHandler.ThreadScanResult]) async throws -> MatterAddDeviceExtensionRequestHandler.ThreadNetworkAssociation {
+            // Use this function to select a Thread network for the device if your ecosystem has special requirements.
+            // Or, return `.defaultSystemNetwork` to use the default Thread network.
+            
+            os_log(.default, "Received Thread scan results: %{public}@", String(describing: threadScanResults))
+            
+            return .defaultSystemNetwork
+        }
+
+        override func commissionDevice(in home: MatterAddDeviceRequest.Home?, onboardingPayload: String, commissioningID: UUID) async throws {
+            // Use this function to commission the device with your Matter stack.
+            
+            os_log(.default, "Received request to commission device in home %{public}@ using onboarding payload: %{public}@ and uuid: %{public}@", String(describing: home), onboardingPayload, String(describing: commissioningID))
+            
+            let _ = try await withCheckedThrowingContinuation({ [weak self] (continuation: CheckedContinuation<Bool, Error>) in
+                guard let self = self else {
+                    return
+                }
+                
+                self.deviceCommissioningCheckedThrowingContinuation = continuation
+                
+                do{
+                    let controller = try InitializeMTR()
+                    
+                    let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
+                    controller.setDeviceControllerDelegate(self, queue: queue)
+                    
+                    let payload = try MTRSetupPayload(onboardingPayload: onboardingPayload)
+                    deviceID = UserDefaults.getDeviceId()!
+                    try controller.setupCommissioningSession(with: payload, newNodeID: NSNumber(value: deviceID))
+                }
+                catch{
+                    let nsError = (error as NSError)
+                    os_log(.error, "Can't start commissionDevice! %{public}@", String(describing: error))
+                    continuation.resume(throwing: error)
+                }
+            })
+        
+            os_log(.default, "Successfully paired accessory: DeviceID %{public}@", String(describing: deviceID))
+            UserDefaults.setSuccess()
+        }
+
+        override func rooms(in home: MatterAddDeviceRequest.Home?) async -> [MatterAddDeviceRequest.Room] {
+            // Use this function to return the rooms your ecosystem manages.
+            // If your ecosystem manages multiple homes, ensure you are returning rooms that belong to the provided home.
+            
+            os_log(.default, "Received request to fetch rooms in home: %{public}@", String(describing: home))
+            return []
+        }
+
+        override func configureDevice(named name: String, in room: MatterAddDeviceRequest.Room?) async {
+            // Use this function to configure the (now) commissioned device with the given name and room.
+            
+            os_log(.default, "Received request to configure device with name %{public}@ in room: %{public}@", name, String(describing: room))
+        }
+    }
+
+    // MARK: MTRDeviceControllerDelegate
+    extension RequestHandler : MTRDeviceControllerDelegate {
+        func controller(_ controller: MTRDeviceController, commissioningSessionEstablishmentDone error: Error?) -> Void {
+            if(error != nil)
+            {
+                os_log(.error, "MTRDeviceControllerDelegate: Failed to pair accessory: %{public}@", String(describing: error))
+                deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error!)
+                deviceCommissioningCheckedThrowingContinuation = nil
+                return
+            }
+            
+            os_log(.default, "MTRDeviceControllerDelegate: commissioningSessionEstablishmentDone")
+            
+            do {
+                os_log(.default, "MTRDeviceControllerDelegate: commissionNode with id %{public}@", String(describing: deviceID))
+            
+                let device = try controller.deviceBeingCommissioned(withNodeID: NSNumber(value: deviceID))
+                os_log(.default, "MTRDeviceControllerDelegate: Device.sessionTransportType %{public}@", String(describing: device.sessionTransportType))
+                
+                let commissioningParameters = MTRCommissioningParameters()
+                commissioningParameters.deviceAttestationDelegate = self
+                commissioningParameters.failSafeTimeout = 600
+                os_log(.default, "MTRDeviceControllerDelegate: commissionNode with id %{public}@", String(describing: deviceID))
+                try controller.commissionNode(withID:  NSNumber(value: deviceID), commissioningParams: commissioningParameters)
+            } catch {
+                os_log(.error, "MTRDeviceControllerDelegate: Failed to commissionNode: %{public}@", String(describing: error))
+                deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
+                deviceCommissioningCheckedThrowingContinuation = nil
+            }
+        }
+        
+        func controller(_ controller: MTRDeviceController, statusUpdate status: MTRCommissioningStatus) -> Void {
+            os_log(.default, "MTRDeviceControllerDelegate: Status update: %{public}@", String(describing: status))
+        }
+    }
+
+    // MARK: MTRDeviceAttestationDelegate
+    extension RequestHandler : MTRDeviceAttestationDelegate {
+        func deviceAttestationCompleted(for controller: MTRDeviceController, opaqueDeviceHandle: UnsafeMutableRawPointer, attestationDeviceInfo: MTRDeviceAttestationDeviceInfo, error: Error?) -> Void {
+            os_log(.default, "MTRDeviceAttestationDelegate: deviceAttestationCompleted: %{public}@ - Error: %{public}@", String(describing: attestationDeviceInfo), String(describing: error))
+            
+            do {
+                try controller.continueCommissioningDevice(opaqueDeviceHandle, ignoreAttestationFailure: false)
+            }
+            catch
+            {
+                deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
+                deviceCommissioningCheckedThrowingContinuation = nil
+                return
+            }
+                
+            if(error == nil)
+            {
+                deviceCommissioningCheckedThrowingContinuation?.resume(returning: true)
+            }
+            else
+            {
+                deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error!)
+            }
+            
+            deviceCommissioningCheckedThrowingContinuation = nil
+        }
+    }
+
+    ```
+    5. Change App Groups identifier in code
+        
+        5.1 ???
+        <!-- TODO: How to change App Groups identifier in code? -->
+# Errors
+
+| Code| Description                      |
+| :-: | :------------------------------: |
+| -1  | Error                            |
+| -2  | Unsupported Plattfrom            |
+| -3  | User cancelled                   |
+| -4  | Cluster not implemented          |
+| -5  | Command not implemented          |
+| -6  | Attribute not implemented        |

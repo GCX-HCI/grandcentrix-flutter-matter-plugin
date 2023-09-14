@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _flutterMatterIosPlugin = FlutterMatterIos();
+  final _flutterMatterAndroidPlugin = FlutterMatterIos();
 
   @override
   void initState() {
@@ -31,8 +31,9 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion = await _flutterMatterIosPlugin.getPlatformVersion() ??
-          'Unknown platform version';
+      platformVersion =
+          await _flutterMatterAndroidPlugin.getPlatformVersion() ??
+              'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -47,6 +48,15 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> commissonMatterDevice() async {
+    try {
+      final device = await _flutterMatterAndroidPlugin.commission(deviceId: 1);
+      print('Comissioned $device');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -55,7 +65,20 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Running on: $_platformVersion\n'),
+              const SizedBox(
+                height: 24,
+              ),
+              TextButton(
+                onPressed: () => commissonMatterDevice(),
+                child: const Text('Start commissoning'),
+              )
+            ],
+          ),
         ),
       ),
     );

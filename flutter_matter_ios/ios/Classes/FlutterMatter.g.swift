@@ -38,17 +38,96 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct MatterDevice {
+  var id: Int64
+
+  static func fromList(_ list: [Any?]) -> MatterDevice? {
+    let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+
+    return MatterDevice(
+      id: id
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+    ]
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct CommissionRequest {
+  var id: Int64
+
+  static func fromList(_ list: [Any?]) -> CommissionRequest? {
+    let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+
+    return CommissionRequest(
+      id: id
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      id,
+    ]
+  }
+}
+
+private class FlutterMatterHostApiCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+      case 128:
+        return CommissionRequest.fromList(self.readValue() as! [Any?])
+      case 129:
+        return MatterDevice.fromList(self.readValue() as! [Any?])
+      default:
+        return super.readValue(ofType: type)
+    }
+  }
+}
+
+private class FlutterMatterHostApiCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? CommissionRequest {
+      super.writeByte(128)
+      super.writeValue(value.toList())
+    } else if let value = value as? MatterDevice {
+      super.writeByte(129)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
+}
+
+private class FlutterMatterHostApiCodecReaderWriter: FlutterStandardReaderWriter {
+  override func reader(with data: Data) -> FlutterStandardReader {
+    return FlutterMatterHostApiCodecReader(data: data)
+  }
+
+  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+    return FlutterMatterHostApiCodecWriter(data: data)
+  }
+}
+
+class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
+  static let shared = FlutterMatterHostApiCodec(readerWriter: FlutterMatterHostApiCodecReaderWriter())
+}
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostApi {
   func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
+  func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FlutterMatterHostApiSetup {
   /// The codec used by FlutterMatterHostApi.
+  static var codec: FlutterStandardMessageCodec { FlutterMatterHostApiCodec.shared }
   /// Sets up an instance of `FlutterMatterHostApi` to handle messages through the `binaryMessenger`.
   static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostApi?) {
-    let getPlatformVersionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.getPlatformVersion", binaryMessenger: binaryMessenger)
+    let getPlatformVersionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.getPlatformVersion", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
       getPlatformVersionChannel.setMessageHandler { _, reply in
         api.getPlatformVersion() { result in
@@ -62,6 +141,23 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       getPlatformVersionChannel.setMessageHandler(nil)
+    }
+    let commissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.commission", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      commissionChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let requestArg = args[0] as! CommissionRequest
+        api.commission(request: requestArg) { result in
+          switch result {
+            case .success(let res):
+              reply(wrapResult(res))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      commissionChannel.setMessageHandler(nil)
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart' show visibleForTesting;
+import 'package:flutter_matter_ios/src/extensions.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
@@ -15,6 +16,13 @@ class FlutterMatterIos extends FlutterMatterPlatform {
   Future<String?> getPlatformVersion() async {
     final version = await _flutterMatterHostApi.getPlatformVersion();
     return version;
+  }
+
+  @override
+  Future<FlutterMatterDevice> commission({required int deviceId}) async {
+    final request = CommissionRequest(id: deviceId);
+    final device = await _flutterMatterHostApi.commission(request);
+    return device.toFlutterMatterDevice();
   }
 
   /// Registers this class as the default instance of [FlutterMatterPlatform].
