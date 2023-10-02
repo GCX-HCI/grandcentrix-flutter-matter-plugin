@@ -54,7 +54,7 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
             self.deviceCommissioningCheckedThrowingContinuation = continuation
             
             do{
-                let controller = try InitializeMTR()
+                let controller = try MTRDeviceController.shared()
                 
                 let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
                 controller.setDeviceControllerDelegate(self, queue: queue)

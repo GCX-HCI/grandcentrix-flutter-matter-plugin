@@ -31,9 +31,7 @@ class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.Activity
     activity = binding.activity
     binding.addActivityResultListener(this)
 
-    // Initialize Google Matter class with this activity
     flutterMatterHostApi.activity = activity;
-    //googleMatter = GoogleMatter(activity!!, methodCallResult)
   }
 
   override fun onDetachedFromActivityForConfigChanges() {

@@ -79,10 +79,6 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
         // If your ecosystem manages multiple homes, ensure you are returning rooms that belong to the provided home.
         
         os_log(.default, "Received request to fetch rooms in home: %{public}@", String(describing: home))
-        
-        //var rooms: [String] = ["Living Room", "Bedroom", "Office"];
-        //return rooms.map { MatterAddDeviceRequest.Room(displayName: $0) }
-        
         return []
     }
 
@@ -107,8 +103,6 @@ extension RequestHandler : MTRDeviceControllerDelegate {
         os_log(.default, "MTRDeviceControllerDelegate: commissioningSessionEstablishmentDone")
         
         do {
-            
-//            let deviceID = MTRGetLastPairedDeviceId();
             os_log(.default, "MTRDeviceControllerDelegate: commissionNode with id %{public}@", String(describing: deviceID))
            
             let device = try controller.deviceBeingCommissioned(withNodeID: NSNumber(value: deviceID))
@@ -124,24 +118,6 @@ extension RequestHandler : MTRDeviceControllerDelegate {
             deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
             deviceCommissioningCheckedThrowingContinuation = nil
         }
-        
-        //        controller.deviceBeingCommissioned(withNodeID: 123)
-        
-        
-        //        if (device.sessionTransportType == MTRTransportTypeBLE) {
-        //            dispatch_async(dispatch_get_main_queue(), ^{
-        //                [self->_deviceList refreshDeviceList];
-        //                [self retrieveAndSendWiFiCredentials];
-        //            });
-        //        } else {
-        //            MTRCommissioningParameters * params = [[MTRCommissioningParameters alloc] init];
-        //            params.deviceAttestationDelegate = [[CHIPToolDeviceAttestationDelegate alloc] initWithViewController:self];
-        //            params.failSafeExpiryTimeoutSecs = @600;
-        //            NSError * error;
-        //            if (![controller commissionDevice:deviceId commissioningParams:params error:&error]) {
-        //                NSLog(@"Failed to commission Device %llu, with error %@", deviceId, error);
-        //            }
-        //        }
     }
     
     func controller(_ controller: MTRDeviceController, statusUpdate status: MTRCommissioningStatus) -> Void {
@@ -159,53 +135,20 @@ extension RequestHandler : MTRDeviceAttestationDelegate {
         }
         catch
         {
-//            MTRSetDevicePaired(deviceID, false)
             deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
             deviceCommissioningCheckedThrowingContinuation = nil
             return
         }
-        
             
         if(error == nil)
         {
-//            MTRSetDevicePaired(deviceID, true)
             deviceCommissioningCheckedThrowingContinuation?.resume(returning: true)
         }
         else
         {
-//            MTRSetDevicePaired(deviceID, false)
             deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error!)
         }
         
-        
         deviceCommissioningCheckedThrowingContinuation = nil
     }
-    
-    // Should not be implemented:
-    /**
-     * Only one of the following delegate callbacks should be implemented.
-     *
-     * If -deviceAttestationFailedForController:opaqueDeviceHandle:error: is implemented, then it will
-     * be called when device attestation fails, and the client can decide to continue or stop the
-     * commissioning.
-     *
-     * If -deviceAttestationCompletedForController:opaqueDeviceHandle:attestationDeviceInfo:error: is
-     * implemented, then it will always be called when device attestation completes.
-     */
-//    func deviceAttestationFailed(for controller: MTRDeviceController, opaqueDeviceHandle: UnsafeMutableRawPointer, error: Error) -> Void {
-//        os_log(.default, "MTRDeviceAttestationDelegate: deviceAttestationFailed: Error: %{public}@", String(describing: error))
-//
-//        do {
-//            try controller.continueCommissioningDevice(opaqueDeviceHandle, ignoreAttestationFailure: false)
-//        }
-//        catch
-//        {
-//            deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
-//            deviceCommissioningCheckedThrowingContinuation = nil
-//            return
-//        }
-//
-//        deviceCommissioningCheckedThrowingContinuation?.resume(throwing: error)
-//        deviceCommissioningCheckedThrowingContinuation = nil
-//    }
 }

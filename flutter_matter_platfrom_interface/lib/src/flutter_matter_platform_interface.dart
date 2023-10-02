@@ -1,3 +1,5 @@
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_cluster.dart';
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_command.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
@@ -43,6 +45,18 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
   Future<FlutterMatterDevice> commission({required int deviceId}) async {
     return Future.error(
       UnimplementedError('commission() has not been implemented.'),
+    );
+  }
+
+  /// Sends the `command` to a matter device with the provided `deviceId` and `endpointId` on the `cluster`
+  Future<void> command({
+    required int deviceId,
+    required int endpointId,
+    required FlutterMatterCluster cluster,
+    required FlutterMatterCommand command,
+  }) async {
+    return Future.error(
+      UnimplementedError('command() has not been implemented.'),
     );
   }
 }

@@ -1,41 +1,5 @@
-import 'package:pigeon/pigeon.dart';
-
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/flutter_matter.g.dart',
-  kotlinOptions: KotlinOptions(package: 'net.grandcentrix.flutter_matter'),
-  kotlinOut:
-      'android/src/main/kotlin/net/grandcentrix/flutter_matter/FlutterMatter.g.kt',
-  // copyrightHeader: 'pigeons/copyright.txt',
-))
-class MatterDevice {
-  final int id;
-  // final String deviceName;
-  // final int vendorId;
-  // final int productId;
-
-  MatterDevice({required this.id});
-}
-
-class CommissionRequest {
-  final int id;
-
-  CommissionRequest({required this.id});
-}
-
-/// Commands for the different clusters, check the Matter Device Library Specification document
-enum Command {
-  /// Command for the on/off cluster
-  off,
-
-  /// Command for the on/off cluster
-  on,
-
-  /// Command for the on/off cluster
-  toggle,
-}
-
 /// Matter clusters, check the Matter Device Library Specification document
-enum Cluster {
+enum FlutterMatterCluster {
   // /// Cluster ID 0x0003 supports an endpoint identification state (e.g., flashing a light), that indicates to an observer (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a multi­ cast request that any endpoint that is identifying itself to respond to the initiator.
   // identify,
 
@@ -73,21 +37,4 @@ enum Cluster {
 
   // /// Cluster ID 0x0300
   // colorControl,
-}
-
-@HostApi()
-abstract class FlutterMatterHostApi {
-  @async
-  String getPlatformVersion();
-
-  @async
-  MatterDevice commission(CommissionRequest request);
-
-  @async
-  void command(
-    int deviceId,
-    int endpointId,
-    Cluster cluster,
-    Command command,
-  );
 }

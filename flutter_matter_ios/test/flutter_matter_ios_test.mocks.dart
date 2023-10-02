@@ -29,15 +29,21 @@ class _FakeMatterDevice_0 extends _i1.SmartFake implements _i2.MatterDevice {
         );
 }
 
+class _FakeObject_1 extends _i1.SmartFake implements Object {
+  _FakeObject_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
 /// A class which mocks [FlutterMatterHostApi].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockFlutterMatterHostApi extends _i1.Mock
     implements _i2.FlutterMatterHostApi {
-  MockFlutterMatterHostApi() {
-    _i1.throwOnMissingStub(this);
-  }
-
   @override
   _i3.Future<String> getPlatformVersion() => (super.noSuchMethod(
         Invocation.method(
@@ -45,6 +51,7 @@ class MockFlutterMatterHostApi extends _i1.Mock
           [],
         ),
         returnValue: _i3.Future<String>.value(''),
+        returnValueForMissingStub: _i3.Future<String>.value(''),
       ) as _i3.Future<String>);
   @override
   _i3.Future<_i2.MatterDevice> commission(_i2.CommissionRequest? arg_request) =>
@@ -60,5 +67,74 @@ class MockFlutterMatterHostApi extends _i1.Mock
             [arg_request],
           ),
         )),
+        returnValueForMissingStub:
+            _i3.Future<_i2.MatterDevice>.value(_FakeMatterDevice_0(
+          this,
+          Invocation.method(
+            #commission,
+            [arg_request],
+          ),
+        )),
       ) as _i3.Future<_i2.MatterDevice>);
+  @override
+  _i3.Future<void> command(
+    int? arg_deviceId,
+    int? arg_endpointId,
+    _i2.Cluster? arg_cluster,
+    _i2.Command? arg_command,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #command,
+          [
+            arg_deviceId,
+            arg_endpointId,
+            arg_cluster,
+            arg_command,
+          ],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+}
+
+/// A class which mocks [MatterDevice].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockMatterDevice extends _i1.Mock implements _i2.MatterDevice {
+  @override
+  int get id => (super.noSuchMethod(
+        Invocation.getter(#id),
+        returnValue: 0,
+        returnValueForMissingStub: 0,
+      ) as int);
+  @override
+  set id(int? _id) => super.noSuchMethod(
+        Invocation.setter(
+          #id,
+          _id,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  Object encode() => (super.noSuchMethod(
+        Invocation.method(
+          #encode,
+          [],
+        ),
+        returnValue: _FakeObject_1(
+          this,
+          Invocation.method(
+            #encode,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeObject_1(
+          this,
+          Invocation.method(
+            #encode,
+            [],
+          ),
+        ),
+      ) as Object);
 }

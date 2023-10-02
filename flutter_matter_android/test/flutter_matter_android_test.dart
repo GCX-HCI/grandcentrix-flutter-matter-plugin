@@ -8,9 +8,9 @@ import 'package:mockito/mockito.dart';
 
 import './flutter_matter_android_test.mocks.dart';
 
-@GenerateMocks([
-  FlutterMatterHostApi,
-  MatterDevice,
+@GenerateNiceMocks([
+  MockSpec<FlutterMatterHostApi>(),
+  MockSpec<MatterDevice>(),
 ])
 void main() {
   late MockMatterDevice mockMatterDevice;
@@ -47,5 +47,24 @@ void main() {
 
     await check(sut.commission(deviceId: 123))
         .completes(it()..equals(FlutterMatterDevice(id: 123)));
+  });
+
+  test('command', () async {
+    final sut =
+        FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
+
+    await check(sut.command(
+      deviceId: 123,
+      endpointId: 1,
+      cluster: FlutterMatterCluster.onOff,
+      command: FlutterMatterCommand.on,
+    )).completes();
+
+    verify(mockFlutterMatterHostApi.command(
+      123,
+      1,
+      Cluster.onOff,
+      Command.on,
+    ));
   });
 }

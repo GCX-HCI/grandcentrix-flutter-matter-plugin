@@ -38,6 +38,22 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
   return value as! T?
 }
 
+/// Commands for the different clusters, check the Matter Device Library Specification document
+enum Command: Int {
+  /// Command for the on/off cluster
+  case off = 0
+  /// Command for the on/off cluster
+  case on = 1
+  /// Command for the on/off cluster
+  case toggle = 2
+}
+
+/// Matter clusters, check the Matter Device Library Specification document
+enum Cluster: Int {
+  /// Cluster ID 0x0006 for turning devices on and off.
+  case onOff = 0
+}
+
 /// Generated class from Pigeon that represents data sent in messages.
 struct MatterDevice {
   var id: Int64
@@ -119,6 +135,7 @@ class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
 protocol FlutterMatterHostApi {
   func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
   func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
+  func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -158,6 +175,26 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       commissionChannel.setMessageHandler(nil)
+    }
+    let commandChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.command", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      commandChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+        let clusterArg = Cluster(rawValue: args[2] as! Int)!
+        let commandArg = Command(rawValue: args[3] as! Int)!
+        api.command(deviceId: deviceIdArg, endpointId: endpointIdArg, cluster: clusterArg, command: commandArg) { result in
+          switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      commandChannel.setMessageHandler(nil)
     }
   }
 }

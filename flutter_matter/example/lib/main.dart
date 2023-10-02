@@ -56,6 +56,18 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> toggleOnOffCluster() async {
+    try {
+      await _flutterMatterPlugin.onOffCluster.toggle(
+        deviceId: 123,
+        endpointId: 1,
+      );
+      print('On/Off toggled!');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -75,6 +87,10 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                 onPressed: () => commissonMatterDevice(),
                 child: const Text('Start commissoning'),
+              ),
+              TextButton(
+                onPressed: () => toggleOnOffCluster(),
+                child: const Text('Toggle On/Off cluster on enpoint 1'),
               )
             ],
           ),

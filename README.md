@@ -113,6 +113,32 @@ try {
 </manifest>
 ```
 
+4. Change kotlin version in your `build.gradle` for the project to at least `1.9.0`:
+```gradle
+buildscript {
+    ext.kotlin_version = '1.9.0'
+    [...]
+}
+```
+
+5. Set your `minSdkVersion` to at least `27`:
+```gradle
+android {
+    [...]
+
+    defaultConfig {
+        [...]
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
+        minSdkVersion 27
+        targetSdkVersion 33
+        [...]
+    }
+
+    [...]
+}
+```
+
 ### Setup for iOS
 1. Add `Matter Extension` to your Project
     1. Open the default Xcode workspace in your project by running open ios/Runner.xcworkspace in a terminal window from your Flutter project directory.
@@ -142,18 +168,25 @@ try {
     ```
     ![Custom properties](docs/setup_ios_2_1.png)
 
-3. Add App Groups to to your *app* **and** *extension*:
+3. Add App Groups to your *app* **and** *extension*:
     1. Select your app/extension as target and choose the `Signing & Capabilities` tab, then click on `+ Capabilities`
     ![Add capabilities](docs/setup_ios_3_1.png)
 
     2. Search for `App Groups` and double click it
     ![Add App Groups](docs/setup_ios_3_2.png)
 
-    3. On the Runner's target add new App Groups. On the extension's target just select it.
+    3. On the Runner's target add new App Groups. On the extension's target just select it
     ![Create new App Groups](docs/setup_ios_3_3_1.png)
     ![Name the new App Groups](docs/setup_ios_3_3_2.png)
 
-4. Add files to your extension
+4. Add Keychain Sharing to your *app* **and** *extension*:
+    1. As in the step before described, select your app/extension as target and choose the `Signing & Capabilities` tab, then click on `+ Capabilities`
+    
+    2. Search for `Keychain Sharing` and double click it
+
+    3. Set the same namespace for the app and extension
+
+5. Add files to your extension
 
     4.1 Add the [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) group to your extension. <br/>
     The easist way to do this is to right click the extension's folder -> Add files to "Runner"... -> Select the  [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) folder -> Make shure to select `Copy items if needed`, `Create groups` and your extension is selected as target -> Click Add
@@ -219,7 +252,7 @@ try {
                 self.deviceCommissioningCheckedThrowingContinuation = continuation
                 
                 do{
-                    let controller = try InitializeMTR()
+                    let controller = try MTRDeviceController.shared()
                     
                     let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
                     controller.setDeviceControllerDelegate(self, queue: queue)
@@ -317,11 +350,10 @@ try {
             deviceCommissioningCheckedThrowingContinuation = nil
         }
     }
-
     ```
-    5. Change App Groups identifier in code
+    6. Change App Groups identifier in code
         
-        5.1 ???
+        6.1 ???
         <!-- TODO: How to change App Groups identifier in code? -->
 # Errors
 

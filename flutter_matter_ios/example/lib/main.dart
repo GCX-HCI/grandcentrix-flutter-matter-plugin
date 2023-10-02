@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
-  final _flutterMatterAndroidPlugin = FlutterMatterIos();
+  final _flutterMatterIosPlugin = FlutterMatterIos();
 
   @override
   void initState() {
@@ -31,9 +31,8 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await _flutterMatterAndroidPlugin.getPlatformVersion() ??
-              'Unknown platform version';
+      platformVersion = await _flutterMatterIosPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -50,7 +49,8 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> commissonMatterDevice() async {
     try {
-      final device = await _flutterMatterAndroidPlugin.commission(deviceId: 1);
+      final device = await _flutterMatterIosPlugin.commission(deviceId: 1);
+
       print('Comissioned $device');
     } catch (e, st) {
       print('Error: $e\n$st');

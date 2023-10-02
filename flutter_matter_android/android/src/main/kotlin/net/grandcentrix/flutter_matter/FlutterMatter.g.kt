@@ -43,6 +43,34 @@ class FlutterError (
   val details: Any? = null
 ) : Throwable()
 
+/** Commands for the different clusters, check the Matter Device Library Specification document */
+enum class Command(val raw: Int) {
+  /** Command for the on/off cluster */
+  OFF(0),
+  /** Command for the on/off cluster */
+  ON(1),
+  /** Command for the on/off cluster */
+  TOGGLE(2);
+
+  companion object {
+    fun ofRaw(raw: Int): Command? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+/** Matter clusters, check the Matter Device Library Specification document */
+enum class Cluster(val raw: Int) {
+  /** Cluster ID 0x0006 for turning devices on and off. */
+  ONOFF(0);
+
+  companion object {
+    fun ofRaw(raw: Int): Cluster? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Generated class from Pigeon that represents data sent in messages. */
 data class MatterDevice (
   val id: Long
@@ -117,6 +145,7 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
 interface FlutterMatterHostApi {
   fun getPlatformVersion(callback: (Result<String>) -> Unit)
   fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit)
+  fun command(deviceId: Long, endpointId: Long, cluster: Cluster, command: Command, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FlutterMatterHostApi. */
@@ -157,6 +186,28 @@ interface FlutterMatterHostApi {
               } else {
                 val data = result.getOrNull()
                 reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.command", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            val endpointIdArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val clusterArg = Cluster.ofRaw(args[2] as Int)!!
+            val commandArg = Command.ofRaw(args[3] as Int)!!
+            api.command(deviceIdArg, endpointIdArg, clusterArg, commandArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
               }
             }
           }

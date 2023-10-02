@@ -1,13 +1,1 @@
-import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
-
-class FlutterMatter {
-  /// Sanity check test method
-  Future<String?> getPlatformVersion() {
-    return FlutterMatterPlatform.instance.getPlatformVersion();
-  }
-
-  /// Commission a matter device with the provided `deviceId`
-  Future<FlutterMatterDevice> commission({required int deviceId}) {
-    return FlutterMatterPlatform.instance.commission(deviceId: deviceId);
-  }
-}
+export 'src/flutter_matter.dart';

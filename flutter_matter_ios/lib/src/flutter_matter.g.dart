@@ -8,6 +8,24 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+/// Commands for the different clusters, check the Matter Device Library Specification document
+enum Command {
+  /// Command for the on/off cluster
+  off,
+
+  /// Command for the on/off cluster
+  on,
+
+  /// Command for the on/off cluster
+  toggle,
+}
+
+/// Matter clusters, check the Matter Device Library Specification document
+enum Cluster {
+  /// Cluster ID 0x0006 for turning devices on and off.
+  onOff,
+}
+
 class MatterDevice {
   MatterDevice({
     required this.id,
@@ -140,6 +158,34 @@ class FlutterMatterHostApi {
       );
     } else {
       return (replyList[0] as MatterDevice?)!;
+    }
+  }
+
+  Future<void> command(int arg_deviceId, int arg_endpointId,
+      Cluster arg_cluster, Command arg_command) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.command',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_deviceId,
+      arg_endpointId,
+      arg_cluster.index,
+      arg_command.index
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
     }
   }
 }

@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart' show visibleForTesting;
-import 'package:flutter_matter_android/src/extensions.dart';
-import 'package:flutter_matter_android/src/flutter_matter.g.dart';
+import 'package:flutter_matter_ios/src/extensions.dart';
+import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
-/// An implementation of [FlutterMatterPlatform] for Android.
-class FlutterMatterAndroid extends FlutterMatterPlatform {
+/// An implementation of [FlutterMatterPlatform] for iOS.
+class FlutterMatterIos extends FlutterMatterPlatform {
   final FlutterMatterHostApi _flutterMatterHostApi;
 
   /// Creates a new plugin implementation instance.
-  FlutterMatterAndroid({
+  FlutterMatterIos({
     @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
   }) : _flutterMatterHostApi = flutterMatterHostApi ?? FlutterMatterHostApi();
 
   /// Registers this class as the default instance of [FlutterMatterPlatform].
   static void registerWith() {
-    FlutterMatterPlatform.instance = FlutterMatterAndroid();
+    FlutterMatterPlatform.instance = FlutterMatterIos();
   }
 
   @override
