@@ -77,6 +77,27 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
         }
     }
     
+    func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void) {
+        Task {
+            do {
+                let controller = try MTRDeviceController.shared()
+                let device = MTRBaseDevice(nodeID: NSNumber(value: deviceId), controller: controller)
+                
+                let payload = try await device.openCommissioningWindow(withSetupPasscode: NSNumber(value: setupPin), discriminator: NSNumber(value: discriminator), duration: NSNumber(value: duration), queue: DispatchQueue.main)
+                
+                let manualPairingCode = payload.manualEntryCode()
+                let qrcode = manualPairingCode != nil ? try payload.qrCodeString() : nil
+                
+                completion(Result.success(OpenPairingWindowResult(manualPairingCode: manualPairingCode, qrCode: qrcode)))
+            } catch
+            {
+                os_log(.default, "Failed to openPairingWindowWithPin for device: \(error)")
+                completion(Result.failure(FlutterError(code: "-1", message: "Failed to openPairingWindowWithPin for device", details: nil)))
+                return
+            }
+        }
+    }
+    
     func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {

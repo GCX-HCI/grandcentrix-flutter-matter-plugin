@@ -5,6 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart'
     as _i2;
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_open_pairing_window_result.dart'
+    as _i3;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -32,4 +34,14 @@ class MockFlutterMatterDevice extends _i1.Mock
         Invocation.getter(#id),
         returnValue: 0,
       ) as int);
+}
+
+/// A class which mocks [FlutterMatterOpenPairingWindowResult].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFlutterMatterOpenPairingWindowResult extends _i1.Mock
+    implements _i3.FlutterMatterOpenPairingWindowResult {
+  MockFlutterMatterOpenPairingWindowResult() {
+    _i1.throwOnMissingStub(this);
+  }
 }

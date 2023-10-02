@@ -33,6 +33,40 @@ class FlutterMatterPlatformTestImpl extends FlutterMatterPlatform {
     return Future.value();
   }
 
+  int _openPairingWindowWithPinDeviceId = -1;
+  int get openPairingWindowWithPinDeviceId => _openPairingWindowWithPinDeviceId;
+
+  Duration _openPairingWindowWithPinDuration = const Duration();
+  Duration get openPairingWindowWithPinDuration =>
+      _openPairingWindowWithPinDuration;
+
+  int _openPairingWindowWithPinDiscriminator = -1;
+  int get openPairingWindowWithPinDiscriminator =>
+      _openPairingWindowWithPinDiscriminator;
+
+  int _openPairingWindowWithPinSetupPin = -1;
+  int get openPairingWindowWithPinSetupPin => _openPairingWindowWithPinSetupPin;
+
+  FlutterMatterOpenPairingWindowResult? _openPairingWindowWithPinReturnValue;
+  set openPairingWindowWithPinReturnValue(
+          FlutterMatterOpenPairingWindowResult val) =>
+      _openPairingWindowWithPinReturnValue = val;
+
+  @override
+  Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
+    required int deviceId,
+    required Duration duration,
+    required int discriminator,
+    required int setupPin,
+  }) {
+    _openPairingWindowWithPinDeviceId = deviceId;
+    _openPairingWindowWithPinDuration = duration;
+    _openPairingWindowWithPinDiscriminator = discriminator;
+    _openPairingWindowWithPinSetupPin = setupPin;
+
+    return Future.value(_openPairingWindowWithPinReturnValue!);
+  }
+
   int _commandParamterDeviceId = -1;
   int get commandParamterDeviceId => _commandParamterDeviceId;
 

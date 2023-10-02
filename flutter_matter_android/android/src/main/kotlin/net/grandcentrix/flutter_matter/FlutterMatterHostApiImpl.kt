@@ -74,8 +74,27 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                 callback(Result.failure(e))
             }
         }
+    }
 
-
+    override fun openPairingWindowWithPin(
+        deviceId: Long,
+        duration: Long,
+        discriminator: Long,
+        setupPin: Long,
+        callback: (Result<OpenPairingWindowResult>) -> Unit
+    ) {
+        scope.launch {
+            try {
+                val chipClient = ChipClient(activity!!)
+                val devicePtr = chipClient.getConnectedDevicePointer(deviceId)
+                val (_: Long, manualPairingCode: String?, qrCode: String?) = chipClient.awaitOpenPairingWindowWithPIN(devicePtr,
+                    duration.toInt(), 10000L, discriminator.toInt(), setupPin)
+                callback(Result.success(OpenPairingWindowResult(manualPairingCode, qrCode)))
+            } catch (e: Exception) {
+                Timber.e( e,"openPairingWindowWithPin failed!")
+                callback(Result.failure(e))
+            }
+        }
     }
 
     override fun command(

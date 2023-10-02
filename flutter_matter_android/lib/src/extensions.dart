@@ -36,3 +36,14 @@ extension FlutterMatterCommandTransformationExtension on FlutterMatterCommand {
     };
   }
 }
+
+/// Extensions for OpenPairingWindowResult
+extension OpenPairingWindowResultTransformationExtension
+    on OpenPairingWindowResult {
+  /// Transfrom OpenPairingWindowResult to FlutterMatterOpenPairingWindowResult
+  FlutterMatterOpenPairingWindowResult
+      toFlutterMatterOpenPairingWindowResult() {
+    return FlutterMatterOpenPairingWindowResult(
+        manualPairingCode: manualPairingCode, qrCode: qrCode);
+  }
+}

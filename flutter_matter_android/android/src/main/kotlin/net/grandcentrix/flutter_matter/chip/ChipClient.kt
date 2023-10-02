@@ -215,7 +215,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
       iteration: Long,
       discriminator: Int,
       setupPinCode: Long
-  ) {
+  ): Triple<Long, String?, String?>{
     return suspendCoroutine { continuation ->
       Timber.d("Calling chipDeviceController.openPairingWindowWithPIN")
       val callback: OpenCommissioningCallback =
@@ -230,7 +230,7 @@ class ChipClient @Inject constructor(@ApplicationContext context: Context) {
             override fun onSuccess(deviceId: Long, manualPairingCode: String?, qrCode: String?) {
               Timber.d(
                   "ShareDevice: awaitOpenPairingWindowWithPIN.onSuccess: deviceId [${deviceId}]")
-              continuation.resume(Unit)
+              continuation.resume(Triple(deviceId, manualPairingCode, qrCode))
             }
           }
       chipDeviceController.openPairingWindowWithPINCallback(

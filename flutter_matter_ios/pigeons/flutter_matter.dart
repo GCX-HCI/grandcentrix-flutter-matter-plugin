@@ -21,6 +21,16 @@ class CommissionRequest {
   CommissionRequest({required this.id});
 }
 
+class OpenPairingWindowResult {
+  final String? manualPairingCode;
+  final String? qrCode;
+
+  OpenPairingWindowResult({
+    required this.manualPairingCode,
+    required this.qrCode,
+  });
+}
+
 /// Commands for the different clusters, check the Matter Device Library Specification document
 enum Command {
   /// Command for the on/off cluster
@@ -84,6 +94,14 @@ abstract class FlutterMatterHostApi {
 
   @async
   void unpair(int deviceId);
+
+  @async
+  OpenPairingWindowResult openPairingWindowWithPin(
+    int deviceId,
+    int duration,
+    int discriminator,
+    int setupPin,
+  );
 
   @async
   void command(

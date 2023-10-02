@@ -68,6 +68,32 @@ class CommissionRequest {
   }
 }
 
+class OpenPairingWindowResult {
+  OpenPairingWindowResult({
+    this.manualPairingCode,
+    this.qrCode,
+  });
+
+  String? manualPairingCode;
+
+  String? qrCode;
+
+  Object encode() {
+    return <Object?>[
+      manualPairingCode,
+      qrCode,
+    ];
+  }
+
+  static OpenPairingWindowResult decode(Object result) {
+    result as List<Object?>;
+    return OpenPairingWindowResult(
+      manualPairingCode: result[0] as String?,
+      qrCode: result[1] as String?,
+    );
+  }
+}
+
 class _FlutterMatterHostApiCodec extends StandardMessageCodec {
   const _FlutterMatterHostApiCodec();
   @override
@@ -77,6 +103,9 @@ class _FlutterMatterHostApiCodec extends StandardMessageCodec {
       writeValue(buffer, value.encode());
     } else if (value is MatterDevice) {
       buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is OpenPairingWindowResult) {
+      buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -90,6 +119,8 @@ class _FlutterMatterHostApiCodec extends StandardMessageCodec {
         return CommissionRequest.decode(readValue(buffer)!);
       case 129:
         return MatterDevice.decode(readValue(buffer)!);
+      case 130:
+        return OpenPairingWindowResult.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -181,6 +212,39 @@ class FlutterMatterHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<OpenPairingWindowResult> openPairingWindowWithPin(int arg_deviceId,
+      int arg_duration, int arg_discriminator, int arg_setupPin) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.openPairingWindowWithPin',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_deviceId,
+      arg_duration,
+      arg_discriminator,
+      arg_setupPin
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as OpenPairingWindowResult?)!;
     }
   }
 

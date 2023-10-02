@@ -109,6 +109,28 @@ data class CommissionRequest (
   }
 }
 
+/** Generated class from Pigeon that represents data sent in messages. */
+data class OpenPairingWindowResult (
+  val manualPairingCode: String? = null,
+  val qrCode: String? = null
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): OpenPairingWindowResult {
+      val manualPairingCode = list[0] as String?
+      val qrCode = list[1] as String?
+      return OpenPairingWindowResult(manualPairingCode, qrCode)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      manualPairingCode,
+      qrCode,
+    )
+  }
+}
+
 @Suppress("UNCHECKED_CAST")
 private object FlutterMatterHostApiCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
@@ -121,6 +143,11 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
       129.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           MatterDevice.fromList(it)
+        }
+      }
+      130.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          OpenPairingWindowResult.fromList(it)
         }
       }
       else -> super.readValueOfType(type, buffer)
@@ -136,6 +163,10 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
         stream.write(129)
         writeValue(stream, value.toList())
       }
+      is OpenPairingWindowResult -> {
+        stream.write(130)
+        writeValue(stream, value.toList())
+      }
       else -> super.writeValue(stream, value)
     }
   }
@@ -146,6 +177,7 @@ interface FlutterMatterHostApi {
   fun getPlatformVersion(callback: (Result<String>) -> Unit)
   fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit)
   fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit)
+  fun openPairingWindowWithPin(deviceId: Long, duration: Long, discriminator: Long, setupPin: Long, callback: (Result<OpenPairingWindowResult>) -> Unit)
   fun command(deviceId: Long, endpointId: Long, cluster: Cluster, command: Command, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -206,6 +238,29 @@ interface FlutterMatterHostApi {
                 reply.reply(wrapError(error))
               } else {
                 reply.reply(wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.openPairingWindowWithPin", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            val durationArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val discriminatorArg = args[2].let { if (it is Int) it.toLong() else it as Long }
+            val setupPinArg = args[3].let { if (it is Int) it.toLong() else it as Long }
+            api.openPairingWindowWithPin(deviceIdArg, durationArg, discriminatorArg, setupPinArg) { result: Result<OpenPairingWindowResult> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
               }
             }
           }

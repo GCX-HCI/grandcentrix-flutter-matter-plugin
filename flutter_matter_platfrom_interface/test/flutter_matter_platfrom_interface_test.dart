@@ -76,6 +76,20 @@ void main() {
               it()..has((p0) => p0.message, 'message').isNotNull());
     });
 
+    test(
+        'Default implementation of openPairingWindowWithPin should throw unimplemented error',
+        () async {
+      final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
+
+      await check(flutterMatterPlatform.openPairingWindowWithPin(
+        deviceId: 123,
+        discriminator: 123,
+        duration: const Duration(minutes: 3),
+        setupPin: 1234,
+      )).throws<UnimplementedError>(
+          it()..has((p0) => p0.message, 'message').isNotNull());
+    });
+
     test('Default implementation of command should throw unimplemented error',
         () async {
       final flutterMatterPlatform = ExtendsFlutterMatterPlatform();

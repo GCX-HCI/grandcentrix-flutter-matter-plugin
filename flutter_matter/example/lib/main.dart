@@ -56,6 +56,27 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> share() async {
+    try {
+      final response = await _flutterMatterPlugin.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 123,
+        setupPin: 11223344,
+      );
+      print('Sharing done');
+      if (response.manualPairingCode != null) {
+        print('Manual pairing code: ${response.manualPairingCode}');
+      }
+      if (response.manualPairingCode != null) {
+        print(
+            'QR code: https://project-chip.github.io/connectedhomeip/qrcode.html?data=${Uri.encodeComponent(response.qrCode!)}');
+      }
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   Future<void> unpair() async {
     try {
       await _flutterMatterPlugin.unpair(deviceId: 123);
@@ -96,6 +117,10 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                 onPressed: () => commissonMatterDevice(),
                 child: const Text('Start commissoning'),
+              ),
+              TextButton(
+                onPressed: () => share(),
+                child: const Text('Share'),
               ),
               TextButton(
                 onPressed: () => unpair(),

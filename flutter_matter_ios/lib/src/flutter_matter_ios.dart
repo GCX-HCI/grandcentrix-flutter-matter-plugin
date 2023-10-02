@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_matter_ios/src/extensions.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
@@ -35,6 +33,22 @@ class FlutterMatterIos extends FlutterMatterPlatform {
   @override
   Future<void> unpair({required int deviceId}) =>
       _flutterMatterHostApi.unpair(deviceId);
+
+  @override
+  Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
+    required int deviceId,
+    required Duration duration,
+    required int discriminator,
+    required int setupPin,
+  }) async {
+    final result = await _flutterMatterHostApi.openPairingWindowWithPin(
+      deviceId,
+      duration.inSeconds,
+      discriminator,
+      setupPin,
+    );
+    return result.toFlutterMatterOpenPairingWindowResult();
+  }
 
   @override
   Future<void> command({

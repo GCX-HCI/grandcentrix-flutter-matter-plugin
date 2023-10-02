@@ -33,4 +33,15 @@ void main() {
       check(FlutterMatterCommand.toggle.toCommand()).equals(Command.toggle);
     });
   });
+
+  group('OpenPairingWindowResultTransformationExtension', () {
+    test('toFlutterMatterOpenPairingWindowResult should return connrect values',
+        () {
+      check(OpenPairingWindowResult(
+              manualPairingCode: '1234', qrCode: 'qrCode123')
+          .toFlutterMatterOpenPairingWindowResult())
+        ..has((p0) => p0.manualPairingCode, 'manualPairingCode').equals('1234')
+        ..has((p0) => p0.qrCode, 'qrCode').equals('qrCode123');
+    });
+  });
 }

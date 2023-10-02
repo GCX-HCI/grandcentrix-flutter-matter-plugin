@@ -90,6 +90,28 @@ struct CommissionRequest {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct OpenPairingWindowResult {
+  var manualPairingCode: String? = nil
+  var qrCode: String? = nil
+
+  static func fromList(_ list: [Any?]) -> OpenPairingWindowResult? {
+    let manualPairingCode: String? = nilOrValue(list[0])
+    let qrCode: String? = nilOrValue(list[1])
+
+    return OpenPairingWindowResult(
+      manualPairingCode: manualPairingCode,
+      qrCode: qrCode
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      manualPairingCode,
+      qrCode,
+    ]
+  }
+}
+
 private class FlutterMatterHostApiCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -97,6 +119,8 @@ private class FlutterMatterHostApiCodecReader: FlutterStandardReader {
         return CommissionRequest.fromList(self.readValue() as! [Any?])
       case 129:
         return MatterDevice.fromList(self.readValue() as! [Any?])
+      case 130:
+        return OpenPairingWindowResult.fromList(self.readValue() as! [Any?])
       default:
         return super.readValue(ofType: type)
     }
@@ -110,6 +134,9 @@ private class FlutterMatterHostApiCodecWriter: FlutterStandardWriter {
       super.writeValue(value.toList())
     } else if let value = value as? MatterDevice {
       super.writeByte(129)
+      super.writeValue(value.toList())
+    } else if let value = value as? OpenPairingWindowResult {
+      super.writeByte(130)
       super.writeValue(value.toList())
     } else {
       super.writeValue(value)
@@ -136,6 +163,7 @@ protocol FlutterMatterHostApi {
   func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
   func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
   func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+  func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
   func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -193,6 +221,26 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       unpairChannel.setMessageHandler(nil)
+    }
+    let openPairingWindowWithPinChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.openPairingWindowWithPin", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      openPairingWindowWithPinChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        let durationArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+        let discriminatorArg = args[2] is Int64 ? args[2] as! Int64 : Int64(args[2] as! Int32)
+        let setupPinArg = args[3] is Int64 ? args[3] as! Int64 : Int64(args[3] as! Int32)
+        api.openPairingWindowWithPin(deviceId: deviceIdArg, duration: durationArg, discriminator: discriminatorArg, setupPin: setupPinArg) { result in
+          switch result {
+            case .success(let res):
+              reply(wrapResult(res))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      openPairingWindowWithPinChannel.setMessageHandler(nil)
     }
     let commandChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.command", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

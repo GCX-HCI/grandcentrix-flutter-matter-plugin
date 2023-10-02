@@ -29,8 +29,19 @@ class _FakeMatterDevice_0 extends _i1.SmartFake implements _i2.MatterDevice {
         );
 }
 
-class _FakeObject_1 extends _i1.SmartFake implements Object {
-  _FakeObject_1(
+class _FakeOpenPairingWindowResult_1 extends _i1.SmartFake
+    implements _i2.OpenPairingWindowResult {
+  _FakeOpenPairingWindowResult_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeObject_2 extends _i1.SmartFake implements Object {
+  _FakeObject_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -86,6 +97,51 @@ class MockFlutterMatterHostApi extends _i1.Mock
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
   @override
+  _i3.Future<_i2.OpenPairingWindowResult> openPairingWindowWithPin(
+    int? arg_deviceId,
+    int? arg_duration,
+    int? arg_discriminator,
+    int? arg_setupPin,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #openPairingWindowWithPin,
+          [
+            arg_deviceId,
+            arg_duration,
+            arg_discriminator,
+            arg_setupPin,
+          ],
+        ),
+        returnValue: _i3.Future<_i2.OpenPairingWindowResult>.value(
+            _FakeOpenPairingWindowResult_1(
+          this,
+          Invocation.method(
+            #openPairingWindowWithPin,
+            [
+              arg_deviceId,
+              arg_duration,
+              arg_discriminator,
+              arg_setupPin,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i3.Future<_i2.OpenPairingWindowResult>.value(
+                _FakeOpenPairingWindowResult_1(
+          this,
+          Invocation.method(
+            #openPairingWindowWithPin,
+            [
+              arg_deviceId,
+              arg_duration,
+              arg_discriminator,
+              arg_setupPin,
+            ],
+          ),
+        )),
+      ) as _i3.Future<_i2.OpenPairingWindowResult>);
+  @override
   _i3.Future<void> command(
     int? arg_deviceId,
     int? arg_endpointId,
@@ -131,14 +187,58 @@ class MockMatterDevice extends _i1.Mock implements _i2.MatterDevice {
           #encode,
           [],
         ),
-        returnValue: _FakeObject_1(
+        returnValue: _FakeObject_2(
           this,
           Invocation.method(
             #encode,
             [],
           ),
         ),
-        returnValueForMissingStub: _FakeObject_1(
+        returnValueForMissingStub: _FakeObject_2(
+          this,
+          Invocation.method(
+            #encode,
+            [],
+          ),
+        ),
+      ) as Object);
+}
+
+/// A class which mocks [OpenPairingWindowResult].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockOpenPairingWindowResult extends _i1.Mock
+    implements _i2.OpenPairingWindowResult {
+  @override
+  set manualPairingCode(String? _manualPairingCode) => super.noSuchMethod(
+        Invocation.setter(
+          #manualPairingCode,
+          _manualPairingCode,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  set qrCode(String? _qrCode) => super.noSuchMethod(
+        Invocation.setter(
+          #qrCode,
+          _qrCode,
+        ),
+        returnValueForMissingStub: null,
+      );
+  @override
+  Object encode() => (super.noSuchMethod(
+        Invocation.method(
+          #encode,
+          [],
+        ),
+        returnValue: _FakeObject_2(
+          this,
+          Invocation.method(
+            #encode,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeObject_2(
           this,
           Invocation.method(
             #encode,

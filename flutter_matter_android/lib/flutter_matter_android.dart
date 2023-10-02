@@ -35,6 +35,22 @@ class FlutterMatterAndroid extends FlutterMatterPlatform {
       _flutterMatterHostApi.unpair(deviceId);
 
   @override
+  Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
+    required int deviceId,
+    required Duration duration,
+    required int discriminator,
+    required int setupPin,
+  }) async {
+    final result = await _flutterMatterHostApi.openPairingWindowWithPin(
+      deviceId,
+      duration.inSeconds,
+      discriminator,
+      setupPin,
+    );
+    return result.toFlutterMatterOpenPairingWindowResult();
+  }
+
+  @override
   Future<void> command({
     required int deviceId,
     required int endpointId,

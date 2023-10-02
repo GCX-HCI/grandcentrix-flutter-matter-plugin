@@ -1,6 +1,7 @@
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_cluster.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_command.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart';
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_open_pairing_window_result.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_method_channel.dart';
@@ -52,6 +53,18 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
   Future<void> unpair({required int deviceId}) async {
     return Future.error(
       UnimplementedError('unpair() has not been implemented.'),
+    );
+  }
+
+  /// Open a pairing window on the device
+  Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
+    required int deviceId,
+    required Duration duration,
+    required int discriminator,
+    required int setupPin,
+  }) {
+    return Future.error(
+      UnimplementedError('openPairingWindowWithPin has not been implemented.'),
     );
   }
 

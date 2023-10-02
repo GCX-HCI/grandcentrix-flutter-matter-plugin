@@ -9,8 +9,9 @@ This plugin needs at least Android 8.1 (API level 27) and iOS 16.4+
 | Feature                | Android | iOS |
 | :--------------------: | :-----: | :-: |
 | Commissioning          | ✅      | ✅  |
-| Control On/Off cluster | ⛔      | ⛔  |
-| Share                  | ⛔      | ⛔  |
+| Control On/Off cluster | ✅      | ✅  |
+| Share                  | ✅      | ✅  |
+| Unpair                 | ✅      | ✅  |
 
 ## Quickstart 
 
