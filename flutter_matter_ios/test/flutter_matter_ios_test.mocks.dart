@@ -77,6 +77,15 @@ class MockFlutterMatterHostApi extends _i1.Mock
         )),
       ) as _i3.Future<_i2.MatterDevice>);
   @override
+  _i3.Future<void> unpair(int? arg_deviceId) => (super.noSuchMethod(
+        Invocation.method(
+          #unpair,
+          [arg_deviceId],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
   _i3.Future<void> command(
     int? arg_deviceId,
     int? arg_endpointId,

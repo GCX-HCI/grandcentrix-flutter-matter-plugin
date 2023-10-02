@@ -31,6 +31,10 @@ class FlutterMatterAndroid extends FlutterMatterPlatform {
   }
 
   @override
+  Future<void> unpair({required int deviceId}) =>
+      _flutterMatterHostApi.unpair(deviceId);
+
+  @override
   Future<void> command({
     required int deviceId,
     required int endpointId,

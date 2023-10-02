@@ -56,6 +56,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> unpair() async {
+    try {
+      await _flutterMatterPlugin.unpair(deviceId: 123);
+      print('Unpairing done');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   Future<void> toggleOnOffCluster() async {
     try {
       await _flutterMatterPlugin.onOffCluster.toggle(
@@ -89,9 +98,13 @@ class _MyAppState extends State<MyApp> {
                 child: const Text('Start commissoning'),
               ),
               TextButton(
+                onPressed: () => unpair(),
+                child: const Text('Unpair device'),
+              ),
+              TextButton(
                 onPressed: () => toggleOnOffCluster(),
                 child: const Text('Toggle On/Off cluster on enpoint 1'),
-              )
+              ),
             ],
           ),
         ),

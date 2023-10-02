@@ -161,6 +161,29 @@ class FlutterMatterHostApi {
     }
   }
 
+  Future<void> unpair(int arg_deviceId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.unpair',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_deviceId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
   Future<void> command(int arg_deviceId, int arg_endpointId,
       Cluster arg_cluster, Command arg_command) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(

@@ -2,6 +2,7 @@ import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interf
 
 class FlutterMatterPlatformTestImpl extends FlutterMatterPlatform {
   String? _getPlatformVersionReturnValue;
+
   set getPlatformVersionReturnValue(String val) =>
       _getPlatformVersionReturnValue = val;
 
@@ -21,6 +22,15 @@ class FlutterMatterPlatformTestImpl extends FlutterMatterPlatform {
   Future<FlutterMatterDevice> commission({required int deviceId}) async {
     _commissonParamterDeviceId = deviceId;
     return Future.value(_commissonReturnValue!);
+  }
+
+  int _unpairParamterDeviceId = -1;
+  int get unpairParamterDeviceId => _unpairParamterDeviceId;
+
+  @override
+  Future<void> unpair({required int deviceId}) async {
+    _unpairParamterDeviceId = deviceId;
+    return Future.value();
   }
 
   int _commandParamterDeviceId = -1;

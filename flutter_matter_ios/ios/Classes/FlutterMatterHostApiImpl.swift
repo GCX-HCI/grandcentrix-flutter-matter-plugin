@@ -53,6 +53,30 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
         }
     }
     
+    func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void) {
+        Task {
+            do {
+                let controller = try MTRDeviceController.shared()
+                let device = MTRBaseDevice(nodeID: NSNumber(value: deviceId), controller: controller)
+                
+                let opCredsCluster = MTRBaseClusterOperationalCredentials(device: device, endpointID: 0, queue: DispatchQueue.main)
+                
+                let fabricIndex = try await opCredsCluster!.readAttributeCurrentFabricIndex()
+                
+                let params = MTROperationalCredentialsClusterRemoveFabricParams()
+                params.fabricIndex = fabricIndex
+                
+                try await opCredsCluster!.removeFabric(with: params)
+                completion(Result.success(Void()))
+            } catch
+            {
+                os_log(.default, "Failed to unpair device: \(error)")
+                completion(Result.failure(FlutterError(code: "-1", message: "Failed to unpair device", details: nil)))
+                return
+            }
+        }
+    }
+    
     func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void) {
         Task {
             do {
@@ -70,13 +94,14 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
                 }
                 
                 try await commandHandler!.handle(command, deviceId: deviceId, endpointId: endpointId)
-                
+                completion(Result.success(Void()))
             } catch FlutterMatterError.CommandNotImplemented {
                 completion(Result.failure(FlutterError(code: "-5", message: "Command not implemented", details: nil)))
                 return
             }
             catch
             {
+                os_log(.default, "Failed to send command to device: \(error)")
                 completion(Result.failure(FlutterError(code: "-1", message: "Failed to send command to device", details: nil)))
                 return
             }

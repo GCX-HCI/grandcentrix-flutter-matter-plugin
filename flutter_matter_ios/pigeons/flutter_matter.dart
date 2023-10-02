@@ -83,6 +83,9 @@ abstract class FlutterMatterHostApi {
   MatterDevice commission(CommissionRequest request);
 
   @async
+  void unpair(int deviceId);
+
+  @async
   void command(
     int deviceId,
     int endpointId,

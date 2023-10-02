@@ -135,6 +135,7 @@ class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
 protocol FlutterMatterHostApi {
   func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
   func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
+  func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
@@ -175,6 +176,23 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       commissionChannel.setMessageHandler(nil)
+    }
+    let unpairChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.unpair", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      unpairChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        api.unpair(deviceId: deviceIdArg) { result in
+          switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      unpairChannel.setMessageHandler(nil)
     }
     let commandChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.command", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {

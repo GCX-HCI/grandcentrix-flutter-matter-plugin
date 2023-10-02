@@ -48,6 +48,13 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
     );
   }
 
+  /// Removes the app's fabric from the device
+  Future<void> unpair({required int deviceId}) async {
+    return Future.error(
+      UnimplementedError('unpair() has not been implemented.'),
+    );
+  }
+
   /// Sends the `command` to a matter device with the provided `deviceId` and `endpointId` on the `cluster`
   Future<void> command({
     required int deviceId,

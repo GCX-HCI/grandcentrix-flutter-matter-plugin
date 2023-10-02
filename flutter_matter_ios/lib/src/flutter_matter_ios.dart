@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_matter_ios/src/extensions.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
@@ -29,6 +31,10 @@ class FlutterMatterIos extends FlutterMatterPlatform {
     final device = await _flutterMatterHostApi.commission(request);
     return device.toFlutterMatterDevice();
   }
+
+  @override
+  Future<void> unpair({required int deviceId}) =>
+      _flutterMatterHostApi.unpair(deviceId);
 
   @override
   Future<void> command({

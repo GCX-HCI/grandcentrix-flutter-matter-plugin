@@ -12,5 +12,10 @@ class FlutterMatter {
     return FlutterMatterPlatform.instance.commission(deviceId: deviceId);
   }
 
+  /// Removes the app's fabric from the device
+  Future<void> unpair({required int deviceId}) {
+    return FlutterMatterPlatform.instance.unpair(deviceId: deviceId);
+  }
+
   final OnOffCluster onOffCluster = OnOffCluster();
 }

@@ -52,16 +52,41 @@ void main() {
         () async {
       final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
 
-      // await check(flutterMatterPlatform.getPlatformVersion()).completes(
-      //   it()..throws(),
-      // );
-
       await check(flutterMatterPlatform.getPlatformVersion())
           .throws<UnimplementedError>(
               it()..has((p0) => p0.message, 'message').isNotNull());
+    });
 
-      // await check(flutterMatterPlatform.getPlatformVersion())
-      //     .throws<UnimplementedError>();
+    test(
+        'Default implementation of commission should throw unimplemented error',
+        () async {
+      final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
+
+      await check(flutterMatterPlatform.commission(deviceId: 123))
+          .throws<UnimplementedError>(
+              it()..has((p0) => p0.message, 'message').isNotNull());
+    });
+
+    test('Default implementation of unpair should throw unimplemented error',
+        () async {
+      final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
+
+      await check(flutterMatterPlatform.unpair(deviceId: 123))
+          .throws<UnimplementedError>(
+              it()..has((p0) => p0.message, 'message').isNotNull());
+    });
+
+    test('Default implementation of command should throw unimplemented error',
+        () async {
+      final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
+
+      await check(flutterMatterPlatform.command(
+        deviceId: 123,
+        endpointId: 1,
+        cluster: FlutterMatterCluster.onOff,
+        command: FlutterMatterCommand.off,
+      )).throws<UnimplementedError>(
+          it()..has((p0) => p0.message, 'message').isNotNull());
     });
   });
 }

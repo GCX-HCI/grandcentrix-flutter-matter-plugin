@@ -145,6 +145,7 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
 interface FlutterMatterHostApi {
   fun getPlatformVersion(callback: (Result<String>) -> Unit)
   fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit)
+  fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit)
   fun command(deviceId: Long, endpointId: Long, cluster: Cluster, command: Command, callback: (Result<Unit>) -> Unit)
 
   companion object {
@@ -186,6 +187,25 @@ interface FlutterMatterHostApi {
               } else {
                 val data = result.getOrNull()
                 reply.reply(wrapResult(data))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.unpair", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            api.unpair(deviceIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
               }
             }
           }

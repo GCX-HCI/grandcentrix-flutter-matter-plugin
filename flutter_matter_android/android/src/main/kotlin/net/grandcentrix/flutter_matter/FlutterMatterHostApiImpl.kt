@@ -63,6 +63,21 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
             }
     }
 
+    override fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit) {
+        scope.launch {
+            try {
+                val chipClient = ChipClient(activity!!)
+                chipClient.awaitUnpairDevice(deviceId)
+                callback(Result.success(Unit))
+            } catch (e: Exception) {
+                Timber.e( e,"Unpair failed!")
+                callback(Result.failure(e))
+            }
+        }
+
+
+    }
+
     override fun command(
         deviceId: Long,
         endpointId: Long,
@@ -87,7 +102,9 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         scope.launch {
             try {
                 handler.handle(deviceId, endpointId, command)
+                callback(Result.success(Unit))
             } catch (e: Exception) {
+                Timber.e( e,"Command failed!")
                 callback(Result.failure(e))
             }
         }

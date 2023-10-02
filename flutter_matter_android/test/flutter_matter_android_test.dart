@@ -49,6 +49,15 @@ void main() {
         .completes(it()..equals(FlutterMatterDevice(id: 123)));
   });
 
+  test('unpair', () async {
+    final sut =
+        FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
+
+    await check(sut.unpair(deviceId: 123)).completes();
+
+    verify(mockFlutterMatterHostApi.unpair(123));
+  });
+
   test('command', () async {
     final sut =
         FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
