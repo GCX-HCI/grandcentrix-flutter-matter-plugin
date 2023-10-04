@@ -102,5 +102,18 @@ void main() {
       )).throws<UnimplementedError>(
           it()..has((p0) => p0.message, 'message').isNotNull());
     });
+
+    test('Default implementation of attribute should throw unimplemented error',
+        () async {
+      final flutterMatterPlatform = ExtendsFlutterMatterPlatform();
+
+      await check(flutterMatterPlatform.attribute(
+        deviceId: 123,
+        endpointId: 1,
+        cluster: FlutterMatterCluster.onOff,
+        attribute: FlutterMatterAttribute.onOff,
+      )).throws<UnimplementedError>(
+          it()..has((p0) => p0.message, 'message').isNotNull());
+    });
   });
 }

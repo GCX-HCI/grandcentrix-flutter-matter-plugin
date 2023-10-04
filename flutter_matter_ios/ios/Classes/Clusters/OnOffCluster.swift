@@ -8,13 +8,14 @@
 import Foundation
 import Matter
 
-class OnOffCommandHandler: CommandHandler {
+class OnOffCluster: CommandHandler, AttributeHandler {
     private let device: MTRBaseDevice
     
     init(_ device: MTRBaseDevice) {
         self.device = device
     }
     
+    // MARK: CommandHandler Methods
     func handle(_ command: Command, deviceId: Int64, endpointId: Int64) async throws {
         let onOffCluster = MTRBaseClusterOnOff(device: device, endpointID: NSNumber(value: endpointId), queue: DispatchQueue.main)
         
@@ -30,6 +31,18 @@ class OnOffCommandHandler: CommandHandler {
             break
         default:
             throw FlutterMatterError.CommandNotImplemented
+        }
+    }
+    
+    // MARK: CommandHandler Methods
+    func handle(_ attribute: Attribute, deviceId: Int64, endpointId: Int64) async throws -> Any {
+        let onOffCluster = MTRBaseClusterOnOff(device: device, endpointID: NSNumber(value: endpointId), queue: DispatchQueue.main)
+        
+        switch attribute {
+        case .onOff:
+            return try await onOffCluster?.readAttributeOnOff()
+        default:
+            throw FlutterMatterError.AttributeNotImplemented
         }
     }
 }

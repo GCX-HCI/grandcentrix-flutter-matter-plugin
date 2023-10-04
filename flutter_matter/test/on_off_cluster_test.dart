@@ -18,51 +18,81 @@ void main() {
     FlutterMatterPlatform.instance = mockFlutterMatterPlatformTestImpl;
   });
 
-  test('off', () async {
-    final sut = OnOffCluster();
+  group('commands', () {
+    test('off', () async {
+      final sut = OnOffCluster();
 
-    await check(sut.off(deviceId: 123, endpointId: 321)).completes();
-    check(mockFlutterMatterPlatformTestImpl)
-      ..has((value) => value.commandParamterDeviceId, 'commandParamterDeviceId')
-          .equals(123)
-      ..has((value) => value.commandParamterEndpointId,
-              'commandParamterEndpointId')
-          .equals(321)
-      ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
-          .equals(FlutterMatterCluster.onOff)
-      ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
-          .equals(FlutterMatterCommand.off);
+      await check(sut.off(deviceId: 123, endpointId: 321)).completes();
+      check(mockFlutterMatterPlatformTestImpl)
+        ..has((value) => value.commandParamterDeviceId,
+                'commandParamterDeviceId')
+            .equals(123)
+        ..has((value) => value.commandParamterEndpointId,
+                'commandParamterEndpointId')
+            .equals(321)
+        ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
+            .equals(FlutterMatterCluster.onOff)
+        ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
+            .equals(FlutterMatterCommand.off);
+    });
+
+    test('on', () async {
+      final sut = OnOffCluster();
+
+      await check(sut.on(deviceId: 123, endpointId: 321)).completes();
+      check(mockFlutterMatterPlatformTestImpl)
+        ..has((value) => value.commandParamterDeviceId,
+                'commandParamterDeviceId')
+            .equals(123)
+        ..has((value) => value.commandParamterEndpointId,
+                'commandParamterEndpointId')
+            .equals(321)
+        ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
+            .equals(FlutterMatterCluster.onOff)
+        ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
+            .equals(FlutterMatterCommand.on);
+    });
+
+    test('toggle', () async {
+      final sut = OnOffCluster();
+
+      await check(sut.toggle(deviceId: 123, endpointId: 321)).completes();
+      check(mockFlutterMatterPlatformTestImpl)
+        ..has((value) => value.commandParamterDeviceId,
+                'commandParamterDeviceId')
+            .equals(123)
+        ..has((value) => value.commandParamterEndpointId,
+                'commandParamterEndpointId')
+            .equals(321)
+        ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
+            .equals(FlutterMatterCluster.onOff)
+        ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
+            .equals(FlutterMatterCommand.toggle);
+    });
   });
 
-  test('on', () async {
-    final sut = OnOffCluster();
+  group('attributes', () {
+    test('onOff', () async {
+      final sut = OnOffCluster();
 
-    await check(sut.on(deviceId: 123, endpointId: 321)).completes();
-    check(mockFlutterMatterPlatformTestImpl)
-      ..has((value) => value.commandParamterDeviceId, 'commandParamterDeviceId')
-          .equals(123)
-      ..has((value) => value.commandParamterEndpointId,
-              'commandParamterEndpointId')
-          .equals(321)
-      ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
-          .equals(FlutterMatterCluster.onOff)
-      ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
-          .equals(FlutterMatterCommand.on);
-  });
+      mockFlutterMatterPlatformTestImpl.attributeReturnValue = true;
 
-  test('toggle', () async {
-    final sut = OnOffCluster();
+      await check(sut.onOff(deviceId: 123, endpointId: 321))
+          .completes(it()..isA<bool>().isTrue());
 
-    await check(sut.toggle(deviceId: 123, endpointId: 321)).completes();
-    check(mockFlutterMatterPlatformTestImpl)
-      ..has((value) => value.commandParamterDeviceId, 'commandParamterDeviceId')
-          .equals(123)
-      ..has((value) => value.commandParamterEndpointId,
-              'commandParamterEndpointId')
-          .equals(321)
-      ..has((value) => value.commandParamterCluster, 'commandParamterCluster')
-          .equals(FlutterMatterCluster.onOff)
-      ..has((value) => value.commandParamterCommand, 'commandParamterCommand')
-          .equals(FlutterMatterCommand.toggle);
+      check(mockFlutterMatterPlatformTestImpl)
+        ..has((value) => value.attributeParamterDeviceId,
+                'attributeParamterDeviceId')
+            .equals(123)
+        ..has((value) => value.attributeParamterEndpointId,
+                'attributeParamterEndpointId')
+            .equals(321)
+        ..has((value) => value.attributeParamterCluster,
+                'attributeParamterCluster')
+            .equals(FlutterMatterCluster.onOff)
+        ..has((value) => value.attributeParamterAttribute,
+                'attributeParamterAttribute')
+            .equals(FlutterMatterAttribute.onOff);
+    });
   });
 }

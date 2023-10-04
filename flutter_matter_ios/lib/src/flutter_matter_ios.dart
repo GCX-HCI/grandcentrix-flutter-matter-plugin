@@ -63,4 +63,18 @@ class FlutterMatterIos extends FlutterMatterPlatform {
         cluster.toCluster(),
         command.toCommand(),
       );
+
+  @override
+  Future<Object> attribute({
+    required int deviceId,
+    required int endpointId,
+    required FlutterMatterCluster cluster,
+    required FlutterMatterAttribute attribute,
+  }) =>
+      _flutterMatterHostApi.attribute(
+        deviceId,
+        endpointId,
+        cluster.toCluster(),
+        attribute.toAttribute(),
+      );
 }

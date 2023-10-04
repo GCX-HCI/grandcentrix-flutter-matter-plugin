@@ -93,4 +93,36 @@ class FlutterMatterPlatformTestImpl extends FlutterMatterPlatform {
 
     return Future.value();
   }
+
+  int _attributeParamterDeviceId = -1;
+  int get attributeParamterDeviceId => _attributeParamterDeviceId;
+
+  int _attributeParamterEndpointId = -1;
+  int get attributeParamterEndpointId => _attributeParamterEndpointId;
+
+  FlutterMatterCluster _attributeParamterCluster = FlutterMatterCluster.onOff;
+  FlutterMatterCluster get attributeParamterCluster =>
+      _attributeParamterCluster;
+
+  FlutterMatterAttribute _attributeParamterAttribute =
+      FlutterMatterAttribute.onOff;
+  FlutterMatterAttribute get attributeParamterAttribute =>
+      _attributeParamterAttribute;
+
+  Object _attributeReturnValue = Object();
+  set attributeReturnValue(Object value) => _attributeReturnValue = value;
+
+  @override
+  Future<Object> attribute({
+    required int deviceId,
+    required int endpointId,
+    required FlutterMatterCluster cluster,
+    required FlutterMatterAttribute attribute,
+  }) {
+    _attributeParamterDeviceId = deviceId;
+    _attributeParamterEndpointId = endpointId;
+    _attributeParamterCluster = cluster;
+    _attributeParamterAttribute = attribute;
+    return Future.value(_attributeReturnValue);
+  }
 }

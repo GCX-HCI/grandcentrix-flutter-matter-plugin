@@ -43,6 +43,12 @@ enum Command {
   toggle,
 }
 
+/// Attributes for the different clusters, check the Matter Device Library Specification document
+enum Attribute {
+  /// Attribute for the on/off cluster
+  onOff,
+}
+
 /// Matter clusters, check the Matter Device Library Specification document
 enum Cluster {
   // /// Cluster ID 0x0003 supports an endpoint identification state (e.g., flashing a light), that indicates to an observer (e.g., an installer) which of several nodes and/or endpoints it is. It also supports a multi­ cast request that any endpoint that is identifying itself to respond to the initiator.
@@ -109,5 +115,13 @@ abstract class FlutterMatterHostApi {
     int endpointId,
     Cluster cluster,
     Command command,
+  );
+
+  @async
+  Object attribute(
+    int deviceId,
+    int endpointId,
+    Cluster cluster,
+    Attribute attribute,
   );
 }

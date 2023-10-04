@@ -48,6 +48,12 @@ enum Command: Int {
   case toggle = 2
 }
 
+/// Attributes for the different clusters, check the Matter Device Library Specification document
+enum Attribute: Int {
+  /// Attribute for the on/off cluster
+  case onOff = 0
+}
+
 /// Matter clusters, check the Matter Device Library Specification document
 enum Cluster: Int {
   /// Cluster ID 0x0006 for turning devices on and off.
@@ -165,6 +171,7 @@ protocol FlutterMatterHostApi {
   func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
   func command(deviceId: Int64, endpointId: Int64, cluster: Cluster, command: Command, completion: @escaping (Result<Void, Error>) -> Void)
+  func attribute(deviceId: Int64, endpointId: Int64, cluster: Cluster, attribute: Attribute, completion: @escaping (Result<Any, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -261,6 +268,26 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       commandChannel.setMessageHandler(nil)
+    }
+    let attributeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.attribute", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      attributeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+        let clusterArg = Cluster(rawValue: args[2] as! Int)!
+        let attributeArg = Attribute(rawValue: args[3] as! Int)!
+        api.attribute(deviceId: deviceIdArg, endpointId: endpointIdArg, cluster: clusterArg, attribute: attributeArg) { result in
+          switch result {
+            case .success(let res):
+              reply(wrapResult(res))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      attributeChannel.setMessageHandler(nil)
     }
   }
 }

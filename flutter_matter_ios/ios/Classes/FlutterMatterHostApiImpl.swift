@@ -107,7 +107,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
                 
                 switch cluster {
                 case Cluster.onOff:
-                    commandHandler = OnOffCommandHandler(device)
+                    commandHandler = OnOffCluster(device)
                     break
                 default:
                     completion(Result.failure(FlutterError(code: "-4", message: "Cluster not implemented", details: nil)))
@@ -124,6 +124,37 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
             {
                 os_log(.default, "Failed to send command to device: \(error)")
                 completion(Result.failure(FlutterError(code: "-1", message: "Failed to send command to device", details: nil)))
+                return
+            }
+        }
+    }
+    
+    func attribute(deviceId: Int64, endpointId: Int64, cluster: Cluster, attribute: Attribute, completion: @escaping (Result<Any, Error>) -> Void) {
+        Task {
+            do {
+                let controller = try MTRDeviceController.shared()
+                let device = MTRBaseDevice(nodeID: NSNumber(value: deviceId), controller: controller)
+                var attributeHandler: AttributeHandler?
+                
+                switch cluster {
+                case Cluster.onOff:
+                    attributeHandler = OnOffCluster(device)
+                    break
+                default:
+                    completion(Result.failure(FlutterError(code: "-4", message: "Cluster not implemented", details: nil)))
+                    return
+                }
+                
+                let result = try await attributeHandler!.handle(attribute, deviceId: deviceId, endpointId: endpointId)
+                completion(Result.success(result))
+            } catch FlutterMatterError.CommandNotImplemented {
+                completion(Result.failure(FlutterError(code: "-6", message: "Attribute not implemented", details: nil)))
+                return
+            }
+            catch
+            {
+                os_log(.default, "Failed to send command to device: \(error)")
+                completion(Result.failure(FlutterError(code: "-1", message: "Failed to read attribute from device", details: nil)))
                 return
             }
         }

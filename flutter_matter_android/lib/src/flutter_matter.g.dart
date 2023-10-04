@@ -20,6 +20,12 @@ enum Command {
   toggle,
 }
 
+/// Attributes for the different clusters, check the Matter Device Library Specification document
+enum Attribute {
+  /// Attribute for the on/off cluster
+  onOff,
+}
+
 /// Matter clusters, check the Matter Device Library Specification document
 enum Cluster {
   /// Cluster ID 0x0006 for turning devices on and off.
@@ -273,6 +279,39 @@ class FlutterMatterHostApi {
       );
     } else {
       return;
+    }
+  }
+
+  Future<Object> attribute(int arg_deviceId, int arg_endpointId,
+      Cluster arg_cluster, Attribute arg_attribute) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.attribute',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_deviceId,
+      arg_endpointId,
+      arg_cluster.index,
+      arg_attribute.index
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return replyList[0]!;
     }
   }
 }

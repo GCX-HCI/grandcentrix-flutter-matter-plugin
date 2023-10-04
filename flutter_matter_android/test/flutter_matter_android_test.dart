@@ -107,4 +107,27 @@ void main() {
       Command.on,
     ));
   });
+
+  test('attribute', () async {
+    when(mockFlutterMatterHostApi.attribute(
+            123, 1, Cluster.onOff, Attribute.onOff))
+        .thenAnswer((_) async => true);
+
+    final sut =
+        FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
+
+    await check(sut.attribute(
+      deviceId: 123,
+      endpointId: 1,
+      cluster: FlutterMatterCluster.onOff,
+      attribute: FlutterMatterAttribute.onOff,
+    )).completes(it()..isA<bool>().equals(true));
+
+    verify(mockFlutterMatterHostApi.attribute(
+      123,
+      1,
+      Cluster.onOff,
+      Attribute.onOff,
+    ));
+  });
 }

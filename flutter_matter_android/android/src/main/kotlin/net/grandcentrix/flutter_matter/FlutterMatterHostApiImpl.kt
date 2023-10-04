@@ -11,9 +11,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import net.grandcentrix.flutter_matter.chip.ChipClient
-import net.grandcentrix.flutter_matter.command_handlers.ICommandHandler
-import net.grandcentrix.flutter_matter.command_handlers.OnOffClusterHandler
+import net.grandcentrix.flutter_matter.interfaces.ICommandHandler
+import net.grandcentrix.flutter_matter.clusters.OnOffCluster
 import net.grandcentrix.flutter_matter.commissioning.AppCommissioningService
+import net.grandcentrix.flutter_matter.interfaces.IAttributeHandler
 import timber.log.Timber
 import java.io.Closeable
 
@@ -110,7 +111,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         val handler: ICommandHandler =
             when (cluster) {
                 Cluster.ONOFF ->
-                    OnOffClusterHandler(chipClient)
+                    OnOffCluster(chipClient)
 
                 else -> {
                     callback(Result.failure(NotImplementedError()))
@@ -124,6 +125,38 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                 callback(Result.success(Unit))
             } catch (e: Exception) {
                 Timber.e( e,"Command failed!")
+                callback(Result.failure(e))
+            }
+        }
+    }
+
+    override fun attribute(
+        deviceId: Long,
+        endpointId: Long,
+        cluster: Cluster,
+        attribute: Attribute,
+        callback: (Result<Any>) -> Unit
+    ) {
+        val chipClient = ChipClient(activity!!)
+
+        @Suppress("REDUNDANT_ELSE_IN_WHEN")
+        val handler: IAttributeHandler =
+            when (cluster) {
+                Cluster.ONOFF ->
+                    OnOffCluster(chipClient)
+
+                else -> {
+                    callback(Result.failure(NotImplementedError()))
+                    return
+                }
+            }
+
+        scope.launch {
+            try {
+                val result = handler.handle(deviceId, endpointId, attribute)
+                callback(Result.success(result))
+            } catch (e: Exception) {
+                Timber.e( e,"Read attribute failed!")
                 callback(Result.failure(e))
             }
         }

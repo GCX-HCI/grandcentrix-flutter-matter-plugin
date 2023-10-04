@@ -1,3 +1,4 @@
+import 'package:flutter_matter_platfrom_interface/src/flutter_matter_attribute.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_cluster.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_command.dart';
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart';
@@ -77,6 +78,18 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
   }) async {
     return Future.error(
       UnimplementedError('command() has not been implemented.'),
+    );
+  }
+
+  /// Reads the `attribute` from a matter device with the provided `deviceId` and `endpointId` on the `cluster`
+  Future<Object> attribute({
+    required int deviceId,
+    required int endpointId,
+    required FlutterMatterCluster cluster,
+    required FlutterMatterAttribute attribute,
+  }) async {
+    return Future.error(
+      UnimplementedError('attribute() has not been implemented.'),
     );
   }
 }

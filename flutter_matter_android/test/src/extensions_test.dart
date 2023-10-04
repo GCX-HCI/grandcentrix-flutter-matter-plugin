@@ -34,6 +34,12 @@ void main() {
     });
   });
 
+  group('FlutterMatterAttributeTransformationExtension', () {
+    test('should transfrom FlutterMatterAttribute.off to Attribute.off', () {
+      check(FlutterMatterAttribute.onOff.toAttribute()).equals(Attribute.onOff);
+    });
+  });
+
   group('OpenPairingWindowResultTransformationExtension', () {
     test('toFlutterMatterOpenPairingWindowResult should return connrect values',
         () {

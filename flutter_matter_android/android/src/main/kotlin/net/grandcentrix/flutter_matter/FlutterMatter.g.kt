@@ -59,6 +59,18 @@ enum class Command(val raw: Int) {
   }
 }
 
+/** Attributes for the different clusters, check the Matter Device Library Specification document */
+enum class Attribute(val raw: Int) {
+  /** Attribute for the on/off cluster */
+  ONOFF(0);
+
+  companion object {
+    fun ofRaw(raw: Int): Attribute? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
 /** Matter clusters, check the Matter Device Library Specification document */
 enum class Cluster(val raw: Int) {
   /** Cluster ID 0x0006 for turning devices on and off. */
@@ -179,6 +191,7 @@ interface FlutterMatterHostApi {
   fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit)
   fun openPairingWindowWithPin(deviceId: Long, duration: Long, discriminator: Long, setupPin: Long, callback: (Result<OpenPairingWindowResult>) -> Unit)
   fun command(deviceId: Long, endpointId: Long, cluster: Cluster, command: Command, callback: (Result<Unit>) -> Unit)
+  fun attribute(deviceId: Long, endpointId: Long, cluster: Cluster, attribute: Attribute, callback: (Result<Any>) -> Unit)
 
   companion object {
     /** The codec used by FlutterMatterHostApi. */
@@ -283,6 +296,29 @@ interface FlutterMatterHostApi {
                 reply.reply(wrapError(error))
               } else {
                 reply.reply(wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.attribute", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            val endpointIdArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val clusterArg = Cluster.ofRaw(args[2] as Int)!!
+            val attributeArg = Attribute.ofRaw(args[3] as Int)!!
+            api.attribute(deviceIdArg, endpointIdArg, clusterArg, attributeArg) { result: Result<Any> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                val data = result.getOrNull()
+                reply.reply(wrapResult(data))
               }
             }
           }

@@ -1,4 +1,4 @@
-package net.grandcentrix.flutter_matter.command_handlers
+package net.grandcentrix.flutter_matter.interfaces
 
 import net.grandcentrix.flutter_matter.Command
 

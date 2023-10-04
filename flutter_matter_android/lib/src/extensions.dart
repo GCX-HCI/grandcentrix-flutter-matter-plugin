@@ -37,6 +37,20 @@ extension FlutterMatterCommandTransformationExtension on FlutterMatterCommand {
   }
 }
 
+/// Extensions for FlutterMatterAttribute
+extension FlutterMatterAttributeTransformationExtension
+    on FlutterMatterAttribute {
+  /// Transfrom FlutterMatterAttribute to Attribute
+  Attribute toAttribute() {
+    return switch (this) {
+      FlutterMatterAttribute.onOff => Attribute.onOff,
+      // ignore: unreachable_switch_case
+      _ => throw UnimplementedError(
+          'Transformation for $name has not been implemented.')
+    };
+  }
+}
+
 /// Extensions for OpenPairingWindowResult
 extension OpenPairingWindowResultTransformationExtension
     on OpenPairingWindowResult {

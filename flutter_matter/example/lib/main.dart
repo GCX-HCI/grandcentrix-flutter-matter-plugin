@@ -98,6 +98,18 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> readOnOffAttribute() async {
+    try {
+      final result = await _flutterMatterPlugin.onOffCluster.onOff(
+        deviceId: 123,
+        endpointId: 1,
+      );
+      print('Light is ${result ? 'on' : 'off'}');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -129,6 +141,10 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                 onPressed: () => toggleOnOffCluster(),
                 child: const Text('Toggle On/Off cluster on enpoint 1'),
+              ),
+              TextButton(
+                onPressed: () => readOnOffAttribute(),
+                child: const Text('Read On/Off attribute on enpoint 1'),
               ),
             ],
           ),
