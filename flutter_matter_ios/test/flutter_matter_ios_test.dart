@@ -1,4 +1,5 @@
 import 'package:checks/checks.dart';
+import 'package:flutter_matter_ios/src/clusters/flutter_matter_ios_onoff_cluster.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_ios/src/flutter_matter_ios.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
@@ -14,118 +15,125 @@ import './flutter_matter_ios_test.mocks.dart';
   MockSpec<OpenPairingWindowResult>(),
 ])
 void main() {
+  late FlutterMatterIos sut;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
 
   setUp(() {
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
+
+    sut = FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
   });
 
-  test('$FlutterMatterIos.registerWith sets $FlutterMatterIos as instance', () {
-    FlutterMatterIos.registerWith();
-    check(FlutterMatterPlatform.instance).isA<FlutterMatterIos>();
+  group('registerWith', () {
+    test('$FlutterMatterIos.registerWith sets $FlutterMatterIos as instance',
+        () {
+      FlutterMatterIos.registerWith();
+      check(FlutterMatterPlatform.instance).isA<FlutterMatterIos>();
+    });
   });
 
-  test('getPlatformVersion', () async {
-    when(mockFlutterMatterHostApi.getPlatformVersion())
-        .thenAnswer((_) async => '42');
+  group('getPlatformVersion', () {
+    test('should call host api', () async {
+      when(mockFlutterMatterHostApi.getPlatformVersion())
+          .thenAnswer((_) async => '42');
 
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
-    await check(sut.getPlatformVersion()).completes(it()..equals('42'));
+      await check(sut.getPlatformVersion()).completes(it()..equals('42'));
+    });
+
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterHostApi.getPlatformVersion())
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.getPlatformVersion()).throws();
+    });
   });
 
-  test('commission', () async {
-    final mockMatterDevice = MockMatterDevice();
+  group('commission', () {
+    test('should call host api', () async {
+      final mockMatterDevice = MockMatterDevice();
 
-    when(mockMatterDevice.id).thenReturn(123);
-    when(mockFlutterMatterHostApi.commission(any))
-        .thenAnswer((_) async => mockMatterDevice);
+      when(mockMatterDevice.id).thenReturn(123);
+      when(mockFlutterMatterHostApi.commission(any))
+          .thenAnswer((_) async => mockMatterDevice);
 
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
+      await check(sut.commission(deviceId: 123))
+          .completes(it()..equals(FlutterMatterDevice(id: 123)));
+    });
 
-    await check(sut.commission(deviceId: 123))
-        .completes(it()..equals(FlutterMatterDevice(id: 123)));
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterHostApi.commission(any))
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.commission(deviceId: 123)).throws();
+    });
   });
 
-  test('unpair', () async {
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
+  group('unpair', () {
+    test('should call host api', () async {
+      await check(sut.unpair(deviceId: 123)).completes();
 
-    await check(sut.unpair(deviceId: 123)).completes();
+      verify(mockFlutterMatterHostApi.unpair(123));
+    });
 
-    verify(mockFlutterMatterHostApi.unpair(123));
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterHostApi.unpair(123))
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.unpair(deviceId: 123)).throws();
+    });
   });
 
-  test('openPairingWindowWithPin', () async {
-    final mockOpenPairingWindowResult = MockOpenPairingWindowResult();
+  group('openPairingWindowWithPin', () {
+    test('should call host api', () async {
+      final mockOpenPairingWindowResult = MockOpenPairingWindowResult();
 
-    when(mockOpenPairingWindowResult.manualPairingCode)
-        .thenReturn('manualPairingCode123');
-    when(mockOpenPairingWindowResult.qrCode).thenReturn('qrCode123');
-    when(mockFlutterMatterHostApi.openPairingWindowWithPin(123, 180, 456, 789))
-        .thenAnswer((_) async => mockOpenPairingWindowResult);
+      when(mockOpenPairingWindowResult.manualPairingCode)
+          .thenReturn('manualPairingCode123');
+      when(mockOpenPairingWindowResult.qrCode).thenReturn('qrCode123');
+      when(mockFlutterMatterHostApi.openPairingWindowWithPin(
+              123, 180, 456, 789))
+          .thenAnswer((_) async => mockOpenPairingWindowResult);
 
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
+      await check(sut.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).completes(it()
+        ..has((p0) => p0.manualPairingCode, 'manualPairingCode')
+            .equals('manualPairingCode123')
+        ..has((p0) => p0.qrCode, 'qrCode').equals('qrCode123'));
 
-    await check(sut.openPairingWindowWithPin(
-      deviceId: 123,
-      duration: const Duration(minutes: 3),
-      discriminator: 456,
-      setupPin: 789,
-    )).completes(it()
-      ..has((p0) => p0.manualPairingCode, 'manualPairingCode')
-          .equals('manualPairingCode123')
-      ..has((p0) => p0.qrCode, 'qrCode').equals('qrCode123'));
+      verify(mockFlutterMatterHostApi.openPairingWindowWithPin(
+        123,
+        180,
+        456,
+        789,
+      ));
+    });
 
-    verify(mockFlutterMatterHostApi.openPairingWindowWithPin(
-      123,
-      180,
-      456,
-      789,
-    ));
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterHostApi.openPairingWindowWithPin(
+        any,
+        any,
+        any,
+        any,
+      )).thenAnswer((_) async => throw Exception());
+
+      await check(sut.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).throws();
+    });
   });
 
-  test('command', () async {
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
-
-    await check(sut.command(
-      deviceId: 123,
-      endpointId: 1,
-      cluster: FlutterMatterCluster.onOff,
-      command: FlutterMatterCommand.on,
-    )).completes();
-
-    verify(mockFlutterMatterHostApi.command(
-      123,
-      1,
-      Cluster.onOff,
-      Command.on,
-    ));
-  });
-
-  test('attribute', () async {
-    when(mockFlutterMatterHostApi.attribute(
-            123, 1, Cluster.onOff, Attribute.onOff))
-        .thenAnswer((_) async => true);
-
-    final sut =
-        FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
-
-    await check(sut.attribute(
-      deviceId: 123,
-      endpointId: 1,
-      cluster: FlutterMatterCluster.onOff,
-      attribute: FlutterMatterAttribute.onOff,
-    )).completes(it()..isA<bool>().equals(true));
-
-    verify(mockFlutterMatterHostApi.attribute(
-      123,
-      1,
-      Cluster.onOff,
-      Attribute.onOff,
-    ));
+  group('clusters', () {
+    test(
+        '$FlutterMatterIos.onOffCluster is a $FlutterMatterIosOnOffCluster instance',
+        () {
+      check(sut.onOffCluster).isA<FlutterMatterIosOnOffCluster>();
+    });
   });
 }

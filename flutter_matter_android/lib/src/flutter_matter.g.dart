@@ -8,28 +8,30 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
-/// Commands for the different clusters, check the Matter Device Library Specification document
-enum Command {
-  /// Command for the on/off cluster
-  off,
+class DescriptorClusterDeviceTypeStruct {
+  DescriptorClusterDeviceTypeStruct({
+    required this.deviceType,
+    required this.revision,
+  });
 
-  /// Command for the on/off cluster
-  on,
+  int deviceType;
 
-  /// Command for the on/off cluster
-  toggle,
-}
+  int revision;
 
-/// Attributes for the different clusters, check the Matter Device Library Specification document
-enum Attribute {
-  /// Attribute for the on/off cluster
-  onOff,
-}
+  Object encode() {
+    return <Object?>[
+      deviceType,
+      revision,
+    ];
+  }
 
-/// Matter clusters, check the Matter Device Library Specification document
-enum Cluster {
-  /// Cluster ID 0x0006 for turning devices on and off.
-  onOff,
+  static DescriptorClusterDeviceTypeStruct decode(Object result) {
+    result as List<Object?>;
+    return DescriptorClusterDeviceTypeStruct(
+      deviceType: result[0]! as int,
+      revision: result[1]! as int,
+    );
+  }
 }
 
 class MatterDevice {
@@ -97,6 +99,265 @@ class OpenPairingWindowResult {
       manualPairingCode: result[0] as String?,
       qrCode: result[1] as String?,
     );
+  }
+}
+
+class FlutterMatterHostOnOffClusterApi {
+  /// Constructor for [FlutterMatterHostOnOffClusterApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  FlutterMatterHostOnOffClusterApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec = StandardMessageCodec();
+
+  Future<void> off(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.off',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> on(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.on',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> toggle(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.toggle',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<bool> readOnOff(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.readOnOff',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as bool?)!;
+    }
+  }
+}
+
+class _FlutterMatterHostDescriptorClusterApiCodec extends StandardMessageCodec {
+  const _FlutterMatterHostDescriptorClusterApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is DescriptorClusterDeviceTypeStruct) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return DescriptorClusterDeviceTypeStruct.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
+class FlutterMatterHostDescriptorClusterApi {
+  /// Constructor for [FlutterMatterHostDescriptorClusterApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  FlutterMatterHostDescriptorClusterApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec =
+      _FlutterMatterHostDescriptorClusterApiCodec();
+
+  Future<List<DescriptorClusterDeviceTypeStruct?>> readDeviceTypeList(
+      int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostDescriptorClusterApi.readDeviceTypeList',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as List<Object?>?)!
+          .cast<DescriptorClusterDeviceTypeStruct?>();
+    }
+  }
+
+  Future<List<int?>> readServerList(
+      int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostDescriptorClusterApi.readServerList',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as List<Object?>?)!.cast<int?>();
+    }
+  }
+
+  Future<List<int?>> readClientList(
+      int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostDescriptorClusterApi.readClientList',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as List<Object?>?)!.cast<int?>();
+    }
+  }
+
+  Future<List<int?>> readPartsList(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostDescriptorClusterApi.readPartsList',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as List<Object?>?)!.cast<int?>();
+    }
   }
 }
 
@@ -251,67 +512,6 @@ class FlutterMatterHostApi {
       );
     } else {
       return (replyList[0] as OpenPairingWindowResult?)!;
-    }
-  }
-
-  Future<void> command(int arg_deviceId, int arg_endpointId,
-      Cluster arg_cluster, Command arg_command) async {
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.command',
-        codec,
-        binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_deviceId,
-      arg_endpointId,
-      arg_cluster.index,
-      arg_command.index
-    ]) as List<Object?>?;
-    if (replyList == null) {
-      throw PlatformException(
-        code: 'channel-error',
-        message: 'Unable to establish connection on channel.',
-      );
-    } else if (replyList.length > 1) {
-      throw PlatformException(
-        code: replyList[0]! as String,
-        message: replyList[1] as String?,
-        details: replyList[2],
-      );
-    } else {
-      return;
-    }
-  }
-
-  Future<Object> attribute(int arg_deviceId, int arg_endpointId,
-      Cluster arg_cluster, Attribute arg_attribute) async {
-    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.attribute',
-        codec,
-        binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_deviceId,
-      arg_endpointId,
-      arg_cluster.index,
-      arg_attribute.index
-    ]) as List<Object?>?;
-    if (replyList == null) {
-      throw PlatformException(
-        code: 'channel-error',
-        message: 'Unable to establish connection on channel.',
-      );
-    } else if (replyList.length > 1) {
-      throw PlatformException(
-        code: replyList[0]! as String,
-        message: replyList[1] as String?,
-        details: replyList[2],
-      );
-    } else if (replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
-    } else {
-      return replyList[0]!;
     }
   }
 }

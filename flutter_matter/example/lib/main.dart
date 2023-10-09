@@ -100,11 +100,43 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> readOnOffAttribute() async {
     try {
-      final result = await _flutterMatterPlugin.onOffCluster.onOff(
+      final result = await _flutterMatterPlugin.onOffCluster.readOnOff(
         deviceId: 123,
         endpointId: 1,
       );
       print('Light is ${result ? 'on' : 'off'}');
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
+  Future<void> readDescriptorAttributes({int endpointId = 0}) async {
+    try {
+      print('Processing part [$endpointId]');
+      final partsList = await _flutterMatterPlugin.descriptorCluster
+          .partsList(deviceId: 123, endpointId: endpointId);
+
+      print('parts attribute: ${partsList.join(', ')}');
+
+      final deviceTypeList = await _flutterMatterPlugin.descriptorCluster
+          .deviceTypeList(deviceId: 123, endpointId: endpointId);
+      print('device attribute: ${deviceTypeList.join(', ')}');
+
+      final serverList = await _flutterMatterPlugin.descriptorCluster
+          .serverList(deviceId: 123, endpointId: endpointId);
+
+      print(
+          'server attribute: ${serverList.map((e) => '0x${e.toRadixString(16).padLeft(4, '0')}').join(', ')}');
+
+      final clientList = await _flutterMatterPlugin.descriptorCluster
+          .clientList(deviceId: 123, endpointId: endpointId);
+
+      print(
+          'client attribute: ${clientList.map((e) => '0x${e.toRadixString(16).padLeft(4, '0')}').join(', ')}');
+
+      for (var part in partsList) {
+        await readDescriptorAttributes(endpointId: part);
+      }
     } catch (e, st) {
       print('Error: $e\n$st');
     }
@@ -145,6 +177,10 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                 onPressed: () => readOnOffAttribute(),
                 child: const Text('Read On/Off attribute on enpoint 1'),
+              ),
+              TextButton(
+                onPressed: () => readDescriptorAttributes(),
+                child: const Text('Read descriptor attributes'),
               ),
             ],
           ),

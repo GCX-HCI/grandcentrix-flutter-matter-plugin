@@ -1,109 +1,139 @@
 package net.grandcentrix.flutter_matter.clusters
 
 import chip.devicecontroller.ChipClusters
-import net.grandcentrix.flutter_matter.Attribute
-import net.grandcentrix.flutter_matter.Command
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import net.grandcentrix.flutter_matter.FlutterError
+import net.grandcentrix.flutter_matter.FlutterMatterHostOnOffClusterApi
 import net.grandcentrix.flutter_matter.chip.ChipClient
-import net.grandcentrix.flutter_matter.interfaces.*
 import timber.log.Timber
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import java.io.Closeable
 
-class OnOffCluster(private val chipClient: ChipClient) : ICommandHandler, IAttributeHandler {
+class OnOffCluster : FlutterMatterHostOnOffClusterApi, Closeable {
 
-    override suspend fun handle(
-        deviceId: Long,
-        endpointId: Long,
-        command: Command
-    ) {
+    private lateinit var chipClient: ChipClient
+
+    var activity: android.app.Activity? = null
+        set(value) {
+            if(value == activity) return
+            field = value
+            if (value != null) {
+                chipClient = ChipClient(value!!)
+            }
+        }
+
+    private val scope =
+        CoroutineScope(Dispatchers.IO + Job())
+
+    private suspend fun getCluster(deviceId: Long, endpointId: Long): ChipClusters.OnOffCluster {
         val devicePtr = chipClient.getConnectedDevicePointer(deviceId)
-        val onOffCluster = ChipClusters.OnOffCluster(devicePtr, endpointId.toInt())
+        return ChipClusters.OnOffCluster(devicePtr, endpointId.toInt())
+    }
 
-        @Suppress("REDUNDANT_ELSE_IN_WHEN")
-        when (command) {
-            Command.OFF -> off(onOffCluster)
-            Command.ON -> on(onOffCluster)
-            Command.TOGGLE -> toggle(onOffCluster)
-            else -> throw NotImplementedError()
+    override fun off(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
+        scope.launch {
+            val onOffCluster = getCluster(deviceId, endpointId)
+
+            onOffCluster
+                .off(object : ChipClusters.DefaultClusterCallback {
+                    override fun onSuccess() {
+                        callback(Result.success(Unit))
+                    }
+
+                    override fun onError(ex: Exception) {
+                        Timber.e(ex, "Failed to send command off")
+                        callback(
+                            Result.failure(
+                                FlutterError(
+                                    "-1",
+                                    "Failed to send command off"
+                                )
+                            )
+                        )
+                    }
+                })
         }
     }
 
-    private suspend fun off(cluster: ChipClusters.OnOffCluster) {
-        return suspendCoroutine { continuation ->
-            cluster
-                .off(
-                    object : ChipClusters.DefaultClusterCallback {
-                        override fun onSuccess() {
-                            continuation.resume(Unit)
-                        }
+    override fun on(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
+        scope.launch {
+            val onOffCluster = getCluster(deviceId, endpointId)
 
-                        override fun onError(ex: Exception) {
-                            Timber.e(ex, "off command failure")
-                            continuation.resumeWithException(ex)
-                        }
-                    })
+            onOffCluster
+                .on(object : ChipClusters.DefaultClusterCallback {
+                    override fun onSuccess() {
+                        callback(Result.success(Unit))
+                    }
+
+                    override fun onError(ex: Exception) {
+                        Timber.e(ex, "Failed to send command on")
+                        callback(
+                            Result.failure(
+                                FlutterError(
+                                    "-1",
+                                    "Failed to send command on"
+                                )
+                            )
+                        )
+                    }
+                })
         }
     }
 
-    private suspend fun on(cluster: ChipClusters.OnOffCluster) {
-        return suspendCoroutine { continuation ->
-            cluster
-                .on(
-                    object : ChipClusters.DefaultClusterCallback {
-                        override fun onSuccess() {
-                            continuation.resume(Unit)
-                        }
+    override fun toggle(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
+        scope.launch {
+            val onOffCluster = getCluster(deviceId, endpointId)
 
-                        override fun onError(ex: Exception) {
-                            Timber.e(ex, "on command failure")
-                            continuation.resumeWithException(ex)
-                        }
-                    })
+            onOffCluster
+                .toggle(object : ChipClusters.DefaultClusterCallback {
+                    override fun onSuccess() {
+                        callback(Result.success(Unit))
+                    }
+
+                    override fun onError(ex: Exception) {
+                        Timber.e(ex, "Failed to send command toggle")
+                        callback(
+                            Result.failure(
+                                FlutterError(
+                                    "-1",
+                                    "Failed to send command toggle"
+                                )
+                            )
+                        )
+                    }
+                })
         }
     }
 
-    private suspend fun toggle(cluster: ChipClusters.OnOffCluster) {
-        return suspendCoroutine { continuation ->
-            cluster
-                .toggle(
-                    object : ChipClusters.DefaultClusterCallback {
-                        override fun onSuccess() {
-                            continuation.resume(Unit)
-                        }
+    override fun readOnOff(deviceId: Long, endpointId: Long, callback: (Result<Boolean>) -> Unit) {
+        scope.launch {
+            val onOffCluster = getCluster(deviceId, endpointId)
 
-                        override fun onError(ex: Exception) {
-                            Timber.e(ex, "toggle command failure")
-                            continuation.resumeWithException(ex)
-                        }
-                    })
+            onOffCluster
+                .readOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
+                    override fun onSuccess(value: Boolean) {
+                        callback(Result.success(value))
+                    }
+
+                    override fun onError(ex: Exception) {
+                        Timber.e(ex, "Failed to read attribute OnOff")
+                        callback(
+                            Result.failure(
+                                FlutterError(
+                                    "-1",
+                                    "Failed to read attribute OnOff"
+                                )
+                            )
+                        )
+                    }
+                })
         }
     }
 
-    override suspend fun handle(deviceId: Long, endpointId: Long, attribute: Attribute): Any {
-        val devicePtr = chipClient.getConnectedDevicePointer(deviceId)
-        val onOffCluster = ChipClusters.OnOffCluster(devicePtr, endpointId.toInt())
-
-        return when (attribute) {
-            Attribute.ONOFF -> readOnOff(onOffCluster)
-            else -> throw NotImplementedError()
-        }
-    }
-
-    private suspend fun readOnOff(cluster: ChipClusters.OnOffCluster): Boolean {
-        return suspendCoroutine { continuation ->
-            cluster
-                .readOnOffAttribute(
-                    object : ChipClusters.BooleanAttributeCallback {
-                        override fun onSuccess(value: Boolean) {
-                            continuation.resume(value)
-                        }
-
-                        override fun onError(ex: Exception) {
-                            Timber.e(ex, "readOnOffAttribute failure")
-                            continuation.resumeWithException(ex)
-                        }
-                    })
-        }
+    override fun close() {
+        scope.cancel()
     }
 }

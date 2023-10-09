@@ -4,10 +4,11 @@ import 'package:flutter_matter_platfrom_interface/src/flutter_matter_method_chan
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  MethodChannelFlutterMatter platform = MethodChannelFlutterMatter();
   const MethodChannel channel = MethodChannel('flutter_matter');
+
+  late MethodChannelFlutterMatter platform = MethodChannelFlutterMatter();
+
+  TestWidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

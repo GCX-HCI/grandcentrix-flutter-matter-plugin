@@ -11,10 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import net.grandcentrix.flutter_matter.chip.ChipClient
-import net.grandcentrix.flutter_matter.interfaces.ICommandHandler
-import net.grandcentrix.flutter_matter.clusters.OnOffCluster
 import net.grandcentrix.flutter_matter.commissioning.AppCommissioningService
-import net.grandcentrix.flutter_matter.interfaces.IAttributeHandler
 import timber.log.Timber
 import java.io.Closeable
 
@@ -59,8 +56,8 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                 )
             }
             .addOnFailureListener { error ->
-                Timber.e(error)
-                callback(Result.failure(error))
+                Timber.e(error, "Failed to set up device")
+                callback(Result.failure(FlutterError("-1", "Failed to set up device")))
             }
     }
 
@@ -71,8 +68,8 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                 chipClient.awaitUnpairDevice(deviceId)
                 callback(Result.success(Unit))
             } catch (e: Exception) {
-                Timber.e( e,"Unpair failed!")
-                callback(Result.failure(e))
+                Timber.e( e,"Failed to unpair device")
+                callback(Result.failure(FlutterError("-1", "Failed to unpair device")))
             }
         }
     }
@@ -92,72 +89,8 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                     duration.toInt(), 10000L, discriminator.toInt(), setupPin)
                 callback(Result.success(OpenPairingWindowResult(manualPairingCode, qrCode)))
             } catch (e: Exception) {
-                Timber.e( e,"openPairingWindowWithPin failed!")
-                callback(Result.failure(e))
-            }
-        }
-    }
-
-    override fun command(
-        deviceId: Long,
-        endpointId: Long,
-        cluster: Cluster,
-        command: Command,
-        callback: (Result<Unit>) -> Unit
-    ) {
-        val chipClient = ChipClient(activity!!)
-
-        @Suppress("REDUNDANT_ELSE_IN_WHEN")
-        val handler: ICommandHandler =
-            when (cluster) {
-                Cluster.ONOFF ->
-                    OnOffCluster(chipClient)
-
-                else -> {
-                    callback(Result.failure(NotImplementedError()))
-                    return
-                }
-            }
-
-        scope.launch {
-            try {
-                handler.handle(deviceId, endpointId, command)
-                callback(Result.success(Unit))
-            } catch (e: Exception) {
-                Timber.e( e,"Command failed!")
-                callback(Result.failure(e))
-            }
-        }
-    }
-
-    override fun attribute(
-        deviceId: Long,
-        endpointId: Long,
-        cluster: Cluster,
-        attribute: Attribute,
-        callback: (Result<Any>) -> Unit
-    ) {
-        val chipClient = ChipClient(activity!!)
-
-        @Suppress("REDUNDANT_ELSE_IN_WHEN")
-        val handler: IAttributeHandler =
-            when (cluster) {
-                Cluster.ONOFF ->
-                    OnOffCluster(chipClient)
-
-                else -> {
-                    callback(Result.failure(NotImplementedError()))
-                    return
-                }
-            }
-
-        scope.launch {
-            try {
-                val result = handler.handle(deviceId, endpointId, attribute)
-                callback(Result.success(result))
-            } catch (e: Exception) {
-                Timber.e( e,"Read attribute failed!")
-                callback(Result.failure(e))
+                Timber.e( e,"Failed to openPairingWindowWithPin for device")
+                callback(Result.failure(FlutterError("-1", "Failed to openPairingWindowWithPin for device")))
             }
         }
     }
@@ -165,8 +98,8 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         when (resultCode) {
             null -> {
-                Timber.e("Timed out!")
-                callback!!(Result.failure(FlutterError("1", "timeout", "Timed out!")))
+                Timber.e("Failed to set up device: Timeout")
+                callback!!(Result.failure(FlutterError("-4", "Failed to set up device: Timeout")))
             }
 
             android.app.Activity.RESULT_OK -> {
@@ -178,17 +111,16 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                             resultCode,
                             data
                         )
-                    print("Commissioned Device data: $result")
+                    Timber.i("Commissioned Device data: $result")
 
                     val commissionedDevice: HashMap<String, Any> = HashMap()
                     if (result.token == null) {
-                        Timber.e("No token in response!")
+                        Timber.e("Failed to set up device: No token in response")
                         callback!!(
                             Result.failure(
                                 FlutterError(
-                                    "2",
-                                    "token",
-                                    "Failed to get token"
+                                    "-1",
+                                    "Failed to set up device: No token in response"
                                 )
                             )
                         )
@@ -197,8 +129,6 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                         commissionedDevice["deviceId"] = result.token?.toLong()!!
                     }
                     commissionedDevice["deviceName"] = result.deviceName
-                    commissionedDevice["deviceType"] =
-                        result.commissionedDeviceDescriptor.deviceType
                     commissionedDevice["vendorId"] = result.commissionedDeviceDescriptor.vendorId
                     commissionedDevice["describeContents"] =
                         result.commissionedDeviceDescriptor.describeContents()
@@ -208,8 +138,8 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
             }
 
             else -> {
-                Timber.e("User cancelled!")
-                callback!!(Result.failure(FlutterError("0", "User Cancelled", "User Cancelled")))
+                Timber.e("Failed to set up device: User Cancelled")
+                callback!!(Result.failure(FlutterError("-3", "Failed to set up device: User Cancelled")))
             }
         }
 

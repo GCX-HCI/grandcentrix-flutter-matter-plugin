@@ -1,4 +1,5 @@
-import 'package:flutter_matter/src/on_off_cluster.dart';
+import 'package:flutter_matter/src/clusters/descriptor_cluster.dart';
+import 'package:flutter_matter/src/clusters/on_off_cluster.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
 class FlutterMatter {
@@ -32,5 +33,15 @@ class FlutterMatter {
     return FlutterMatterPlatform.instance.unpair(deviceId: deviceId);
   }
 
+  /// This cluster describes an endpoint instance on the node, independently from other endpoints, but also allows composition of endpoints to conform to complex device type patterns.
+  ///
+  /// This cluster supports a list of one or more device type identifiers that represent conformance to device type specifications.
+  /// > For Example: An Extended Color Light device type may support device type IDs for both a Dimmable Light and On/Off Light, because those are subsets of an Extended Color Light (the superset).
+  ///
+  /// The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a com­ posed device type.
+  /// > For Example: A Refrigerator/Freezer appliance device type may be defined as being com­ posed of multiple Temperature Sensor endpoints, a Metering endpoint, and two Thermostat endpoints.
+  final DescriptorCluster descriptorCluster = DescriptorCluster();
+
+  /// Attributes and commands for turning devices on and off.
   final OnOffCluster onOffCluster = OnOffCluster();
 }

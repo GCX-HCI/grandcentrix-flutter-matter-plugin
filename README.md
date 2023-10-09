@@ -356,6 +356,11 @@ android {
         
         6.1 ???
         <!-- TODO: How to change App Groups identifier in code? -->
+
+# Supported Clusters
+
+
+
 # Errors
 
 | Code| Description                      |
@@ -363,6 +368,4 @@ android {
 | -1  | Error                            |
 | -2  | Unsupported Plattfrom            |
 | -3  | User cancelled                   |
-| -4  | Cluster not implemented          |
-| -5  | Command not implemented          |
-| -6  | Attribute not implemented        |
+| -4  | Timeout                          |

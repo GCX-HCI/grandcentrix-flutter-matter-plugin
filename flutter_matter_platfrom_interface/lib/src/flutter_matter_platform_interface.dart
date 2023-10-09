@@ -1,8 +1,8 @@
-import 'package:flutter_matter_platfrom_interface/src/flutter_matter_attribute.dart';
-import 'package:flutter_matter_platfrom_interface/src/flutter_matter_cluster.dart';
-import 'package:flutter_matter_platfrom_interface/src/flutter_matter_command.dart';
-import 'package:flutter_matter_platfrom_interface/src/flutter_matter_device.dart';
-import 'package:flutter_matter_platfrom_interface/src/flutter_matter_open_pairing_window_result.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
+import 'package:flutter_matter_platfrom_interface/src/cluster_interfaces/flutter_matter_onoff_cluster_interface.dart';
+import 'package:flutter_matter_platfrom_interface/src/models/flutter_matter_device.dart';
+import 'package:flutter_matter_platfrom_interface/src/models/flutter_matter_open_pairing_window_result.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'package:flutter_matter_platfrom_interface/src/flutter_matter_method_channel.dart';
@@ -32,30 +32,26 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
   /// platform-specific class that extends [FlutterMatterPlatform] when
   /// they register themselves.
   static set instance(FlutterMatterPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);
+    if (!_skipVerifyForTesting) {
+      PlatformInterface.verify(instance, _token);
+    }
     _instance = instance;
   }
 
-  /// Sanity check test method
-  Future<String?> getPlatformVersion() async {
-    return Future.error(
-      UnimplementedError('platformVersion() has not been implemented.'),
-    );
+  static bool _skipVerifyForTesting = false;
+  @visibleForTesting
+  static set skipVerifyForTesting(bool skip) {
+    _skipVerifyForTesting = skip;
   }
+
+  /// Sanity check test method
+  Future<String?> getPlatformVersion();
 
   /// Commission a matter device with the provided `deviceId`
-  Future<FlutterMatterDevice> commission({required int deviceId}) async {
-    return Future.error(
-      UnimplementedError('commission() has not been implemented.'),
-    );
-  }
+  Future<FlutterMatterDevice> commission({required int deviceId});
 
   /// Removes the app's fabric from the device
-  Future<void> unpair({required int deviceId}) async {
-    return Future.error(
-      UnimplementedError('unpair() has not been implemented.'),
-    );
-  }
+  Future<void> unpair({required int deviceId});
 
   /// Open a pairing window on the device
   Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
@@ -63,33 +59,9 @@ abstract class FlutterMatterPlatform extends PlatformInterface {
     required Duration duration,
     required int discriminator,
     required int setupPin,
-  }) {
-    return Future.error(
-      UnimplementedError('openPairingWindowWithPin has not been implemented.'),
-    );
-  }
+  });
 
-  /// Sends the `command` to a matter device with the provided `deviceId` and `endpointId` on the `cluster`
-  Future<void> command({
-    required int deviceId,
-    required int endpointId,
-    required FlutterMatterCluster cluster,
-    required FlutterMatterCommand command,
-  }) async {
-    return Future.error(
-      UnimplementedError('command() has not been implemented.'),
-    );
-  }
+  FlutterMatterOnOffClusterInterface get onOffCluster;
 
-  /// Reads the `attribute` from a matter device with the provided `deviceId` and `endpointId` on the `cluster`
-  Future<Object> attribute({
-    required int deviceId,
-    required int endpointId,
-    required FlutterMatterCluster cluster,
-    required FlutterMatterAttribute attribute,
-  }) async {
-    return Future.error(
-      UnimplementedError('attribute() has not been implemented.'),
-    );
-  }
+  FlutterMatterDescriptorClusterInterface get descriptorCluster;
 }

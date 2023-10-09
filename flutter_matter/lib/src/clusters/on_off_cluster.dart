@@ -9,11 +9,9 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.command(
+      FlutterMatterPlatform.instance.onOffCluster.off(
         deviceId: deviceId,
         endpointId: endpointId,
-        cluster: FlutterMatterCluster.onOff,
-        command: FlutterMatterCommand.off,
       );
 
   /// Command On
@@ -21,11 +19,9 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.command(
+      FlutterMatterPlatform.instance.onOffCluster.on(
         deviceId: deviceId,
         endpointId: endpointId,
-        cluster: FlutterMatterCluster.onOff,
-        command: FlutterMatterCommand.on,
       );
 
   /// Command Toggle
@@ -33,26 +29,20 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.command(
+      FlutterMatterPlatform.instance.onOffCluster.toggle(
         deviceId: deviceId,
         endpointId: endpointId,
-        cluster: FlutterMatterCluster.onOff,
-        command: FlutterMatterCommand.toggle,
       );
 
   // Attributes
 
   /// Attribute OnOff
-  Future<bool> onOff({
+  Future<bool> readOnOff({
     required int deviceId,
     required int endpointId,
-  }) async {
-    final result = await FlutterMatterPlatform.instance.attribute(
-      deviceId: deviceId,
-      endpointId: endpointId,
-      cluster: FlutterMatterCluster.onOff,
-      attribute: FlutterMatterAttribute.onOff,
-    );
-    return result as bool;
-  }
+  }) =>
+      FlutterMatterPlatform.instance.onOffCluster.readOnOff(
+        deviceId: deviceId,
+        endpointId: endpointId,
+      );
 }

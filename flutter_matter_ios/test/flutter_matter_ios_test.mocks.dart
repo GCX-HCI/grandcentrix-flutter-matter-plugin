@@ -141,68 +141,6 @@ class MockFlutterMatterHostApi extends _i1.Mock
           ),
         )),
       ) as _i3.Future<_i2.OpenPairingWindowResult>);
-  @override
-  _i3.Future<void> command(
-    int? arg_deviceId,
-    int? arg_endpointId,
-    _i2.Cluster? arg_cluster,
-    _i2.Command? arg_command,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #command,
-          [
-            arg_deviceId,
-            arg_endpointId,
-            arg_cluster,
-            arg_command,
-          ],
-        ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
-  @override
-  _i3.Future<Object> attribute(
-    int? arg_deviceId,
-    int? arg_endpointId,
-    _i2.Cluster? arg_cluster,
-    _i2.Attribute? arg_attribute,
-  ) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #attribute,
-          [
-            arg_deviceId,
-            arg_endpointId,
-            arg_cluster,
-            arg_attribute,
-          ],
-        ),
-        returnValue: _i3.Future<Object>.value(_FakeObject_2(
-          this,
-          Invocation.method(
-            #attribute,
-            [
-              arg_deviceId,
-              arg_endpointId,
-              arg_cluster,
-              arg_attribute,
-            ],
-          ),
-        )),
-        returnValueForMissingStub: _i3.Future<Object>.value(_FakeObject_2(
-          this,
-          Invocation.method(
-            #attribute,
-            [
-              arg_deviceId,
-              arg_endpointId,
-              arg_cluster,
-              arg_attribute,
-            ],
-          ),
-        )),
-      ) as _i3.Future<Object>);
 }
 
 /// A class which mocks [MatterDevice].

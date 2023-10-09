@@ -1,95 +1,134 @@
-import 'package:flutter_matter/src/on_off_cluster.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_matter/src/flutter_matter.dart';
 import 'package:checks/checks.dart';
 import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 
-import 'flutter_matter_platfrom_test_impl.dart';
 import 'flutter_matter_test.mocks.dart';
 
-@GenerateMocks([
-  FlutterMatterDevice,
-  FlutterMatterOpenPairingWindowResult,
+@GenerateNiceMocks([
+  MockSpec<FlutterMatterDevice>(),
+  MockSpec<FlutterMatterOpenPairingWindowResult>(),
+  MockSpec<FlutterMatterPlatform>(),
 ])
 void main() {
-  late FlutterMatterPlatformTestImpl mockFlutterMatterPlatformTestImpl;
+  late FlutterMatter sut;
 
-  late MockFlutterMatterDevice mockFlutterMatterDevice;
-  late MockFlutterMatterOpenPairingWindowResult
-      mockFlutterMatterOpenPairingWindowResult;
+  late MockFlutterMatterPlatform mockFlutterMatterPlatform;
 
   setUp(() {
-    mockFlutterMatterPlatformTestImpl = FlutterMatterPlatformTestImpl();
-    mockFlutterMatterDevice = MockFlutterMatterDevice();
-    mockFlutterMatterOpenPairingWindowResult =
-        MockFlutterMatterOpenPairingWindowResult();
+    mockFlutterMatterPlatform = MockFlutterMatterPlatform();
 
-    FlutterMatterPlatform.instance = mockFlutterMatterPlatformTestImpl;
+    sut = FlutterMatter();
+
+    FlutterMatterPlatform.skipVerifyForTesting = true;
+    FlutterMatterPlatform.instance = mockFlutterMatterPlatform;
   });
 
-  test('getPlatformVersion', () async {
-    final sut = FlutterMatter();
+  group('getPlatformVersion', () {
+    test('should return 42', () async {
+      when(mockFlutterMatterPlatform.getPlatformVersion())
+          .thenAnswer((_) async => '42');
 
-    mockFlutterMatterPlatformTestImpl.getPlatformVersionReturnValue = '42';
+      await check(sut.getPlatformVersion()).completes(it()..equals('42'));
+    });
 
-    await check(sut.getPlatformVersion()).completes(it()..equals('42'));
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterPlatform.getPlatformVersion())
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.getPlatformVersion()).throws();
+    });
   });
 
-  test('commission', () async {
-    final sut = FlutterMatter();
+  group('commission', () {
+    test('should return commissoned FlutterMatterDevice', () async {
+      final mockFlutterMatterDevice = MockFlutterMatterDevice();
+      when(mockFlutterMatterPlatform.commission(deviceId: 123))
+          .thenAnswer((_) async => mockFlutterMatterDevice);
 
-    mockFlutterMatterPlatformTestImpl.commissonReturnValue =
-        mockFlutterMatterDevice;
+      await check(sut.commission(deviceId: 123))
+          .completes(it()..equals(mockFlutterMatterDevice));
 
-    await check(sut.commission(deviceId: 123))
-        .completes(it()..equals(mockFlutterMatterDevice));
+      verify(mockFlutterMatterPlatform.commission(deviceId: 123));
+    });
 
-    check(mockFlutterMatterPlatformTestImpl.commissonParamterDeviceId)
-        .equals(123);
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterPlatform.commission(deviceId: 123))
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.commission(deviceId: 123)).throws();
+
+      verify(mockFlutterMatterPlatform.commission(deviceId: 123));
+    });
   });
 
-  test('unpair', () async {
-    final sut = FlutterMatter();
+  group('unpair', () {
+    test('should call unpair', () async {
+      await check(sut.unpair(deviceId: 123)).completes();
 
-    await check(sut.unpair(deviceId: 123)).completes();
+      verify(mockFlutterMatterPlatform.unpair(deviceId: 123));
+    });
 
-    check(mockFlutterMatterPlatformTestImpl.unpairParamterDeviceId).equals(123);
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterPlatform.unpair(deviceId: 123))
+          .thenAnswer((_) async => throw Exception());
+
+      await check(sut.unpair(deviceId: 123)).throws();
+
+      verify(mockFlutterMatterPlatform.unpair(deviceId: 123));
+    });
   });
 
-  test('openPairingWindowWithPin', () async {
-    final sut = FlutterMatter();
+  group('openPairingWindowWithPin', () {
+    test('should return pairing result', () async {
+      final mockFlutterMatterOpenPairingWindowResult =
+          MockFlutterMatterOpenPairingWindowResult();
 
-    mockFlutterMatterPlatformTestImpl.openPairingWindowWithPinReturnValue =
-        mockFlutterMatterOpenPairingWindowResult;
+      when(mockFlutterMatterPlatform.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).thenAnswer((_) async => mockFlutterMatterOpenPairingWindowResult);
 
-    await check(sut.openPairingWindowWithPin(
-      deviceId: 123,
-      duration: const Duration(minutes: 3),
-      discriminator: 456,
-      setupPin: 789,
-    )).completes(it()..equals(mockFlutterMatterOpenPairingWindowResult));
+      await check(sut.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).completes(it()..equals(mockFlutterMatterOpenPairingWindowResult));
 
-    check(mockFlutterMatterPlatformTestImpl)
-      ..has((p0) => p0.openPairingWindowWithPinDeviceId,
-              'openPairingWindowWithPinDeviceId')
-          .equals(123)
-      ..has((p0) => p0.openPairingWindowWithPinDuration,
-              'openPairingWindowWithPinDuration')
-          .equals(const Duration(minutes: 3))
-      ..has((p0) => p0.openPairingWindowWithPinDiscriminator,
-              'openPairingWindowWithPinDuration')
-          .equals(456)
-      ..has((p0) => p0.openPairingWindowWithPinSetupPin,
-              'openPairingWindowWithPinDuration')
-          .equals(789);
-  });
+      verify(mockFlutterMatterPlatform.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      ));
+    });
 
-  test('onOffCluster', () async {
-    final sut = FlutterMatter();
+    test('should rethrow exceptions', () async {
+      when(mockFlutterMatterPlatform.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).thenAnswer((_) async => throw Exception());
 
-    check(sut.onOffCluster)
-      ..isNotNull()
-      ..isA<OnOffCluster>();
+      await check(sut.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).throws();
+
+      verify(mockFlutterMatterPlatform.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      ));
+    });
   });
 }
