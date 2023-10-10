@@ -1,7 +1,12 @@
+/// Result of the open pairing window method
 class FlutterMatterOpenPairingWindowResult {
+  /// Pairing code for manual comisson
   final String? manualPairingCode;
+
+  /// Data for the QrCode
   final String? qrCode;
 
+  /// Create instance of FlutterMatterOpenPairingWindowResult
   FlutterMatterOpenPairingWindowResult({
     required this.manualPairingCode,
     required this.qrCode,

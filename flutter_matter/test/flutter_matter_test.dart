@@ -10,32 +10,29 @@ import 'flutter_matter_test.mocks.dart';
 @GenerateNiceMocks([
   MockSpec<FlutterMatterDevice>(),
   MockSpec<FlutterMatterOpenPairingWindowResult>(),
-  MockSpec<FlutterMatterPlatform>(),
+  MockSpec<FlutterMatterPlatformInterface>(),
 ])
 void main() {
   late FlutterMatter sut;
 
-  late MockFlutterMatterPlatform mockFlutterMatterPlatform;
+  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatformInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatform();
+    mockFlutterMatterPlatformInterface = MockFlutterMatterPlatformInterface();
 
-    sut = FlutterMatter();
-
-    FlutterMatterPlatform.skipVerifyForTesting = true;
-    FlutterMatterPlatform.instance = mockFlutterMatterPlatform;
+    sut = FlutterMatter(instance: mockFlutterMatterPlatformInterface);
   });
 
   group('getPlatformVersion', () {
     test('should return 42', () async {
-      when(mockFlutterMatterPlatform.getPlatformVersion())
+      when(mockFlutterMatterPlatformInterface.getPlatformVersion())
           .thenAnswer((_) async => '42');
 
       await check(sut.getPlatformVersion()).completes(it()..equals('42'));
     });
 
     test('should rethrow exceptions', () async {
-      when(mockFlutterMatterPlatform.getPlatformVersion())
+      when(mockFlutterMatterPlatformInterface.getPlatformVersion())
           .thenAnswer((_) async => throw Exception());
 
       await check(sut.getPlatformVersion()).throws();
@@ -45,22 +42,22 @@ void main() {
   group('commission', () {
     test('should return commissoned FlutterMatterDevice', () async {
       final mockFlutterMatterDevice = MockFlutterMatterDevice();
-      when(mockFlutterMatterPlatform.commission(deviceId: 123))
+      when(mockFlutterMatterPlatformInterface.commission(deviceId: 123))
           .thenAnswer((_) async => mockFlutterMatterDevice);
 
       await check(sut.commission(deviceId: 123))
           .completes(it()..equals(mockFlutterMatterDevice));
 
-      verify(mockFlutterMatterPlatform.commission(deviceId: 123));
+      verify(mockFlutterMatterPlatformInterface.commission(deviceId: 123));
     });
 
     test('should rethrow exceptions', () async {
-      when(mockFlutterMatterPlatform.commission(deviceId: 123))
+      when(mockFlutterMatterPlatformInterface.commission(deviceId: 123))
           .thenAnswer((_) async => throw Exception());
 
       await check(sut.commission(deviceId: 123)).throws();
 
-      verify(mockFlutterMatterPlatform.commission(deviceId: 123));
+      verify(mockFlutterMatterPlatformInterface.commission(deviceId: 123));
     });
   });
 
@@ -68,16 +65,16 @@ void main() {
     test('should call unpair', () async {
       await check(sut.unpair(deviceId: 123)).completes();
 
-      verify(mockFlutterMatterPlatform.unpair(deviceId: 123));
+      verify(mockFlutterMatterPlatformInterface.unpair(deviceId: 123));
     });
 
     test('should rethrow exceptions', () async {
-      when(mockFlutterMatterPlatform.unpair(deviceId: 123))
+      when(mockFlutterMatterPlatformInterface.unpair(deviceId: 123))
           .thenAnswer((_) async => throw Exception());
 
       await check(sut.unpair(deviceId: 123)).throws();
 
-      verify(mockFlutterMatterPlatform.unpair(deviceId: 123));
+      verify(mockFlutterMatterPlatformInterface.unpair(deviceId: 123));
     });
   });
 
@@ -86,7 +83,7 @@ void main() {
       final mockFlutterMatterOpenPairingWindowResult =
           MockFlutterMatterOpenPairingWindowResult();
 
-      when(mockFlutterMatterPlatform.openPairingWindowWithPin(
+      when(mockFlutterMatterPlatformInterface.openPairingWindowWithPin(
         deviceId: 123,
         duration: const Duration(minutes: 3),
         discriminator: 456,
@@ -100,7 +97,7 @@ void main() {
         setupPin: 789,
       )).completes(it()..equals(mockFlutterMatterOpenPairingWindowResult));
 
-      verify(mockFlutterMatterPlatform.openPairingWindowWithPin(
+      verify(mockFlutterMatterPlatformInterface.openPairingWindowWithPin(
         deviceId: 123,
         duration: const Duration(minutes: 3),
         discriminator: 456,
@@ -109,7 +106,7 @@ void main() {
     });
 
     test('should rethrow exceptions', () async {
-      when(mockFlutterMatterPlatform.openPairingWindowWithPin(
+      when(mockFlutterMatterPlatformInterface.openPairingWindowWithPin(
         deviceId: 123,
         duration: const Duration(minutes: 3),
         discriminator: 456,
@@ -123,7 +120,7 @@ void main() {
         setupPin: 789,
       )).throws();
 
-      verify(mockFlutterMatterPlatform.openPairingWindowWithPin(
+      verify(mockFlutterMatterPlatformInterface.openPairingWindowWithPin(
         deviceId: 123,
         duration: const Duration(minutes: 3),
         discriminator: 456,

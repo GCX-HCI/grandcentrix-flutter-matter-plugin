@@ -110,6 +110,26 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  StreamSubscription<bool>? onOffScubscription;
+
+  void subscribeOnOffAttribute() {
+    try {
+      onOffScubscription?.cancel();
+      onOffScubscription = _flutterMatterPlugin.onOffCluster
+          .subscribeOnOff(
+        deviceId: 123,
+        endpointId: 1,
+      )
+          .listen((event) {
+        print('Update: Light is ${event ? 'on' : 'off'}');
+      }, onError: (error) {
+        print('subscribeOnOffAttribute Error: $error');
+      });
+    } catch (e, st) {
+      print('Error: $e\n$st');
+    }
+  }
+
   Future<void> readDescriptorAttributes({int endpointId = 0}) async {
     try {
       print('Processing part [$endpointId]');
@@ -177,6 +197,10 @@ class _MyAppState extends State<MyApp> {
               TextButton(
                 onPressed: () => readOnOffAttribute(),
                 child: const Text('Read On/Off attribute on enpoint 1'),
+              ),
+              TextButton(
+                onPressed: () => subscribeOnOffAttribute(),
+                child: const Text('Subscribe On/Off attribute on enpoint 1'),
               ),
               TextButton(
                 onPressed: () => readDescriptorAttributes(),

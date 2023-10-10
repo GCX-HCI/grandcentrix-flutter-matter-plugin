@@ -88,4 +88,36 @@ class MockFlutterMatterHostOnOffClusterApi extends _i1.Mock
         returnValue: _i3.Future<bool>.value(false),
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
+  @override
+  _i3.Future<void> subscribeToOnOff(
+    int? arg_deviceId,
+    int? arg_endpointId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #subscribeToOnOff,
+          [
+            arg_deviceId,
+            arg_endpointId,
+          ],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> unsubscribeToOnOff(
+    int? arg_deviceId,
+    int? arg_endpointId,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #unsubscribeToOnOff,
+          [
+            arg_deviceId,
+            arg_endpointId,
+          ],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
 }

@@ -39,6 +39,30 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct IosError {
+  /// An error code.
+  var code: String
+  /// A human-readable error message, possibly null.
+  var message: String? = nil
+
+  static func fromList(_ list: [Any?]) -> IosError? {
+    let code = list[0] as! String
+    let message: String? = nilOrValue(list[1])
+
+    return IosError(
+      code: code,
+      message: message
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      code,
+      message,
+    ]
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct DescriptorClusterDeviceTypeStruct {
   var deviceType: Int64
   var revision: Int64
@@ -124,6 +148,8 @@ protocol FlutterMatterHostOnOffClusterApi {
   func on(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func toggle(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func readOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Bool, Error>) -> Void)
+  func subscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+  func unsubscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
@@ -202,6 +228,94 @@ class FlutterMatterHostOnOffClusterApiSetup {
       }
     } else {
       readOnOffChannel.setMessageHandler(nil)
+    }
+    let subscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.subscribeToOnOff", binaryMessenger: binaryMessenger)
+    if let api = api {
+      subscribeToOnOffChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+        api.subscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+          switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      subscribeToOnOffChannel.setMessageHandler(nil)
+    }
+    let unsubscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.unsubscribeToOnOff", binaryMessenger: binaryMessenger)
+    if let api = api {
+      unsubscribeToOnOffChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+        api.unsubscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+          switch result {
+            case .success:
+              reply(wrapResult(nil))
+            case .failure(let error):
+              reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      unsubscribeToOnOffChannel.setMessageHandler(nil)
+    }
+  }
+}
+private class FlutterMatterFlutterOnOffClusterApiCodecReader: FlutterStandardReader {
+  override func readValue(ofType type: UInt8) -> Any? {
+    switch type {
+      case 128:
+        return IosError.fromList(self.readValue() as! [Any?])
+      default:
+        return super.readValue(ofType: type)
+    }
+  }
+}
+
+private class FlutterMatterFlutterOnOffClusterApiCodecWriter: FlutterStandardWriter {
+  override func writeValue(_ value: Any) {
+    if let value = value as? IosError {
+      super.writeByte(128)
+      super.writeValue(value.toList())
+    } else {
+      super.writeValue(value)
+    }
+  }
+}
+
+private class FlutterMatterFlutterOnOffClusterApiCodecReaderWriter: FlutterStandardReaderWriter {
+  override func reader(with data: Data) -> FlutterStandardReader {
+    return FlutterMatterFlutterOnOffClusterApiCodecReader(data: data)
+  }
+
+  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+    return FlutterMatterFlutterOnOffClusterApiCodecWriter(data: data)
+  }
+}
+
+class FlutterMatterFlutterOnOffClusterApiCodec: FlutterStandardMessageCodec {
+  static let shared = FlutterMatterFlutterOnOffClusterApiCodec(readerWriter: FlutterMatterFlutterOnOffClusterApiCodecReaderWriter())
+}
+
+/// Generated class from Pigeon that represents Flutter messages that can be called from Swift.
+class FlutterMatterFlutterOnOffClusterApi {
+  private let binaryMessenger: FlutterBinaryMessenger
+  init(binaryMessenger: FlutterBinaryMessenger){
+    self.binaryMessenger = binaryMessenger
+  }
+  var codec: FlutterStandardMessageCodec {
+    return FlutterMatterFlutterOnOffClusterApiCodec.shared
+  }
+  func onOff(deviceId deviceIdArg: Int64, endpointId endpointIdArg: Int64, onOff onOffArg: Bool?, error errorArg: IosError?, completion: @escaping () -> Void) {
+    let channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterFlutterOnOffClusterApi.onOff", binaryMessenger: binaryMessenger, codec: codec)
+    channel.sendMessage([deviceIdArg, endpointIdArg, onOffArg, errorArg] as [Any?]) { _ in
+      completion()
     }
   }
 }

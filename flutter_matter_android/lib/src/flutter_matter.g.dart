@@ -8,6 +8,34 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
+class AndroidError {
+  AndroidError({
+    required this.code,
+    this.message,
+  });
+
+  /// An error code.
+  String code;
+
+  /// A human-readable error message, possibly null.
+  String? message;
+
+  Object encode() {
+    return <Object?>[
+      code,
+      message,
+    ];
+  }
+
+  static AndroidError decode(Object result) {
+    result as List<Object?>;
+    return AndroidError(
+      code: result[0]! as String,
+      message: result[1] as String?,
+    );
+  }
+}
+
 class DescriptorClusterDeviceTypeStruct {
   DescriptorClusterDeviceTypeStruct({
     required this.deviceType,
@@ -206,6 +234,111 @@ class FlutterMatterHostOnOffClusterApi {
       );
     } else {
       return (replyList[0] as bool?)!;
+    }
+  }
+
+  Future<void> subscribeToOnOff(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.subscribeToOnOff',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<void> unsubscribeToOnOff(int arg_deviceId, int arg_endpointId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.unsubscribeToOnOff',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+}
+
+class _FlutterMatterFlutterOnOffClusterApiCodec extends StandardMessageCodec {
+  const _FlutterMatterFlutterOnOffClusterApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is AndroidError) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return AndroidError.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
+abstract class FlutterMatterFlutterOnOffClusterApi {
+  static const MessageCodec<Object?> codec =
+      _FlutterMatterFlutterOnOffClusterApiCodec();
+
+  void onOff(int deviceId, int endpointId, bool? onOff, AndroidError? error);
+
+  static void setup(FlutterMatterFlutterOnOffClusterApi? api,
+      {BinaryMessenger? binaryMessenger}) {
+    {
+      final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.flutter_matter_android.FlutterMatterFlutterOnOffClusterApi.onOff',
+          codec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        channel.setMessageHandler(null);
+      } else {
+        channel.setMessageHandler((Object? message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.flutter_matter_android.FlutterMatterFlutterOnOffClusterApi.onOff was null.');
+          final List<Object?> args = (message as List<Object?>?)!;
+          final int? arg_deviceId = (args[0] as int?);
+          assert(arg_deviceId != null,
+              'Argument for dev.flutter.pigeon.flutter_matter_android.FlutterMatterFlutterOnOffClusterApi.onOff was null, expected non-null int.');
+          final int? arg_endpointId = (args[1] as int?);
+          assert(arg_endpointId != null,
+              'Argument for dev.flutter.pigeon.flutter_matter_android.FlutterMatterFlutterOnOffClusterApi.onOff was null, expected non-null int.');
+          final bool? arg_onOff = (args[2] as bool?);
+          final AndroidError? arg_error = (args[3] as AndroidError?);
+          api.onOff(arg_deviceId!, arg_endpointId!, arg_onOff, arg_error);
+          return;
+        });
+      }
     }
   }
 }

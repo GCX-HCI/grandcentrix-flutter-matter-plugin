@@ -8,26 +8,23 @@ import 'package:mockito/mockito.dart';
 import 'descriptor_cluster_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FlutterMatterPlatform>(),
+  MockSpec<FlutterMatterPlatformInterface>(),
   MockSpec<FlutterMatterDescriptorClusterInterface>(),
   MockSpec<FlutterMatterDescriptorClusterDeviceTypeStruct>(),
 ])
 void main() {
   late DescriptorCluster sut;
 
-  late MockFlutterMatterPlatform mockFlutterMatterPlatform;
+  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatform;
   late MockFlutterMatterDescriptorClusterInterface
       mockFlutterMatterDescriptorClusterInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatform();
+    mockFlutterMatterPlatform = MockFlutterMatterPlatformInterface();
     mockFlutterMatterDescriptorClusterInterface =
         MockFlutterMatterDescriptorClusterInterface();
 
-    sut = DescriptorCluster();
-
-    FlutterMatterPlatform.skipVerifyForTesting = true;
-    FlutterMatterPlatform.instance = mockFlutterMatterPlatform;
+    sut = DescriptorCluster(mockFlutterMatterPlatform);
 
     when(mockFlutterMatterPlatform.descriptorCluster)
         .thenReturn(mockFlutterMatterDescriptorClusterInterface);

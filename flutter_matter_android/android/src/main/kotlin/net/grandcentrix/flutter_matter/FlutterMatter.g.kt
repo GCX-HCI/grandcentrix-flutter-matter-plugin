@@ -44,6 +44,30 @@ class FlutterError (
 ) : Throwable()
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidError (
+  /** An error code. */
+  val code: String,
+  /** A human-readable error message, possibly null. */
+  val message: String? = null
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): AndroidError {
+      val code = list[0] as String
+      val message = list[1] as String?
+      return AndroidError(code, message)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      code,
+      message,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class DescriptorClusterDeviceTypeStruct (
   val deviceType: Long,
   val revision: Long
@@ -131,6 +155,8 @@ interface FlutterMatterHostOnOffClusterApi {
   fun on(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit)
   fun toggle(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit)
   fun readOnOff(deviceId: Long, endpointId: Long, callback: (Result<Boolean>) -> Unit)
+  fun subscribeToOnOff(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit)
+  fun unsubscribeToOnOff(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit)
 
   companion object {
     /** The codec used by FlutterMatterHostOnOffClusterApi. */
@@ -221,6 +247,85 @@ interface FlutterMatterHostOnOffClusterApi {
           channel.setMessageHandler(null)
         }
       }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.subscribeToOnOff", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            val endpointIdArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            api.subscribeToOnOff(deviceIdArg, endpointIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostOnOffClusterApi.unsubscribeToOnOff", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val deviceIdArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            val endpointIdArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            api.unsubscribeToOnOff(deviceIdArg, endpointIdArg) { result: Result<Unit> ->
+              val error = result.exceptionOrNull()
+              if (error != null) {
+                reply.reply(wrapError(error))
+              } else {
+                reply.reply(wrapResult(null))
+              }
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+    }
+  }
+}
+@Suppress("UNCHECKED_CAST")
+private object FlutterMatterFlutterOnOffClusterApiCodec : StandardMessageCodec() {
+  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
+    return when (type) {
+      128.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidError.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
+  }
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+    when (value) {
+      is AndroidError -> {
+        stream.write(128)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
+  }
+}
+
+/** Generated class from Pigeon that represents Flutter messages that can be called from Kotlin. */
+@Suppress("UNCHECKED_CAST")
+class FlutterMatterFlutterOnOffClusterApi(private val binaryMessenger: BinaryMessenger) {
+  companion object {
+    /** The codec used by FlutterMatterFlutterOnOffClusterApi. */
+    val codec: MessageCodec<Any?> by lazy {
+      FlutterMatterFlutterOnOffClusterApiCodec
+    }
+  }
+  fun onOff(deviceIdArg: Long, endpointIdArg: Long, onOffArg: Boolean?, errorArg: AndroidError?, callback: () -> Unit) {
+    val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterFlutterOnOffClusterApi.onOff", codec)
+    channel.send(listOf(deviceIdArg, endpointIdArg, onOffArg, errorArg)) {
+      callback()
     }
   }
 }

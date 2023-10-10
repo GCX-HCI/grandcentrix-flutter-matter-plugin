@@ -6,8 +6,8 @@ import 'package:flutter_matter_android/src/extensions/open_pairing_window_result
 import 'package:flutter_matter_android/src/flutter_matter.g.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
-/// An implementation of [FlutterMatterPlatform] for iOS.
-class FlutterMatterAndroid extends FlutterMatterPlatform {
+/// An implementation of [FlutterMatterPlatformInterface] for iOS.
+class FlutterMatterAndroid implements FlutterMatterPlatformInterface {
   final FlutterMatterHostApi _flutterMatterHostApi;
   final FlutterMatterOnOffClusterInterface _flutterMatterOnOffClusterInterface;
   final FlutterMatterDescriptorClusterInterface
@@ -28,11 +28,6 @@ class FlutterMatterAndroid extends FlutterMatterPlatform {
         _flutterMatterDescriptorClusterInterface =
             flutterMatterDescriptorClusterInterface ??
                 FlutterMatterAndroidDescriptorCluster();
-
-  /// Registers this class as the default instance of [FlutterMatterPlatform].
-  static void registerWith() {
-    FlutterMatterPlatform.instance = FlutterMatterAndroid();
-  }
 
   @override
   Future<String?> getPlatformVersion() async {

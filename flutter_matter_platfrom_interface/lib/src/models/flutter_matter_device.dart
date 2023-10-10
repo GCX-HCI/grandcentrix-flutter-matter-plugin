@@ -1,9 +1,12 @@
+/// Result of the newly comissoned device
 class FlutterMatterDevice {
+  /// ID of the device, should be the same, as specified by the commisson method
   final int id;
   // final String name;
   // final int vendorId;
   // final int productId;
 
+  /// Create instance, needs [id]
   FlutterMatterDevice({required this.id});
 
   @override

@@ -31,6 +31,44 @@ abstract class FlutterMatterHostOnOffClusterApi {
     int deviceId,
     int endpointId,
   );
+
+  @async
+  void subscribeToOnOff(
+    int deviceId,
+    int endpointId,
+  );
+
+  @async
+  void unsubscribeToOnOff(
+    int deviceId,
+    int endpointId,
+  );
+}
+
+class IosError {
+  /// Creates a [PlatformException] with the specified error [code] and optional
+  /// [message], and with the optional error [details] which must be a valid
+  /// value for the [MethodCodec] involved in the interaction.
+  IosError({
+    required this.code,
+    this.message,
+  });
+
+  /// An error code.
+  final String code;
+
+  /// A human-readable error message, possibly null.
+  final String? message;
+}
+
+@FlutterApi()
+abstract class FlutterMatterFlutterOnOffClusterApi {
+  void onOff(
+    int deviceId,
+    int endpointId,
+    bool? onOff,
+    IosError? error,
+  );
 }
 
 class DescriptorClusterDeviceTypeStruct {

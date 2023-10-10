@@ -64,11 +64,11 @@ class _FakeFlutterMatterOpenPairingWindowResult_3 extends _i1.SmartFake
         );
 }
 
-/// A class which mocks [FlutterMatterPlatform].
+/// A class which mocks [FlutterMatterPlatformInterface].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFlutterMatterPlatform extends _i1.Mock
-    implements _i2.FlutterMatterPlatform {
+class MockFlutterMatterPlatformInterface extends _i1.Mock
+    implements _i2.FlutterMatterPlatformInterface {
   @override
   _i2.FlutterMatterOnOffClusterInterface get onOffCluster =>
       (super.noSuchMethod(

@@ -6,19 +6,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import net.grandcentrix.flutter_matter.AndroidError
 import net.grandcentrix.flutter_matter.FlutterError
+import net.grandcentrix.flutter_matter.FlutterMatterFlutterOnOffClusterApi
 import net.grandcentrix.flutter_matter.FlutterMatterHostOnOffClusterApi
 import net.grandcentrix.flutter_matter.chip.ChipClient
 import timber.log.Timber
 import java.io.Closeable
 
-class OnOffCluster : FlutterMatterHostOnOffClusterApi, Closeable {
+
+class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOffClusterApi) : FlutterMatterHostOnOffClusterApi, Closeable {
 
     private lateinit var chipClient: ChipClient
 
     var activity: android.app.Activity? = null
         set(value) {
-            if(value == activity) return
+            if (value == activity) return
             field = value
             if (value != null) {
                 chipClient = ChipClient(value!!)
@@ -131,6 +134,50 @@ class OnOffCluster : FlutterMatterHostOnOffClusterApi, Closeable {
                     }
                 })
         }
+    }
+
+    override fun subscribeToOnOff(
+        deviceId: Long,
+        endpointId: Long,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        scope.launch {
+            val onOffCluster = getCluster(deviceId, endpointId)
+
+            onOffCluster.subscribeOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
+                override fun onSuccess(value: Boolean) {
+                    activity!!.runOnUiThread {
+                        flutterOnOffClusterApi.onOff(deviceId, endpointId, value, null) {
+                            Timber.i("Reported OnOff status: $value")
+                        }
+                    }
+                }
+
+                override fun onError(ex: Exception) {
+                    activity!!.runOnUiThread {
+                        flutterOnOffClusterApi.onOff(
+                            deviceId,
+                            endpointId,
+                            null,
+                            AndroidError("-1", ex.message)
+                        ) {
+                            Timber.e(ex, "Reported OnOff error")
+                        }
+                    }
+                }
+            }, 1, 10)
+
+            callback(Result.success(Unit))
+        }
+    }
+
+    override fun unsubscribeToOnOff(
+        deviceId: Long,
+        endpointId: Long,
+        callback: (Result<Unit>) -> Unit
+    ) {
+        //TODO: How? ¯\_(ツ)_/¯
+        callback(Result.success(Unit))
     }
 
     override fun close() {

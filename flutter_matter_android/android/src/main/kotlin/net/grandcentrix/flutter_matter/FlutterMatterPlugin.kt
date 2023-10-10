@@ -29,7 +29,8 @@ class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.Activity
 
     flutterMatterHostApi = FlutterMatterHostApiImpl()
     descriptorClusterApi = DescriptorCluster()
-    onOffClusterApi = OnOffCluster()
+    val flutterOnOffClusterApi =  FlutterMatterFlutterOnOffClusterApi(flutterPluginBinding.binaryMessenger)
+    onOffClusterApi = OnOffCluster(flutterOnOffClusterApi)
 
     if(flutterPluginBinding.applicationContext is Activity) {
       setActivity(flutterPluginBinding.applicationContext as Activity)

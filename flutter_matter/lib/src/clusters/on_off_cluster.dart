@@ -2,6 +2,11 @@ import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interf
 
 /// Attributes and commands for turning devices on and off
 final class OnOffCluster {
+  final FlutterMatterPlatformInterface _instance;
+
+  /// Should not be used! Access via [FlutterMatter.onOffCluster]
+  OnOffCluster(FlutterMatterPlatformInterface instance) : _instance = instance;
+
   // Commands
 
   /// Command Off
@@ -9,7 +14,7 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.onOffCluster.off(
+      _instance.onOffCluster.off(
         deviceId: deviceId,
         endpointId: endpointId,
       );
@@ -19,7 +24,7 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.onOffCluster.on(
+      _instance.onOffCluster.on(
         deviceId: deviceId,
         endpointId: endpointId,
       );
@@ -29,20 +34,28 @@ final class OnOffCluster {
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.onOffCluster.toggle(
+      _instance.onOffCluster.toggle(
         deviceId: deviceId,
         endpointId: endpointId,
       );
 
   // Attributes
 
-  /// Attribute OnOff
+  /// Read attribute OnOff
   Future<bool> readOnOff({
     required int deviceId,
     required int endpointId,
   }) =>
-      FlutterMatterPlatform.instance.onOffCluster.readOnOff(
+      _instance.onOffCluster.readOnOff(
         deviceId: deviceId,
         endpointId: endpointId,
       );
+
+  /// Subscribe to attribute OnOff
+  Stream<bool> subscribeOnOff({
+    required int deviceId,
+    required int endpointId,
+  }) =>
+      _instance.onOffCluster
+          .subscribeOnOff(deviceId: deviceId, endpointId: endpointId);
 }

@@ -8,6 +8,12 @@ import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interf
 /// The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a com­ posed device type.
 /// > For Example: A Refrigerator/Freezer appliance device type may be defined as being com­ posed of multiple Temperature Sensor endpoints, a Metering endpoint, and two Thermostat endpoints.
 final class DescriptorCluster {
+  final FlutterMatterPlatformInterface _instance;
+
+  /// Should not be used! Access via [FlutterMatter.descriptorCluster]
+  DescriptorCluster(FlutterMatterPlatformInterface instance)
+      : _instance = instance;
+
   /// This is a list of device types and corresponding revisions declaring endpoint conformance (see [DeviceTypeStruct]). At least one device type entry SHALL be present.
   ///
   /// An endpoint SHALL conform to all device types listed in the DeviceTypeList. A cluster instance that is in common for more than one device type in the DeviceTypeList SHALL be supported as a shared cluster instance on the endpoint.
@@ -16,7 +22,7 @@ final class DescriptorCluster {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await FlutterMatterPlatform.instance.descriptorCluster
+    final result = await _instance.descriptorCluster
         .readDeviceTypeList(deviceId: deviceId, endpointId: endpointId);
 
     return result
@@ -30,7 +36,7 @@ final class DescriptorCluster {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await FlutterMatterPlatform.instance.descriptorCluster
+    final result = await _instance.descriptorCluster
         .readServerList(deviceId: deviceId, endpointId: endpointId);
 
     return result.where((element) => element != null).cast<int>().toList();
@@ -41,7 +47,7 @@ final class DescriptorCluster {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await FlutterMatterPlatform.instance.descriptorCluster
+    final result = await _instance.descriptorCluster
         .readClientList(deviceId: deviceId, endpointId: endpointId);
     return result.where((element) => element != null).cast<int>().toList();
   }
@@ -51,7 +57,7 @@ final class DescriptorCluster {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await FlutterMatterPlatform.instance.descriptorCluster
+    final result = await _instance.descriptorCluster
         .readPartsList(deviceId: deviceId, endpointId: endpointId);
 
     return result.where((element) => element != null).cast<int>().toList();

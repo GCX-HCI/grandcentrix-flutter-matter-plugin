@@ -24,14 +24,6 @@ void main() {
     sut = FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
   });
 
-  group('registerWith', () {
-    test('$FlutterMatterIos.registerWith sets $FlutterMatterIos as instance',
-        () {
-      FlutterMatterIos.registerWith();
-      check(FlutterMatterPlatform.instance).isA<FlutterMatterIos>();
-    });
-  });
-
   group('getPlatformVersion', () {
     test('should call host api', () async {
       when(mockFlutterMatterHostApi.getPlatformVersion())

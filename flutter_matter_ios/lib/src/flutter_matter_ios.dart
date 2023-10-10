@@ -6,8 +6,8 @@ import 'package:flutter_matter_ios/src/extensions/open_pairing_window_result_tra
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
-/// An implementation of [FlutterMatterPlatform] for iOS.
-class FlutterMatterIos extends FlutterMatterPlatform {
+/// An implementation of [FlutterMatterPlatformInterface] for iOS.
+class FlutterMatterIos implements FlutterMatterPlatformInterface {
   final FlutterMatterHostApi _flutterMatterHostApi;
   final FlutterMatterOnOffClusterInterface _flutterMatterOnOffClusterInterface;
   final FlutterMatterDescriptorClusterInterface
@@ -29,13 +29,19 @@ class FlutterMatterIos extends FlutterMatterPlatform {
             flutterMatterDescriptorClusterInterface ??
                 FlutterMatterIosDescriptorCluster();
 
-  /// Registers this class as the default instance of [FlutterMatterPlatform].
-  static void registerWith() {
-    FlutterMatterPlatform.instance = FlutterMatterIos();
-  }
+  /// Registers this class as the default instance of [FlutterMatterPlatformInterface].
+  // static void registerWith() {
+  //   print('Register with called!');
+  //   final onOff = FlutterMatterIosOnOffCluster();
+
+  //   final x = FlutterMatterIos(flutterMatterOnOffClusterInterface: onOff);
+  //   FlutterMatterPlatform.instance = x;
+  //   onOff.setup();
+  // }
 
   @override
   Future<String?> getPlatformVersion() async {
+    print('getPlatformVersion called!');
     final version = await _flutterMatterHostApi.getPlatformVersion();
     return version;
   }

@@ -6,8 +6,9 @@ public class FlutterMatterPlugin: NSObject, FlutterPlugin {
       
       let messenger = registrar.messenger()
       let flutterMatterHostApi = FlutterMatterHostApiImpl()
-      let onOffCluster = OnOffCluster();
-      let descriptorCluster = DescriptorCluster();
+      let onOffClusterFlutterApi = FlutterMatterFlutterOnOffClusterApi(binaryMessenger: messenger)
+      let onOffCluster = OnOffCluster(flutterApi: onOffClusterFlutterApi)
+      let descriptorCluster = DescriptorCluster()
       
       FlutterMatterHostApiSetup.setUp(binaryMessenger: messenger, api: flutterMatterHostApi)
       FlutterMatterHostOnOffClusterApiSetup.setUp(binaryMessenger: messenger, api: onOffCluster)

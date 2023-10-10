@@ -1,7 +1,9 @@
+/// Flutter implementation of the DescriptorClusterDeviceTypeStruct
 class FlutterMatterDescriptorClusterDeviceTypeStruct {
   final int deviceType;
   final int revision;
 
+  /// Create DescriptorClusterDeviceTypeStruct
   FlutterMatterDescriptorClusterDeviceTypeStruct({
     required this.deviceType,
     required this.revision,

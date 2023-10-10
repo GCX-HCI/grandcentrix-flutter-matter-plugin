@@ -83,11 +83,11 @@ class MockFlutterMatterDevice extends _i1.Mock
 class MockFlutterMatterOpenPairingWindowResult extends _i1.Mock
     implements _i2.FlutterMatterOpenPairingWindowResult {}
 
-/// A class which mocks [FlutterMatterPlatform].
+/// A class which mocks [FlutterMatterPlatformInterface].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFlutterMatterPlatform extends _i1.Mock
-    implements _i2.FlutterMatterPlatform {
+class MockFlutterMatterPlatformInterface extends _i1.Mock
+    implements _i2.FlutterMatterPlatformInterface {
   @override
   _i2.FlutterMatterOnOffClusterInterface get onOffCluster =>
       (super.noSuchMethod(

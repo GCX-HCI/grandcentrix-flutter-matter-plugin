@@ -49,7 +49,7 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
 
     companion object{
 
-        var deviceId: Long = 123
+        var deviceId: Long = -1
     }
 
   override fun onCreate() {

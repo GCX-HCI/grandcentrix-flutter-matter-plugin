@@ -24,15 +24,6 @@ void main() {
     sut = FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
   });
 
-  group('registerWith', () {
-    test(
-        '$FlutterMatterAndroid.registerWith sets $FlutterMatterAndroid as instance',
-        () {
-      FlutterMatterAndroid.registerWith();
-      check(FlutterMatterPlatform.instance).isA<FlutterMatterAndroid>();
-    });
-  });
-
   group('getPlatformVersion', () {
     test('should call host api', () async {
       when(mockFlutterMatterHostApi.getPlatformVersion())

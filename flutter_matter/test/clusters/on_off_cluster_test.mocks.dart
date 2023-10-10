@@ -64,11 +64,11 @@ class _FakeFlutterMatterOpenPairingWindowResult_3 extends _i1.SmartFake
         );
 }
 
-/// A class which mocks [FlutterMatterPlatform].
+/// A class which mocks [FlutterMatterPlatformInterface].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockFlutterMatterPlatform extends _i1.Mock
-    implements _i2.FlutterMatterPlatform {
+class MockFlutterMatterPlatformInterface extends _i1.Mock
+    implements _i2.FlutterMatterPlatformInterface {
   @override
   _i2.FlutterMatterOnOffClusterInterface get onOffCluster =>
       (super.noSuchMethod(
@@ -267,4 +267,21 @@ class MockFlutterMatterOnOffClusterInterface extends _i1.Mock
         returnValue: _i3.Future<bool>.value(false),
         returnValueForMissingStub: _i3.Future<bool>.value(false),
       ) as _i3.Future<bool>);
+  @override
+  _i3.Stream<bool> subscribeOnOff({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #subscribeOnOff,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Stream<bool>.empty(),
+        returnValueForMissingStub: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
 }

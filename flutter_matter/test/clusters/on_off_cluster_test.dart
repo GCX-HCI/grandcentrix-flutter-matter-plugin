@@ -8,25 +8,22 @@ import 'package:mockito/mockito.dart';
 import 'on_off_cluster_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FlutterMatterPlatform>(),
+  MockSpec<FlutterMatterPlatformInterface>(),
   MockSpec<FlutterMatterOnOffClusterInterface>(),
 ])
 void main() {
   late OnOffCluster sut;
 
-  late MockFlutterMatterPlatform mockFlutterMatterPlatform;
+  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatform;
   late MockFlutterMatterOnOffClusterInterface
       mockFlutterMatterOnOffClusterInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatform();
+    mockFlutterMatterPlatform = MockFlutterMatterPlatformInterface();
     mockFlutterMatterOnOffClusterInterface =
         MockFlutterMatterOnOffClusterInterface();
 
-    sut = OnOffCluster();
-
-    FlutterMatterPlatform.skipVerifyForTesting = true;
-    FlutterMatterPlatform.instance = mockFlutterMatterPlatform;
+    sut = OnOffCluster(mockFlutterMatterPlatform);
 
     when(mockFlutterMatterPlatform.onOffCluster)
         .thenReturn(mockFlutterMatterOnOffClusterInterface);
@@ -116,6 +113,21 @@ void main() {
         await check(sut.readOnOff(deviceId: 123, endpointId: 1)).throws();
 
         verify(mockFlutterMatterOnOffClusterInterface.readOnOff(
+            deviceId: 123, endpointId: 1));
+      });
+    });
+
+    group('subscribeOnOff', () {
+      test('should return subscription to attribute', () async {
+        when(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) => Stream.fromIterable([true]));
+
+        await check(sut.subscribeOnOff(deviceId: 123, endpointId: 1))
+            .withQueue
+            .emits(it()..isTrue());
+
+        verify(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
             deviceId: 123, endpointId: 1));
       });
     });
