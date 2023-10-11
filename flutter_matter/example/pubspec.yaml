@@ -17,8 +17,9 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter:
     sdk: flutter
-
   flutter_matter: ^0.0.1
+  shared_preferences: ^2.2.1
+  url_launcher: ^6.1.14
 
 dev_dependencies:
   build_runner: ^2.4.6
