@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run flutter_matter_example",
+            "type": "dart",
+            "request": "launch",
+            "program": "flutter_matter/example/lib/main.dart"
+        },
+        {
+            "name": "Run flutter_matter_android_example",
+            "type": "dart",
+            "request": "launch",
+            "program": "flutter_matter_android/example/lib/main.dart"
+        },
+        {
+            "name": "Run flutter_matter_ios_example",
+            "type": "dart",
+            "request": "launch",
+            "program": "flutter_matter_ios/example/lib/main.dart"
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "dart-code.flutter",
+        "blaugold.melos-code",
+        "jeroen-meijer.pubspec-assist",
+        "google-home.google-home-extension",
+        "redhat.vscode-yaml"
+    ]
+}

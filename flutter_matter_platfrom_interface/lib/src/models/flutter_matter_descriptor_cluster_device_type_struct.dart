@@ -1,6 +1,11 @@
 /// Flutter implementation of the DescriptorClusterDeviceTypeStruct
+///
+/// The device type and revision define endpoint conformance to a release of a device type definition. See the Data Model specification for more information.
 class FlutterMatterDescriptorClusterDeviceTypeStruct {
+  /// This SHALL indicate the device type definition. The endpoint SHALL conform to the device type def­inition and cluster specifications required by the device type.
   final int deviceType;
+
+  /// This is the implemented revision of the device type definition. The endpoint SHALL conform to this revision of the device type.
   final int revision;
 
   /// Create DescriptorClusterDeviceTypeStruct
