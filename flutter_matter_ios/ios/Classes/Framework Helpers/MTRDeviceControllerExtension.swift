@@ -13,13 +13,12 @@ import Matter
 extension MTRDeviceController {
     private static var instance: MTRDeviceController?
     
-    private static let storage: MTRStorage = MTRStorageImpl()
-    
     public static func shared() throws -> MTRDeviceController {
         if(instance != nil) {
             return instance!
         }
         
+        let storage = MTRStorageImpl.getInstance()
         let deviceControllerFactoryParams = MTRDeviceControllerFactoryParams(storage: storage)
         let deviceControllerFactory = MTRDeviceControllerFactory.sharedInstance()
         try deviceControllerFactory.start(deviceControllerFactoryParams)

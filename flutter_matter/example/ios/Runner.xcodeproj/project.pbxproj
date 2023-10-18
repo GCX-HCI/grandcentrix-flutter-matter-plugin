@@ -11,9 +11,9 @@
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8A0A198FFFC031C56B93D7BD /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8455D2A16558E410654AAF28 /* Pods_RunnerTests.framework */; };
+		8D5F0B9F2ADD1B18006B94A0 /* UserDefaultsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5F0B9E2ADD1B18006B94A0 /* UserDefaultsService.swift */; };
 		8D7D32432ABAF6E5007E7F04 /* MTRStorageImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D323F2ABAF6E5007E7F04 /* MTRStorageImpl.swift */; };
 		8D7D32442ABAF6E5007E7F04 /* MTRKeypairImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D32402ABAF6E5007E7F04 /* MTRKeypairImpl.swift */; };
-		8D7D32462ABAF6E5007E7F04 /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D32422ABAF6E5007E7F04 /* UserDefaultsExtension.swift */; };
 		8D7D324E2ACAAC17007E7F04 /* MTRDeviceControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D324D2ACAAC17007E7F04 /* MTRDeviceControllerExtension.swift */; };
 		8D7D32562ACFFD57007E7F04 /* FlutterMatterHostApiImplTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D7D32552ACFFD57007E7F04 /* FlutterMatterHostApiImplTests.swift */; };
 		8DEBB9E62AB9D92B008D2CD8 /* RequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEBB9E52AB9D92B008D2CD8 /* RequestHandler.swift */; };
@@ -77,9 +77,9 @@
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		8455D2A16558E410654AAF28 /* Pods_RunnerTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RunnerTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D5F0B9E2ADD1B18006B94A0 /* UserDefaultsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsService.swift; sourceTree = "<group>"; };
 		8D7D323F2ABAF6E5007E7F04 /* MTRStorageImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTRStorageImpl.swift; sourceTree = "<group>"; };
 		8D7D32402ABAF6E5007E7F04 /* MTRKeypairImpl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTRKeypairImpl.swift; sourceTree = "<group>"; };
-		8D7D32422ABAF6E5007E7F04 /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		8D7D324D2ACAAC17007E7F04 /* MTRDeviceControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MTRDeviceControllerExtension.swift; sourceTree = "<group>"; };
 		8D7D32552ACFFD57007E7F04 /* FlutterMatterHostApiImplTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlutterMatterHostApiImplTests.swift; sourceTree = "<group>"; };
 		8D87DB6C2ABADAEF00B48795 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
@@ -138,10 +138,10 @@
 		8D7D323E2ABAF6E5007E7F04 /* Framework Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8D5F0B9E2ADD1B18006B94A0 /* UserDefaultsService.swift */,
 				8D7D324D2ACAAC17007E7F04 /* MTRDeviceControllerExtension.swift */,
 				8D7D323F2ABAF6E5007E7F04 /* MTRStorageImpl.swift */,
 				8D7D32402ABAF6E5007E7F04 /* MTRKeypairImpl.swift */,
-				8D7D32422ABAF6E5007E7F04 /* UserDefaultsExtension.swift */,
 			);
 			name = "Framework Helpers";
 			path = "../../../../flutter_matter_ios/ios/Classes/Framework Helpers";
@@ -473,9 +473,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D7D32462ABAF6E5007E7F04 /* UserDefaultsExtension.swift in Sources */,
 				8DEBB9E62AB9D92B008D2CD8 /* RequestHandler.swift in Sources */,
 				8D7D32432ABAF6E5007E7F04 /* MTRStorageImpl.swift in Sources */,
+				8D5F0B9F2ADD1B18006B94A0 /* UserDefaultsService.swift in Sources */,
 				8D7D324E2ACAAC17007E7F04 /* MTRDeviceControllerExtension.swift in Sources */,
 				8D7D32442ABAF6E5007E7F04 /* MTRKeypairImpl.swift in Sources */,
 			);

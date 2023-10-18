@@ -8,9 +8,15 @@ import 'package:flutter_matter/flutter_matter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final _flutterMatterPlugin = FlutterMatter();
+late final FlutterMatter _flutterMatterPlugin;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // IMPORTANT: Change the parameter `appGroup` to your App Group defined in the iOS App Group capabilities. See the README for setup!
+  _flutterMatterPlugin = await FlutterMatter.createInstance(
+      appGroup: 'group.example.flutterMatterExample');
+
   runApp(const MyApp());
 }
 
@@ -76,42 +82,44 @@ class _MyAppState extends State<MyApp> {
             }
           },
         ),
-        body: Center(
-          child: _devices.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'No devices yet!',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    Text(
-                      'Start by adding your first matter device!',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                  ],
-                )
-              : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _devices.length,
-                        itemBuilder: (ctx, i) => LightDeviceWidget(
-                          deviceId: _devices[i],
-                          unpaired: (id) {
-                            _devices.remove(id);
-                            setState(() {});
-                          },
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              children: [
+                Expanded(
+                  child: _devices.isEmpty
+                      ? Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'No devices yet!',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            Text(
+                              'Start by adding your first matter device!',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ],
+                        )
+                      : ListView.builder(
+                          itemCount: _devices.length,
+                          itemBuilder: (ctx, i) => LightDeviceWidget(
+                            deviceId: _devices[i],
+                            unpaired: (id) {
+                              _devices.remove(id);
+                              setState(() {});
+                            },
+                          ),
+                          padding: const EdgeInsetsDirectional.all(16.0),
                         ),
-                        padding: const EdgeInsetsDirectional.all(16.0),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text('Running on: $_platformVersion'),
-                    ),
-                  ],
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text('Running on: $_platformVersion'),
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -123,6 +131,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
+      // ignore: invalid_use_of_visible_for_testing_member
       platformVersion = await _flutterMatterPlugin.getPlatformVersion() ??
           'Unknown platform version';
     } on PlatformException {
@@ -259,7 +268,6 @@ class _LightDeviceWidgetState extends State<LightDeviceWidget> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text('Device ${widget._deviceId}'),
-          content: Text(''),
           actions: [
             TextButton(
               style: TextButton.styleFrom(

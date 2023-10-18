@@ -16,7 +16,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('getPlatformVersion test', (WidgetTester tester) async {
-    final FlutterMatterIos plugin = FlutterMatterIos();
+    final FlutterMatterIos plugin = await FlutterMatterIos.createInstance(
+        appGroup: 'group.example.flutterMatterExample');
     await check(plugin.getPlatformVersion()).completes(
       it()..isNotNull().isNotEmpty(),
     );

@@ -1,10 +1,3 @@
-//
-//  FlutterMatterHostApiImpl.swift
-//  flutter_matter_ios
-//
-//  Created by Philipp Manstein on 08.09.23.
-//
-
 import Foundation
 import OSLog
 import MatterSupport
@@ -16,6 +9,13 @@ extension FlutterError: Error {}
 
 class FlutterMatterHostApiImpl : FlutterMatterHostApi
 {
+    private var userDefaultsService: UserDefaultsService?
+    
+    func initUserDefaults(appGroup: String) throws {
+        userDefaultsService = UserDefaultsService(appGroup: appGroup)
+        MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService!)
+    }
+    
     // MARK: FlutterMatterHostApi Methods
     
     func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void) {
@@ -26,17 +26,24 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi
         Task {
             os_log(.default, "Starting to add device...")
             
+            if(userDefaultsService == nil)
+            {
+                completion(Result.failure(FlutterError(code: "-1", message: "initUserDefaults wasn't called!", details: nil)))
+                return;
+            }
+            
             let topology = MatterAddDeviceRequest.Topology(ecosystemName: "MyEcosystemName", homes: [])
             
             let matterDeviceRequest = MatterAddDeviceRequest(topology: topology)
             
-            UserDefaults.resetSuccess()
-            UserDefaults.setDeviceId(request.id)
+            
+            userDefaultsService!.resetSuccess()
+            userDefaultsService!.setDeviceId(request.id)
             
             do {
                 try await matterDeviceRequest.perform()
                 
-                if(!UserDefaults.success())
+                if(!userDefaultsService!.success())
                 {
                     os_log(.default, "User cancelled")
                     completion(Result.failure(FlutterError(code: "-3", message: "User cancelled", details: nil)))

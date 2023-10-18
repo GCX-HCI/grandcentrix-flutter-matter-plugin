@@ -1,5 +1,4 @@
 import 'package:checks/checks.dart';
-import 'package:flutter_matter_ios/src/clusters/flutter_matter_ios_onoff_cluster.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
 import 'package:flutter_matter_ios/src/flutter_matter_ios.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
@@ -13,15 +12,38 @@ import './flutter_matter_ios_test.mocks.dart';
   MockSpec<FlutterMatterHostApi>(),
   MockSpec<MatterDevice>(),
   MockSpec<OpenPairingWindowResult>(),
+  MockSpec<FlutterMatterOnOffClusterInterface>(),
+  MockSpec<FlutterMatterDescriptorClusterInterface>(),
 ])
 void main() {
   late FlutterMatterIos sut;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
+  late MockFlutterMatterOnOffClusterInterface
+      mockFlutterMatterOnOffClusterInterface;
+  late MockFlutterMatterDescriptorClusterInterface
+      mockFlutterMatterDescriptorClusterInterface;
 
-  setUp(() {
+  setUp(() async {
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
+    mockFlutterMatterOnOffClusterInterface =
+        MockFlutterMatterOnOffClusterInterface();
+    mockFlutterMatterDescriptorClusterInterface =
+        MockFlutterMatterDescriptorClusterInterface();
 
-    sut = FlutterMatterIos(flutterMatterHostApi: mockFlutterMatterHostApi);
+    sut = await FlutterMatterIos.createInstance(
+      appGroup: 'test',
+      flutterMatterHostApi: mockFlutterMatterHostApi,
+      flutterMatterOnOffClusterInterface:
+          mockFlutterMatterOnOffClusterInterface,
+      flutterMatterDescriptorClusterInterface:
+          mockFlutterMatterDescriptorClusterInterface,
+    );
+  });
+
+  group('createInstance', () {
+    test('should call initUserDefaults', () {
+      verify(mockFlutterMatterHostApi.initUserDefaults('test'));
+    });
   });
 
   group('getPlatformVersion', () {
@@ -123,9 +145,16 @@ void main() {
 
   group('clusters', () {
     test(
-        '$FlutterMatterIos.onOffCluster is a $FlutterMatterIosOnOffCluster instance',
+        '$FlutterMatterIos.onOffCluster is a $FlutterMatterOnOffClusterInterface',
         () {
-      check(sut.onOffCluster).isA<FlutterMatterIosOnOffCluster>();
+      check(sut.onOffCluster).isA<FlutterMatterOnOffClusterInterface>();
+    });
+
+    test(
+        '$FlutterMatterIos.descriptorCluster is a $FlutterMatterDescriptorClusterInterface',
+        () {
+      check(sut.descriptorCluster)
+          .isA<FlutterMatterDescriptorClusterInterface>();
     });
   });
 }

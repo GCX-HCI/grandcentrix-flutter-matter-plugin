@@ -1,10 +1,3 @@
-//
-//  RequestHandler.swift
-//  FlutterMatterExtension
-//
-//  Created by Philipp Manstein on 12.09.23.
-//
-
 import OSLog
 import MatterSupport
 import Matter
@@ -13,6 +6,9 @@ import Security
 // The extension is launched in response to `MatterAddDeviceRequest.perform()` and this class is the entry point
 // for the extension operations.
 class RequestHandler: MatterAddDeviceExtensionRequestHandler {
+    
+    // IMPORTANT! Change the paramter appGroup to your App Group! See the README for setup!
+    private var userDefaultsService =  UserDefaultsService(appGroup: "group.example.flutterMatterExample")
     
     private var deviceCommissioningCheckedThrowingContinuation: CheckedContinuation<Bool, Error>?
     
@@ -54,13 +50,14 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
             self.deviceCommissioningCheckedThrowingContinuation = continuation
             
             do{
+                MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService)
                 let controller = try MTRDeviceController.shared()
                 
-                let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
-                controller.setDeviceControllerDelegate(self, queue: queue)
+                //let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
+                controller.setDeviceControllerDelegate(self, queue: DispatchQueue.main)
                 
                 let payload = try MTRSetupPayload(onboardingPayload: onboardingPayload)
-                deviceID = UserDefaults.getDeviceId()!
+                deviceID = userDefaultsService.getDeviceId()!
                 try controller.setupCommissioningSession(with: payload, newNodeID: NSNumber(value: deviceID))
             }
             catch{
@@ -71,7 +68,7 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
         })
     
         os_log(.default, "Successfully paired accessory: DeviceID %{public}@", String(describing: deviceID))
-        UserDefaults.setSuccess()
+        userDefaultsService.setSuccess()
     }
 
     override func rooms(in home: MatterAddDeviceRequest.Home?) async -> [MatterAddDeviceRequest.Room] {

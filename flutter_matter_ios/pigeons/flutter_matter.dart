@@ -156,6 +156,8 @@ abstract class FlutterMatterHostApi {
   @async
   String getPlatformVersion();
 
+  void initUserDefaults(String appGroup);
+
   @async
   MatterDevice commission(CommissionRequest request);
 

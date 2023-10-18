@@ -17,10 +17,13 @@ void main() {
 
   late MockFlutterMatterPlatformInterface mockFlutterMatterPlatformInterface;
 
-  setUp(() {
+  setUp(() async {
     mockFlutterMatterPlatformInterface = MockFlutterMatterPlatformInterface();
 
-    sut = FlutterMatter(instance: mockFlutterMatterPlatformInterface);
+    sut = await FlutterMatter.createInstance(
+      appGroup: 'test',
+      instance: mockFlutterMatterPlatformInterface,
+    );
   });
 
   group('getPlatformVersion', () {

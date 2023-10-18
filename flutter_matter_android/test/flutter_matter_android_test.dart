@@ -1,5 +1,4 @@
 import 'package:checks/checks.dart';
-import 'package:flutter_matter_android/src/clusters/flutter_matter_android_onoff_cluster.dart';
 import 'package:flutter_matter_android/src/flutter_matter.g.dart';
 import 'package:flutter_matter_android/src/flutter_matter_android.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
@@ -13,15 +12,31 @@ import './flutter_matter_android_test.mocks.dart';
   MockSpec<FlutterMatterHostApi>(),
   MockSpec<MatterDevice>(),
   MockSpec<OpenPairingWindowResult>(),
+  MockSpec<FlutterMatterOnOffClusterInterface>(),
+  MockSpec<FlutterMatterDescriptorClusterInterface>(),
 ])
 void main() {
   late FlutterMatterAndroid sut;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
+  late MockFlutterMatterOnOffClusterInterface
+      mockFlutterMatterOnOffClusterInterface;
+  late MockFlutterMatterDescriptorClusterInterface
+      mockFlutterMatterDescriptorClusterInterface;
 
   setUp(() {
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
+    mockFlutterMatterOnOffClusterInterface =
+        MockFlutterMatterOnOffClusterInterface();
+    mockFlutterMatterDescriptorClusterInterface =
+        MockFlutterMatterDescriptorClusterInterface();
 
-    sut = FlutterMatterAndroid(flutterMatterHostApi: mockFlutterMatterHostApi);
+    sut = FlutterMatterAndroid(
+      flutterMatterHostApi: mockFlutterMatterHostApi,
+      flutterMatterOnOffClusterInterface:
+          mockFlutterMatterOnOffClusterInterface,
+      flutterMatterDescriptorClusterInterface:
+          mockFlutterMatterDescriptorClusterInterface,
+    );
   });
 
   group('getPlatformVersion', () {
@@ -123,9 +138,16 @@ void main() {
 
   group('clusters', () {
     test(
-        '$FlutterMatterAndroid.onOffCluster is a $FlutterMatterAndroidOnOffCluster instance',
+        '$FlutterMatterAndroid.onOffCluster is a $FlutterMatterOnOffClusterInterface',
         () {
-      check(sut.onOffCluster).isA<FlutterMatterAndroidOnOffCluster>();
+      check(sut.onOffCluster).isA<FlutterMatterOnOffClusterInterface>();
+    });
+
+    test(
+        '$FlutterMatterAndroid.descriptorCluster is a $FlutterMatterDescriptorClusterInterface',
+        () {
+      check(sut.descriptorCluster)
+          .isA<FlutterMatterDescriptorClusterInterface>();
     });
   });
 }

@@ -1,21 +1,36 @@
-//
-//  MTRStorageImpl.swift
-//  FlutterMatterExtension
-//
-//  Created by Philipp Manstein on 14.09.23.
-//
-
 import Foundation
 import Matter
+import OSLog
 
 class MTRStorageImpl : NSObject, MTRStorage
 {
+    private static var instance: MTRStorageImpl?
+    
+    private var userData: UserDefaultsService
+    
+    private init(_ userDefaultsService: UserDefaultsService) {
+        self.userData = userDefaultsService
+    }
+    
+    public static func initInstance(withUserDefaultsService userDefaultsService: UserDefaultsService) {
+        if(instance != nil) {
+            os_log(.default, "Already created an instance!")
+            return
+        }
+        
+        instance = MTRStorageImpl(userDefaultsService)
+    }
+    
+    public static func getInstance() -> MTRStorageImpl {
+        return instance!
+    }
+    
     /**
      * Get the data for the given key.  Returns nil if there is no data for the
      * key.
      */
     func storageData(forKey key: String) -> Data? {
-        return UserDefaults.group.data(forKey: key)
+        return userData.data(forKey: key)
     }
     
     /**
@@ -23,7 +38,7 @@ class MTRStorageImpl : NSObject, MTRStorage
      * was set successfully, NO otherwise.
      */
     func setStorageData(_ value: Data, forKey key: String) -> Bool {
-        UserDefaults.group.set(value, forKey: key)
+        userData.set(value, forKey: key)
         return true
     }
     
@@ -33,11 +48,11 @@ class MTRStorageImpl : NSObject, MTRStorage
      */
     func removeStorageData(forKey key: String) -> Bool {
         
-        if(UserDefaults.group.data(forKey: key) == nil) {
+        if(userData.data(forKey: key) == nil) {
             return false;
         }
         
-        UserDefaults.group.removeObject(forKey: key)
+        userData.removeObject(forKey: key)
         return true
     }
 }

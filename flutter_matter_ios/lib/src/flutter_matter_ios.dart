@@ -14,7 +14,7 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
       _flutterMatterDescriptorClusterInterface;
 
   /// Creates a new plugin implementation instance.
-  FlutterMatterIos({
+  FlutterMatterIos._({
     @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
     @visibleForTesting
     FlutterMatterOnOffClusterInterface? flutterMatterOnOffClusterInterface,
@@ -29,19 +29,28 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
             flutterMatterDescriptorClusterInterface ??
                 FlutterMatterIosDescriptorCluster();
 
-  /// Registers this class as the default instance of [FlutterMatterPlatformInterface].
-  // static void registerWith() {
-  //   print('Register with called!');
-  //   final onOff = FlutterMatterIosOnOffCluster();
-
-  //   final x = FlutterMatterIos(flutterMatterOnOffClusterInterface: onOff);
-  //   FlutterMatterPlatform.instance = x;
-  //   onOff.setup();
-  // }
+  /// Async factory method to create a [FlutterMatterIos] instance and initialize the iOS UserDefaults
+  static Future<FlutterMatterIos> createInstance({
+    required String appGroup,
+    @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
+    @visibleForTesting
+    FlutterMatterOnOffClusterInterface? flutterMatterOnOffClusterInterface,
+    @visibleForTesting
+    FlutterMatterDescriptorClusterInterface?
+        flutterMatterDescriptorClusterInterface,
+  }) async {
+    final instance = FlutterMatterIos._(
+      flutterMatterHostApi: flutterMatterHostApi,
+      flutterMatterOnOffClusterInterface: flutterMatterOnOffClusterInterface,
+      flutterMatterDescriptorClusterInterface:
+          flutterMatterDescriptorClusterInterface,
+    );
+    await instance._flutterMatterHostApi.initUserDefaults(appGroup);
+    return instance;
+  }
 
   @override
   Future<String?> getPlatformVersion() async {
-    print('getPlatformVersion called!');
     final version = await _flutterMatterHostApi.getPlatformVersion();
     return version;
   }

@@ -6,6 +6,12 @@
 import 'dart:async' as _i3;
 
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart' as _i2;
+import 'package:flutter_matter_platfrom_interface/src/cluster_interfaces/flutter_matter_descriptor_cluster_interface.dart'
+    as _i5;
+import 'package:flutter_matter_platfrom_interface/src/cluster_interfaces/flutter_matter_onoff_cluster_interface.dart'
+    as _i4;
+import 'package:flutter_matter_platfrom_interface/src/models/flutter_matter_descriptor_cluster_device_type_struct.dart'
+    as _i6;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -64,6 +70,16 @@ class MockFlutterMatterHostApi extends _i1.Mock
         returnValue: _i3.Future<String>.value(''),
         returnValueForMissingStub: _i3.Future<String>.value(''),
       ) as _i3.Future<String>);
+  @override
+  _i3.Future<void> initUserDefaults(String? arg_appGroup) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #initUserDefaults,
+          [arg_appGroup],
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
   @override
   _i3.Future<_i2.MatterDevice> commission(_i2.CommissionRequest? arg_request) =>
       (super.noSuchMethod(
@@ -226,4 +242,181 @@ class MockOpenPairingWindowResult extends _i1.Mock
           ),
         ),
       ) as Object);
+}
+
+/// A class which mocks [FlutterMatterOnOffClusterInterface].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFlutterMatterOnOffClusterInterface extends _i1.Mock
+    implements _i4.FlutterMatterOnOffClusterInterface {
+  @override
+  _i3.Future<void> off({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #off,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> on({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #on,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<void> toggle({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #toggle,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<void>.value(),
+        returnValueForMissingStub: _i3.Future<void>.value(),
+      ) as _i3.Future<void>);
+  @override
+  _i3.Future<bool> readOnOff({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readOnOff,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<bool>.value(false),
+        returnValueForMissingStub: _i3.Future<bool>.value(false),
+      ) as _i3.Future<bool>);
+  @override
+  _i3.Stream<bool> subscribeOnOff({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #subscribeOnOff,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Stream<bool>.empty(),
+        returnValueForMissingStub: _i3.Stream<bool>.empty(),
+      ) as _i3.Stream<bool>);
+}
+
+/// A class which mocks [FlutterMatterDescriptorClusterInterface].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockFlutterMatterDescriptorClusterInterface extends _i1.Mock
+    implements _i5.FlutterMatterDescriptorClusterInterface {
+  @override
+  _i3.Future<List<_i6.FlutterMatterDescriptorClusterDeviceTypeStruct?>>
+      readDeviceTypeList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #readDeviceTypeList,
+              [],
+              {
+                #deviceId: deviceId,
+                #endpointId: endpointId,
+              },
+            ),
+            returnValue: _i3.Future<
+                    List<
+                        _i6
+                        .FlutterMatterDescriptorClusterDeviceTypeStruct?>>.value(
+                <_i6.FlutterMatterDescriptorClusterDeviceTypeStruct?>[]),
+            returnValueForMissingStub: _i3.Future<
+                    List<
+                        _i6
+                        .FlutterMatterDescriptorClusterDeviceTypeStruct?>>.value(
+                <_i6.FlutterMatterDescriptorClusterDeviceTypeStruct?>[]),
+          ) as _i3.Future<
+              List<_i6.FlutterMatterDescriptorClusterDeviceTypeStruct?>>);
+  @override
+  _i3.Future<List<int?>> readServerList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readServerList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<List<int?>>.value(<int?>[]),
+        returnValueForMissingStub: _i3.Future<List<int?>>.value(<int?>[]),
+      ) as _i3.Future<List<int?>>);
+  @override
+  _i3.Future<List<int?>> readClientList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readClientList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<List<int?>>.value(<int?>[]),
+        returnValueForMissingStub: _i3.Future<List<int?>>.value(<int?>[]),
+      ) as _i3.Future<List<int?>>);
+  @override
+  _i3.Future<List<int?>> readPartsList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readPartsList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i3.Future<List<int?>>.value(<int?>[]),
+        returnValueForMissingStub: _i3.Future<List<int?>>.value(<int?>[]),
+      ) as _i3.Future<List<int?>>);
 }

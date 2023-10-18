@@ -22,7 +22,9 @@ This plugin needs at least Android 8.1 (API level 27) and iOS 16.4+
 ```dart
 import 'package:flutter_matter/flutter_matter.dart';
 
-final flutterMatterPlugin = FlutterMatter();
+// IMPORTANT: Change the parameter `appGroup` to your App Group defined in the iOS App Group capabilities. See the README for setup!
+final flutterMatterPlugin = = await FlutterMatter.createInstance(
+      appGroup: 'group.example.flutterMatterExample');
 
 // Commission a device
 try {
@@ -189,21 +191,14 @@ android {
 
 5. Add files to your extension
 
-    4.1 Add the [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) group to your extension. <br/>
+    1. Add the [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) group to your extension. <br/>
     The easist way to do this is to right click the extension's folder -> Add files to "Runner"... -> Select the  [Framework Helpers](/flutter_matter_ios/ios/Classes/Framework%20Helpers/) folder -> Make shure to select `Copy items if needed`, `Create groups` and your extension is selected as target -> Click Add
-     ![Create new App Groups](docs/setup_ios_4_1.png)
+     ![Add files to extension](docs/setup_ios_4_1.png)
 
     4.2 Edit your [RequestHandler.swift](/flutter_matter/example/ios/FlutterMatterExtension/RequestHandler.swift), created by the Xcode while creating the extension.<br/>
      You also can finde the code in the example app [here](/flutter_matter/example/ios/FlutterMatterExtension/RequestHandler.swift)
     <!-- TODO: Use linked code like here: https://github.com/stevemar/code-reference-in-readme -->
     ```swift
-    //
-    //  RequestHandler.swift
-    //  FlutterMatterExtension
-    //
-    //  Created by Philipp Manstein on 12.09.23.
-    //
-
     import OSLog
     import MatterSupport
     import Matter
@@ -212,6 +207,9 @@ android {
     // The extension is launched in response to `MatterAddDeviceRequest.perform()` and this class is the entry point
     // for the extension operations.
     class RequestHandler: MatterAddDeviceExtensionRequestHandler {
+        
+        // IMPORTANT! Change the paramter appGroup to your App Group! See the README for setup!
+        private var userDefaultsService =  UserDefaultsService(appGroup: "group.example.flutterMatterExample")
         
         private var deviceCommissioningCheckedThrowingContinuation: CheckedContinuation<Bool, Error>?
         
@@ -253,13 +251,14 @@ android {
                 self.deviceCommissioningCheckedThrowingContinuation = continuation
                 
                 do{
+                    MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService)
                     let controller = try MTRDeviceController.shared()
                     
-                    let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
-                    controller.setDeviceControllerDelegate(self, queue: queue)
+                    //let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
+                    controller.setDeviceControllerDelegate(self, queue: DispatchQueue.main)
                     
                     let payload = try MTRSetupPayload(onboardingPayload: onboardingPayload)
-                    deviceID = UserDefaults.getDeviceId()!
+                    deviceID = userDefaultsService.getDeviceId()!
                     try controller.setupCommissioningSession(with: payload, newNodeID: NSNumber(value: deviceID))
                 }
                 catch{
@@ -270,7 +269,7 @@ android {
             })
         
             os_log(.default, "Successfully paired accessory: DeviceID %{public}@", String(describing: deviceID))
-            UserDefaults.setSuccess()
+            userDefaultsService.setSuccess()
         }
 
         override func rooms(in home: MatterAddDeviceRequest.Home?) async -> [MatterAddDeviceRequest.Room] {
@@ -351,11 +350,16 @@ android {
             deviceCommissioningCheckedThrowingContinuation = nil
         }
     }
+        ```
+    2. Change App Groups identifier in code
+    
+    In your `RequestHandler.swift` in line 11 change the initialization of the `UserDefaultsService`.
+    Add your App Group name you defined before here!
+    ```swift
+    // IMPORTANT! Change the paramter appGroup to your App Group! See the README for setup!
+    private var userDefaultsService =  UserDefaultsService(appGroup: "group.example.flutterMatterExample")
     ```
-    6. Change App Groups identifier in code
-        
-        6.1 ???
-        <!-- TODO: How to change App Groups identifier in code? -->
+
 
 # Supported Clusters
 

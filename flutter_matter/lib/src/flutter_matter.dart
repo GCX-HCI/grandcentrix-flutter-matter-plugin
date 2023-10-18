@@ -9,24 +9,31 @@ import 'package:flutter_matter_android/flutter_matter_android.dart';
 
 /// Commisson, share, read, subscribe and control Matter devices
 final class FlutterMatter {
-  late final FlutterMatterPlatformInterface _instance;
+  final FlutterMatterPlatformInterface _instance;
+
+  FlutterMatter._({required FlutterMatterPlatformInterface instance})
+      : _instance = instance {
+    _setupClusters();
+  }
 
   /// Create instance of [FlutterMatter]
   ///
+  /// Parameter [appGroup] should be your App Group you defined in the iOS App Group capabilities. See the README for setup.
+  /// Throws an [UnimplementedError], when your Platfrom is not iOS or Android!
+  ///
   /// Paramter [instance] is for testing
-  FlutterMatter({@visibleForTesting FlutterMatterPlatformInterface? instance}) {
+  static Future<FlutterMatter> createInstance(
+      {required String appGroup,
+      @visibleForTesting FlutterMatterPlatformInterface? instance}) async {
     if (instance != null) {
-      _instance = instance;
-      _setupClusters();
-      return;
+      return FlutterMatter._(instance: instance);
     } else if (Platform.isIOS) {
-      _instance = FlutterMatterIos();
-      _setupClusters();
-      return;
+      final iOSPlatformInterface =
+          await FlutterMatterIos.createInstance(appGroup: appGroup);
+      return FlutterMatter._(instance: iOSPlatformInterface);
     } else if (Platform.isAndroid) {
-      _instance = FlutterMatterAndroid();
-      _setupClusters();
-      return;
+      final androidPlatformInterface = FlutterMatterAndroid();
+      return FlutterMatter._(instance: androidPlatformInterface);
     }
 
     throw UnimplementedError(

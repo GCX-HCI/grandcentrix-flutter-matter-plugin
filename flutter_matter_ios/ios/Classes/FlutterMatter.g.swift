@@ -492,6 +492,7 @@ class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostApi {
   func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
+  func initUserDefaults(appGroup: String) throws
   func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
   func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
   func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
@@ -517,6 +518,21 @@ class FlutterMatterHostApiSetup {
       }
     } else {
       getPlatformVersionChannel.setMessageHandler(nil)
+    }
+    let initUserDefaultsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.initUserDefaults", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      initUserDefaultsChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let appGroupArg = args[0] as! String
+        do {
+          try api.initUserDefaults(appGroup: appGroupArg)
+          reply(wrapResult(nil))
+        } catch {
+          reply(wrapError(error))
+        }
+      }
+    } else {
+      initUserDefaultsChannel.setMessageHandler(nil)
     }
     let commissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.commission", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
