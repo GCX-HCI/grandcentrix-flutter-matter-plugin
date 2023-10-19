@@ -1,5 +1,7 @@
 import 'package:checks/checks.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_matter/src/clusters/descriptor_cluster.dart';
+import 'package:flutter_matter/src/exceptions/flutter_matter_exceptions.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -76,6 +78,15 @@ void main() {
         verify(mockFlutterMatterDescriptorClusterInterface.readDeviceTypeList(
             deviceId: 123, endpointId: 1));
       });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterDescriptorClusterInterface.readDeviceTypeList(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.deviceTypeList(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
+      });
     });
 
     group('serverList', () {
@@ -116,6 +127,15 @@ void main() {
 
         verify(mockFlutterMatterDescriptorClusterInterface.readServerList(
             deviceId: 123, endpointId: 1));
+      });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterDescriptorClusterInterface.readServerList(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.serverList(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
       });
     });
 
@@ -158,6 +178,15 @@ void main() {
         verify(mockFlutterMatterDescriptorClusterInterface.readClientList(
             deviceId: 123, endpointId: 1));
       });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterDescriptorClusterInterface.readClientList(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.clientList(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
+      });
     });
 
     group('partsList', () {
@@ -198,6 +227,15 @@ void main() {
 
         verify(mockFlutterMatterDescriptorClusterInterface.readPartsList(
             deviceId: 123, endpointId: 1));
+      });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterDescriptorClusterInterface.readPartsList(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.partsList(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
       });
     });
   });

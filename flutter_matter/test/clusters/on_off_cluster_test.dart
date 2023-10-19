@@ -1,5 +1,7 @@
 import 'package:checks/checks.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_matter/src/clusters/on_off_cluster.dart';
+import 'package:flutter_matter/src/exceptions/flutter_matter_exceptions.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
@@ -48,6 +50,15 @@ void main() {
         verify(mockFlutterMatterOnOffClusterInterface.off(
             deviceId: 123, endpointId: 1));
       });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterOnOffClusterInterface.off(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.off(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
+      });
     });
 
     group('on', () {
@@ -68,6 +79,15 @@ void main() {
         verify(mockFlutterMatterOnOffClusterInterface.on(
             deviceId: 123, endpointId: 1));
       });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterOnOffClusterInterface.on(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.on(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
+      });
     });
 
     group('toggle', () {
@@ -87,6 +107,15 @@ void main() {
 
         verify(mockFlutterMatterOnOffClusterInterface.toggle(
             deviceId: 123, endpointId: 1));
+      });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterOnOffClusterInterface.toggle(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.toggle(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
       });
     });
   });
@@ -115,6 +144,15 @@ void main() {
         verify(mockFlutterMatterOnOffClusterInterface.readOnOff(
             deviceId: 123, endpointId: 1));
       });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterOnOffClusterInterface.readOnOff(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+        await check(sut.readOnOff(deviceId: 123, endpointId: 1))
+            .throws<GeneralException>();
+      });
     });
 
     group('subscribeOnOff', () {
@@ -126,6 +164,32 @@ void main() {
         await check(sut.subscribeOnOff(deviceId: 123, endpointId: 1))
             .withQueue
             .emits(it()..isTrue());
+
+        verify(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
+            deviceId: 123, endpointId: 1));
+      });
+
+      test('should rethrow exceptions', () async {
+        when(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) => Stream.error(Exception()));
+
+        await check(sut.subscribeOnOff(deviceId: 123, endpointId: 1))
+            .withQueue
+            .emitsError<Exception>();
+
+        verify(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
+            deviceId: 123, endpointId: 1));
+      });
+
+      test('should transform PlatformException', () async {
+        when(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
+                deviceId: 123, endpointId: 1))
+            .thenAnswer((_) => Stream.error(PlatformException(code: '-1')));
+
+        await check(sut.subscribeOnOff(deviceId: 123, endpointId: 1))
+            .withQueue
+            .emitsError<GeneralException>();
 
         verify(mockFlutterMatterOnOffClusterInterface.subscribeOnOff(
             deviceId: 123, endpointId: 1));

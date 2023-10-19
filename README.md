@@ -369,7 +369,7 @@ android {
 
 | Code| Description                      |
 | :-: | :------------------------------: |
-| -1  | Error                            |
-| -2  | Unsupported Plattfrom            |
+| -1  | General Error                    |
+| -2  | Unsupported Platfrom             |
 | -3  | User cancelled                   |
 | -4  | Timeout                          |

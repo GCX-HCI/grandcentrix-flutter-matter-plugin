@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+import 'package:flutter_matter/src/exceptions/flutter_matter_exceptions.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_matter/src/flutter_matter.dart';
@@ -40,6 +42,13 @@ void main() {
 
       await check(sut.getPlatformVersion()).throws();
     });
+
+    test('should transform PlatformException', () async {
+      when(mockFlutterMatterPlatformInterface.getPlatformVersion())
+          .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+      await check(sut.getPlatformVersion()).throws<GeneralException>();
+    });
   });
 
   group('commission', () {
@@ -62,6 +71,13 @@ void main() {
 
       verify(mockFlutterMatterPlatformInterface.commission(deviceId: 123));
     });
+
+    test('should transform PlatformException', () async {
+      when(mockFlutterMatterPlatformInterface.commission(deviceId: 123))
+          .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+      await check(sut.commission(deviceId: 123)).throws<GeneralException>();
+    });
   });
 
   group('unpair', () {
@@ -78,6 +94,13 @@ void main() {
       await check(sut.unpair(deviceId: 123)).throws();
 
       verify(mockFlutterMatterPlatformInterface.unpair(deviceId: 123));
+    });
+
+    test('should transform PlatformException', () async {
+      when(mockFlutterMatterPlatformInterface.unpair(deviceId: 123))
+          .thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+      await check(sut.unpair(deviceId: 123)).throws<GeneralException>();
     });
   });
 
@@ -129,6 +152,22 @@ void main() {
         discriminator: 456,
         setupPin: 789,
       ));
+    });
+
+    test('should transform PlatformException', () async {
+      when(mockFlutterMatterPlatformInterface.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).thenAnswer((_) async => throw PlatformException(code: '-1'));
+
+      await check(sut.openPairingWindowWithPin(
+        deviceId: 123,
+        duration: const Duration(minutes: 3),
+        discriminator: 456,
+        setupPin: 789,
+      )).throws<GeneralException>();
     });
   });
 }

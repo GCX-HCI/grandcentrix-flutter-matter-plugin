@@ -3,12 +3,13 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:flutter_matter/src/clusters/descriptor_cluster.dart';
 import 'package:flutter_matter/src/clusters/on_off_cluster.dart';
+import 'package:flutter_matter/src/utils/specifyplatformexception.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_matter_ios/flutter_matter_ios.dart';
 import 'package:flutter_matter_android/flutter_matter_android.dart';
 
 /// Commisson, share, read, subscribe and control Matter devices
-final class FlutterMatter {
+final class FlutterMatter with SpecifyPlatfromException {
   final FlutterMatterPlatformInterface _instance;
 
   FlutterMatter._({required FlutterMatterPlatformInterface instance})
@@ -47,11 +48,12 @@ final class FlutterMatter {
 
   /// Sanity check test method
   @visibleForTesting
-  Future<String?> getPlatformVersion() => _instance.getPlatformVersion();
+  Future<String?> getPlatformVersion() =>
+      catchSpecifyRethrow(() => _instance.getPlatformVersion());
 
   /// Commission a matter device with the provided `deviceId`
   Future<FlutterMatterDevice> commission({required int deviceId}) =>
-      _instance.commission(deviceId: deviceId);
+      catchSpecifyRethrow(() => _instance.commission(deviceId: deviceId));
 
   /// Open a pairing window on the device
   Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
@@ -60,16 +62,16 @@ final class FlutterMatter {
     required int discriminator,
     required int setupPin,
   }) =>
-      _instance.openPairingWindowWithPin(
-        deviceId: deviceId,
-        duration: duration,
-        discriminator: discriminator,
-        setupPin: setupPin,
-      );
+      catchSpecifyRethrow(() => _instance.openPairingWindowWithPin(
+            deviceId: deviceId,
+            duration: duration,
+            discriminator: discriminator,
+            setupPin: setupPin,
+          ));
 
   /// Removes the app's fabric from the device
   Future<void> unpair({required int deviceId}) =>
-      _instance.unpair(deviceId: deviceId);
+      catchSpecifyRethrow(() => _instance.unpair(deviceId: deviceId));
 
   /// This cluster describes an endpoint instance on the node, independently from other endpoints, but also allows composition of endpoints to conform to complex device type patterns.
   ///
