@@ -10,9 +10,19 @@ same interface.
 
 To implement a new platform-specific implementation of `flutter_matter`, extend
 [`FlutterMatterPlatform`][2] with an implementation that performs the
-platform-specific behavior, and when you register your plugin, set the default
-`FlutterMatterPlatform` by calling
-`FlutterMatterPlatform.instance = MyPlatformFlutterMatter()`.
+platform-specific behavior.
+
+# Contributing
+Contributions, issues and feature requests are welcome.
+Feel free to check issues page if you want to contribute.
+[Check the contributing guide](../CONTRIBUTING.md).
+
+# Issues
+
+Please file any issues, bugs or feature requests as an issue on our [GitHub page](TODO).
+
+# Author
+Developed by [grandcentrix](https://grandcentrix.net/). We make IoT happen.
 
 [1]: ../flutter_matter
-[2]: lib/flutter_matter_platform_interface.dart
+[2]: lib/src/flutter_matter_platform_interface.dart
