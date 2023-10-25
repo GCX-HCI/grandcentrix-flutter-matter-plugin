@@ -8,6 +8,7 @@ import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry
 import net.grandcentrix.flutter_matter.clusters.DescriptorCluster
 import net.grandcentrix.flutter_matter.clusters.OnOffCluster
+import net.grandcentrix.flutter_matter.clusters.TemperatureCluster
 import timber.log.Timber
 
 
@@ -16,11 +17,13 @@ class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.Activity
   private lateinit var flutterMatterHostApi: FlutterMatterHostApiImpl
   private lateinit var descriptorClusterApi: DescriptorCluster
   private lateinit var onOffClusterApi: OnOffCluster
+  private lateinit var temperatureApi: TemperatureCluster
 
   private fun setActivity(activity: Activity?) {
     flutterMatterHostApi.activity = activity
     descriptorClusterApi.activity = activity
     onOffClusterApi.activity = activity
+    temperatureApi.activity = activity
   }
 
   // FlutterPlugin
@@ -31,6 +34,7 @@ class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.Activity
     descriptorClusterApi = DescriptorCluster()
     val flutterOnOffClusterApi =  FlutterMatterFlutterOnOffClusterApi(flutterPluginBinding.binaryMessenger)
     onOffClusterApi = OnOffCluster(flutterOnOffClusterApi)
+    temperatureApi = TemperatureCluster()
 
     if(flutterPluginBinding.applicationContext is Activity) {
       setActivity(flutterPluginBinding.applicationContext as Activity)
@@ -39,12 +43,14 @@ class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.Activity
     FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, flutterMatterHostApi)
     FlutterMatterHostDescriptorClusterApi.setUp(flutterPluginBinding.binaryMessenger, descriptorClusterApi)
     FlutterMatterHostOnOffClusterApi.setUp(flutterPluginBinding.binaryMessenger, onOffClusterApi)
+    FlutterMatterHostTemperatureClusterApi.setUp(flutterPluginBinding.binaryMessenger, temperatureApi)
   }
 
   override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     flutterMatterHostApi.close()
     descriptorClusterApi.close()
     onOffClusterApi.close()
+    temperatureApi.close()
 
     FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
   }

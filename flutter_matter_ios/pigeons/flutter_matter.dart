@@ -6,6 +6,53 @@ import 'package:pigeon/pigeon.dart';
   swiftOut: 'ios/Classes/FlutterMatter.g.swift',
   // copyrightHeader: 'pigeons/copyright.txt',
 ))
+class MatterDevice {
+  final int id;
+  // final String deviceName;
+  // final int vendorId;
+  // final int productId;
+
+  MatterDevice({required this.id});
+}
+
+class CommissionRequest {
+  final int id;
+
+  CommissionRequest({required this.id});
+}
+
+class OpenPairingWindowResult {
+  final String? manualPairingCode;
+  final String? qrCode;
+
+  OpenPairingWindowResult({
+    required this.manualPairingCode,
+    required this.qrCode,
+  });
+}
+
+@HostApi()
+abstract class FlutterMatterHostApi {
+  @async
+  String getPlatformVersion();
+
+  void initUserDefaults(String appGroup);
+
+  @async
+  MatterDevice commission(CommissionRequest request);
+
+  @async
+  void unpair(int deviceId);
+
+  @async
+  OpenPairingWindowResult openPairingWindowWithPin(
+    int deviceId,
+    int duration,
+    int discriminator,
+    int setupPin,
+  );
+}
+
 @HostApi()
 abstract class FlutterMatterHostOnOffClusterApi {
   @async
@@ -126,49 +173,29 @@ abstract class FlutterMatterHostDescriptorClusterApi {
   // List<int> readClusterRevision(int deviceId);
 }
 
-class MatterDevice {
-  final int id;
-  // final String deviceName;
-  // final int vendorId;
-  // final int productId;
-
-  MatterDevice({required this.id});
-}
-
-class CommissionRequest {
-  final int id;
-
-  CommissionRequest({required this.id});
-}
-
-class OpenPairingWindowResult {
-  final String? manualPairingCode;
-  final String? qrCode;
-
-  OpenPairingWindowResult({
-    required this.manualPairingCode,
-    required this.qrCode,
-  });
-}
-
 @HostApi()
-abstract class FlutterMatterHostApi {
+abstract class FlutterMatterHostTemperatureClusterApi {
   @async
-  String getPlatformVersion();
-
-  void initUserDefaults(String appGroup);
-
-  @async
-  MatterDevice commission(CommissionRequest request);
-
-  @async
-  void unpair(int deviceId);
-
-  @async
-  OpenPairingWindowResult openPairingWindowWithPin(
+  int? readMeasuredValue(
     int deviceId,
-    int duration,
-    int discriminator,
-    int setupPin,
+    int endpointId,
+  );
+
+  @async
+  int? readMinMeasuredValue(
+    int deviceId,
+    int endpointId,
+  );
+
+  @async
+  int? readMaxMeasuredValue(
+    int deviceId,
+    int endpointId,
+  );
+
+  @async
+  int? readTolerance(
+    int deviceId,
+    int endpointId,
   );
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_matter_ios/src/clusters/flutter_matter_ios_descriptor_cluster.dart';
 import 'package:flutter_matter_ios/src/clusters/flutter_matter_ios_onoff_cluster.dart';
+import 'package:flutter_matter_ios/src/clusters/flutter_matter_ios_temperature_cluster.dart';
 import 'package:flutter_matter_ios/src/extensions/matter_device_transformation_extension.dart';
 import 'package:flutter_matter_ios/src/extensions/open_pairing_window_result_transformation_extension.dart';
 import 'package:flutter_matter_ios/src/flutter_matter.g.dart';
@@ -12,6 +13,8 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
   final FlutterMatterOnOffClusterInterface _flutterMatterOnOffClusterInterface;
   final FlutterMatterDescriptorClusterInterface
       _flutterMatterDescriptorClusterInterface;
+  final FlutterMatterTemperatureClusterInterface
+      _flutterMatterTemperatureClusterInterface;
 
   /// Creates a new plugin implementation instance.
   FlutterMatterIos._({
@@ -21,13 +24,19 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
     @visibleForTesting
     FlutterMatterDescriptorClusterInterface?
         flutterMatterDescriptorClusterInterface,
+    @visibleForTesting
+    FlutterMatterTemperatureClusterInterface?
+        flutterMatterTemperatureClusterInterface,
   })  : _flutterMatterHostApi = flutterMatterHostApi ?? FlutterMatterHostApi(),
         _flutterMatterOnOffClusterInterface =
             flutterMatterOnOffClusterInterface ??
                 FlutterMatterIosOnOffCluster(),
         _flutterMatterDescriptorClusterInterface =
             flutterMatterDescriptorClusterInterface ??
-                FlutterMatterIosDescriptorCluster();
+                FlutterMatterIosDescriptorCluster(),
+        _flutterMatterTemperatureClusterInterface =
+            flutterMatterTemperatureClusterInterface ??
+                FlutterMatterIosTemperatureCluster();
 
   /// Async factory method to create a [FlutterMatterIos] instance and initialize the iOS UserDefaults
   static Future<FlutterMatterIos> createInstance({
@@ -89,4 +98,8 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
   @override
   FlutterMatterDescriptorClusterInterface get descriptorCluster =>
       _flutterMatterDescriptorClusterInterface;
+
+  @override
+  FlutterMatterTemperatureClusterInterface get temperatureCluster =>
+      _flutterMatterTemperatureClusterInterface;
 }

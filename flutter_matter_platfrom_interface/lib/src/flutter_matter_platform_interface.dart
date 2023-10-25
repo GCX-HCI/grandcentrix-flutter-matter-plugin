@@ -24,4 +24,7 @@ abstract interface class FlutterMatterPlatformInterface {
 
   /// Access descriptor cluster
   FlutterMatterDescriptorClusterInterface get descriptorCluster;
+
+  /// Access temperature cluster
+  FlutterMatterTemperatureClusterInterface get temperatureCluster;
 }

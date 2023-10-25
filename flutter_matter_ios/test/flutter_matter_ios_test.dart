@@ -156,5 +156,12 @@ void main() {
       check(sut.descriptorCluster)
           .isA<FlutterMatterDescriptorClusterInterface>();
     });
+
+    test(
+        '$FlutterMatterIos.temperatureCluster is a $FlutterMatterTemperatureClusterInterface',
+        () {
+      check(sut.temperatureCluster)
+          .isA<FlutterMatterTemperatureClusterInterface>();
+    });
   });
 }

@@ -149,5 +149,12 @@ void main() {
       check(sut.descriptorCluster)
           .isA<FlutterMatterDescriptorClusterInterface>();
     });
+
+    test(
+        '$FlutterMatterAndroid.temperatureCluster is a $FlutterMatterTemperatureClusterInterface',
+        () {
+      check(sut.temperatureCluster)
+          .isA<FlutterMatterTemperatureClusterInterface>();
+    });
   });
 }

@@ -42,9 +42,9 @@ class _FakeFlutterMatterDescriptorClusterInterface_1 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterDevice_2 extends _i1.SmartFake
-    implements _i2.FlutterMatterDevice {
-  _FakeFlutterMatterDevice_2(
+class _FakeFlutterMatterTemperatureClusterInterface_2 extends _i1.SmartFake
+    implements _i2.FlutterMatterTemperatureClusterInterface {
+  _FakeFlutterMatterTemperatureClusterInterface_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -53,9 +53,20 @@ class _FakeFlutterMatterDevice_2 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterOpenPairingWindowResult_3 extends _i1.SmartFake
+class _FakeFlutterMatterDevice_3 extends _i1.SmartFake
+    implements _i2.FlutterMatterDevice {
+  _FakeFlutterMatterDevice_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFlutterMatterOpenPairingWindowResult_4 extends _i1.SmartFake
     implements _i2.FlutterMatterOpenPairingWindowResult {
-  _FakeFlutterMatterOpenPairingWindowResult_3(
+  _FakeFlutterMatterOpenPairingWindowResult_4(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -97,6 +108,20 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
         ),
       ) as _i2.FlutterMatterDescriptorClusterInterface);
   @override
+  _i2.FlutterMatterTemperatureClusterInterface get temperatureCluster =>
+      (super.noSuchMethod(
+        Invocation.getter(#temperatureCluster),
+        returnValue: _FakeFlutterMatterTemperatureClusterInterface_2(
+          this,
+          Invocation.getter(#temperatureCluster),
+        ),
+        returnValueForMissingStub:
+            _FakeFlutterMatterTemperatureClusterInterface_2(
+          this,
+          Invocation.getter(#temperatureCluster),
+        ),
+      ) as _i2.FlutterMatterTemperatureClusterInterface);
+  @override
   _i3.Future<String?> getPlatformVersion() => (super.noSuchMethod(
         Invocation.method(
           #getPlatformVersion,
@@ -114,7 +139,7 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
           {#deviceId: deviceId},
         ),
         returnValue: _i3.Future<_i2.FlutterMatterDevice>.value(
-            _FakeFlutterMatterDevice_2(
+            _FakeFlutterMatterDevice_3(
           this,
           Invocation.method(
             #commission,
@@ -123,7 +148,7 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
           ),
         )),
         returnValueForMissingStub: _i3.Future<_i2.FlutterMatterDevice>.value(
-            _FakeFlutterMatterDevice_2(
+            _FakeFlutterMatterDevice_3(
           this,
           Invocation.method(
             #commission,
@@ -163,7 +188,7 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
             ),
             returnValue:
                 _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
-                    _FakeFlutterMatterOpenPairingWindowResult_3(
+                    _FakeFlutterMatterOpenPairingWindowResult_4(
               this,
               Invocation.method(
                 #openPairingWindowWithPin,
@@ -178,7 +203,7 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
             )),
             returnValueForMissingStub:
                 _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
-                    _FakeFlutterMatterOpenPairingWindowResult_3(
+                    _FakeFlutterMatterOpenPairingWindowResult_4(
               this,
               Invocation.method(
                 #openPairingWindowWithPin,

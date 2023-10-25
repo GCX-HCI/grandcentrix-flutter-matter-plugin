@@ -11,6 +11,11 @@ abstract class FlutterMatterException implements Exception {
 
   /// Create a new `FlutterMatterException` with the description [message]
   FlutterMatterException(this.message);
+
+  @override
+  String toString() {
+    return '$runtimeType: ${message ?? 'No message!'}';
+  }
 }
 
 /// General error which is not further specified, see the [message] for more information

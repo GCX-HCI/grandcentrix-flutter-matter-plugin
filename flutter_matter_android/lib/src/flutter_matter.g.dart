@@ -8,60 +8,6 @@ import 'dart:typed_data' show Float64List, Int32List, Int64List, Uint8List;
 import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 
-class AndroidError {
-  AndroidError({
-    required this.code,
-    this.message,
-  });
-
-  /// An error code.
-  String code;
-
-  /// A human-readable error message, possibly null.
-  String? message;
-
-  Object encode() {
-    return <Object?>[
-      code,
-      message,
-    ];
-  }
-
-  static AndroidError decode(Object result) {
-    result as List<Object?>;
-    return AndroidError(
-      code: result[0]! as String,
-      message: result[1] as String?,
-    );
-  }
-}
-
-class DescriptorClusterDeviceTypeStruct {
-  DescriptorClusterDeviceTypeStruct({
-    required this.deviceType,
-    required this.revision,
-  });
-
-  int deviceType;
-
-  int revision;
-
-  Object encode() {
-    return <Object?>[
-      deviceType,
-      revision,
-    ];
-  }
-
-  static DescriptorClusterDeviceTypeStruct decode(Object result) {
-    result as List<Object?>;
-    return DescriptorClusterDeviceTypeStruct(
-      deviceType: result[0]! as int,
-      revision: result[1]! as int,
-    );
-  }
-}
-
 class MatterDevice {
   MatterDevice({
     required this.id,
@@ -127,6 +73,215 @@ class OpenPairingWindowResult {
       manualPairingCode: result[0] as String?,
       qrCode: result[1] as String?,
     );
+  }
+}
+
+class AndroidError {
+  AndroidError({
+    required this.code,
+    this.message,
+  });
+
+  /// An error code.
+  String code;
+
+  /// A human-readable error message, possibly null.
+  String? message;
+
+  Object encode() {
+    return <Object?>[
+      code,
+      message,
+    ];
+  }
+
+  static AndroidError decode(Object result) {
+    result as List<Object?>;
+    return AndroidError(
+      code: result[0]! as String,
+      message: result[1] as String?,
+    );
+  }
+}
+
+class DescriptorClusterDeviceTypeStruct {
+  DescriptorClusterDeviceTypeStruct({
+    required this.deviceType,
+    required this.revision,
+  });
+
+  int deviceType;
+
+  int revision;
+
+  Object encode() {
+    return <Object?>[
+      deviceType,
+      revision,
+    ];
+  }
+
+  static DescriptorClusterDeviceTypeStruct decode(Object result) {
+    result as List<Object?>;
+    return DescriptorClusterDeviceTypeStruct(
+      deviceType: result[0]! as int,
+      revision: result[1]! as int,
+    );
+  }
+}
+
+class _FlutterMatterHostApiCodec extends StandardMessageCodec {
+  const _FlutterMatterHostApiCodec();
+  @override
+  void writeValue(WriteBuffer buffer, Object? value) {
+    if (value is CommissionRequest) {
+      buffer.putUint8(128);
+      writeValue(buffer, value.encode());
+    } else if (value is MatterDevice) {
+      buffer.putUint8(129);
+      writeValue(buffer, value.encode());
+    } else if (value is OpenPairingWindowResult) {
+      buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else {
+      super.writeValue(buffer, value);
+    }
+  }
+
+  @override
+  Object? readValueOfType(int type, ReadBuffer buffer) {
+    switch (type) {
+      case 128:
+        return CommissionRequest.decode(readValue(buffer)!);
+      case 129:
+        return MatterDevice.decode(readValue(buffer)!);
+      case 130:
+        return OpenPairingWindowResult.decode(readValue(buffer)!);
+      default:
+        return super.readValueOfType(type, buffer);
+    }
+  }
+}
+
+class FlutterMatterHostApi {
+  /// Constructor for [FlutterMatterHostApi].  The [binaryMessenger] named argument is
+  /// available for dependency injection.  If it is left null, the default
+  /// BinaryMessenger will be used which routes to the host platform.
+  FlutterMatterHostApi({BinaryMessenger? binaryMessenger})
+      : _binaryMessenger = binaryMessenger;
+  final BinaryMessenger? _binaryMessenger;
+
+  static const MessageCodec<Object?> codec = _FlutterMatterHostApiCodec();
+
+  Future<String> getPlatformVersion() async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.getPlatformVersion',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<MatterDevice> commission(CommissionRequest arg_request) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.commission',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_request]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as MatterDevice?)!;
+    }
+  }
+
+  Future<void> unpair(int arg_deviceId) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.unpair',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_deviceId]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
+    }
+  }
+
+  Future<OpenPairingWindowResult> openPairingWindowWithPin(int arg_deviceId,
+      int arg_duration, int arg_discriminator, int arg_setupPin) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.openPairingWindowWithPin',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList = await channel.send(<Object?>[
+      arg_deviceId,
+      arg_duration,
+      arg_discriminator,
+      arg_setupPin
+    ]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else if (replyList[0] == null) {
+      throw PlatformException(
+        code: 'null-error',
+        message: 'Host platform returned null value for non-null return value.',
+      );
+    } else {
+      return (replyList[0] as OpenPairingWindowResult?)!;
+    }
   }
 }
 
@@ -494,55 +649,23 @@ class FlutterMatterHostDescriptorClusterApi {
   }
 }
 
-class _FlutterMatterHostApiCodec extends StandardMessageCodec {
-  const _FlutterMatterHostApiCodec();
-  @override
-  void writeValue(WriteBuffer buffer, Object? value) {
-    if (value is CommissionRequest) {
-      buffer.putUint8(128);
-      writeValue(buffer, value.encode());
-    } else if (value is MatterDevice) {
-      buffer.putUint8(129);
-      writeValue(buffer, value.encode());
-    } else if (value is OpenPairingWindowResult) {
-      buffer.putUint8(130);
-      writeValue(buffer, value.encode());
-    } else {
-      super.writeValue(buffer, value);
-    }
-  }
-
-  @override
-  Object? readValueOfType(int type, ReadBuffer buffer) {
-    switch (type) {
-      case 128:
-        return CommissionRequest.decode(readValue(buffer)!);
-      case 129:
-        return MatterDevice.decode(readValue(buffer)!);
-      case 130:
-        return OpenPairingWindowResult.decode(readValue(buffer)!);
-      default:
-        return super.readValueOfType(type, buffer);
-    }
-  }
-}
-
-class FlutterMatterHostApi {
-  /// Constructor for [FlutterMatterHostApi].  The [binaryMessenger] named argument is
+class FlutterMatterHostTemperatureClusterApi {
+  /// Constructor for [FlutterMatterHostTemperatureClusterApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
   /// BinaryMessenger will be used which routes to the host platform.
-  FlutterMatterHostApi({BinaryMessenger? binaryMessenger})
+  FlutterMatterHostTemperatureClusterApi({BinaryMessenger? binaryMessenger})
       : _binaryMessenger = binaryMessenger;
   final BinaryMessenger? _binaryMessenger;
 
-  static const MessageCodec<Object?> codec = _FlutterMatterHostApiCodec();
+  static const MessageCodec<Object?> codec = StandardMessageCodec();
 
-  Future<String> getPlatformVersion() async {
+  Future<int?> readMeasuredValue(int arg_deviceId, int arg_endpointId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.getPlatformVersion',
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostTemperatureClusterApi.readMeasuredValue',
         codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel.send(null) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -554,23 +677,19 @@ class FlutterMatterHostApi {
         message: replyList[1] as String?,
         details: replyList[2],
       );
-    } else if (replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
     } else {
-      return (replyList[0] as String?)!;
+      return (replyList[0] as int?);
     }
   }
 
-  Future<MatterDevice> commission(CommissionRequest arg_request) async {
+  Future<int?> readMinMeasuredValue(
+      int arg_deviceId, int arg_endpointId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.commission',
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostTemperatureClusterApi.readMinMeasuredValue',
         codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_request]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -582,23 +701,19 @@ class FlutterMatterHostApi {
         message: replyList[1] as String?,
         details: replyList[2],
       );
-    } else if (replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
     } else {
-      return (replyList[0] as MatterDevice?)!;
+      return (replyList[0] as int?);
     }
   }
 
-  Future<void> unpair(int arg_deviceId) async {
+  Future<int?> readMaxMeasuredValue(
+      int arg_deviceId, int arg_endpointId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.unpair',
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostTemperatureClusterApi.readMaxMeasuredValue',
         codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList =
-        await channel.send(<Object?>[arg_deviceId]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -611,22 +726,17 @@ class FlutterMatterHostApi {
         details: replyList[2],
       );
     } else {
-      return;
+      return (replyList[0] as int?);
     }
   }
 
-  Future<OpenPairingWindowResult> openPairingWindowWithPin(int arg_deviceId,
-      int arg_duration, int arg_discriminator, int arg_setupPin) async {
+  Future<int?> readTolerance(int arg_deviceId, int arg_endpointId) async {
     final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
-        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.openPairingWindowWithPin',
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostTemperatureClusterApi.readTolerance',
         codec,
         binaryMessenger: _binaryMessenger);
-    final List<Object?>? replyList = await channel.send(<Object?>[
-      arg_deviceId,
-      arg_duration,
-      arg_discriminator,
-      arg_setupPin
-    ]) as List<Object?>?;
+    final List<Object?>? replyList = await channel
+        .send(<Object?>[arg_deviceId, arg_endpointId]) as List<Object?>?;
     if (replyList == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -638,13 +748,8 @@ class FlutterMatterHostApi {
         message: replyList[1] as String?,
         details: replyList[2],
       );
-    } else if (replyList[0] == null) {
-      throw PlatformException(
-        code: 'null-error',
-        message: 'Host platform returned null value for non-null return value.',
-      );
     } else {
-      return (replyList[0] as OpenPairingWindowResult?)!;
+      return (replyList[0] as int?);
     }
   }
 }

@@ -417,6 +417,16 @@ Attributes and commands for turning devices on and off.
 | OnWithRecallGlob­alScene | ⛔️          |
 | OnWithTimedOff          | ⛔️          |
 
+## Temperature Measurement
+This cluster provides an interface to temperature measurement functionality.
+
+### Attributes
+| Attribute              | Implemented |
+| :--------------------- | :---------: |
+| Measured­Value          | ✅          |
+| MinMea­suredValue       | ✅          |
+| MaxMea­suredValue       | ✅          |
+| Tolerance              | ✅          |
 
 # Errors
 
