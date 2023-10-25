@@ -61,7 +61,6 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
                 try controller.setupCommissioningSession(with: payload, newNodeID: NSNumber(value: deviceID))
             }
             catch{
-                let nsError = (error as NSError)
                 os_log(.error, "Can't start commissionDevice! %{public}@", String(describing: error))
                 continuation.resume(throwing: error)
             }

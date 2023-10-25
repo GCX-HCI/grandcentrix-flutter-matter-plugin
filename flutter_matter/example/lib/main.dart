@@ -40,88 +40,97 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Matter Example App'),
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            // Commisson a device
-            try {
-              final device = await _flutterMatterPlugin.commission(
-                  deviceId: _nextDeviceId);
-              // Device successfully comissioned!
-              setState(() {
-                _devices.add(device.id);
-              });
+      home: Builder(builder: (context) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Flutter Matter Example App'),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () async {
+              // Commisson a device
+              try {
+                final device = await _flutterMatterPlugin.commission(
+                    deviceId: _nextDeviceId);
+                // Device successfully comissioned!
+                setState(() {
+                  _devices.add(device.id);
+                });
 
-              // Save next available device id to shared prefs
-              _nextDeviceId++;
-              await _prefs.setInt(_nextDeviceIdKey, _nextDeviceId);
+                // Save next available device id to shared prefs
+                _nextDeviceId++;
+                await _prefs.setInt(_nextDeviceIdKey, _nextDeviceId);
 
-              // Save connected devices to shared prefs
-              await _prefs.setStringList(_connectedDevicesIdKey,
-                  _devices.map((e) => e.toString()).toList());
+                // Save connected devices to shared prefs
+                await _prefs.setStringList(_connectedDevicesIdKey,
+                    _devices.map((e) => e.toString()).toList());
 
-              // Read descriptor attributes
-              await readDescriptorAttributes(device.id);
-            } catch (e, st) {
-              // Commissioing wasn't successful!
+                // Read descriptor attributes
+                await readDescriptorAttributes(device.id);
+              } catch (e, st) {
+                // Commissioing wasn't successful!
 
-              print('Error: $e\n$st');
-              if (!context.mounted) return;
-              await showAdaptiveDialog(
-                context: context,
-                builder: (ctx) => AlertDialog.adaptive(
-                  icon: const Icon(Icons.error),
-                  title: const Text('Error!'),
-                  content: Text(e.toString()),
-                ),
-              );
-            }
-          },
-        ),
-        body: SafeArea(
-          child: Center(
-            child: Column(
-              children: [
-                Expanded(
-                  child: _devices.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'No devices yet!',
-                              style: Theme.of(context).textTheme.headlineMedium,
+                print('Error: $e\n$st');
+                if (!context.mounted) return;
+                await showAdaptiveDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog.adaptive(
+                    icon: const Icon(Icons.error),
+                    title: const Text('Error!'),
+                    content: Text(e.toString()),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('Ok'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+          body: SafeArea(
+            child: Center(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: _devices.isEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'No devices yet!',
+                                style:
+                                    Theme.of(context).textTheme.headlineMedium,
+                              ),
+                              Text(
+                                'Start by adding your first matter device!',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            ],
+                          )
+                        : ListView.builder(
+                            itemCount: _devices.length,
+                            itemBuilder: (ctx, i) => LightDeviceWidget(
+                              deviceId: _devices[i],
+                              unpaired: (id) {
+                                _devices.remove(id);
+                                setState(() {});
+                              },
                             ),
-                            Text(
-                              'Start by adding your first matter device!',
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ],
-                        )
-                      : ListView.builder(
-                          itemCount: _devices.length,
-                          itemBuilder: (ctx, i) => LightDeviceWidget(
-                            deviceId: _devices[i],
-                            unpaired: (id) {
-                              _devices.remove(id);
-                              setState(() {});
-                            },
+                            padding: const EdgeInsetsDirectional.all(16.0),
                           ),
-                          padding: const EdgeInsetsDirectional.all(16.0),
-                        ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text('Running on: $_platformVersion'),
-                ),
-              ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text('Running on: $_platformVersion'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 
