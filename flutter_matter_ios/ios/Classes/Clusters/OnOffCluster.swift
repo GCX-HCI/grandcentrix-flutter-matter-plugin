@@ -105,13 +105,13 @@ class OnOffCluster: FlutterMatterHostOnOffClusterApi {
                     if(error != nil)
                     {
                         os_log(.error, "Failed report attribute OnOff: \(error)")
-                        self._flutterApi.onOff(deviceId: deviceId, endpointId: endpointId, onOff: nil, error: IosError(code: "-1", message: error.debugDescription)) {
+                        self._flutterApi.onOff(deviceId: deviceId, endpointId: endpointId, onOff: nil, error: IosError(code: "-1", message: error.debugDescription)) {_ in 
                             os_log(.error, "Reported OnOff error: \(error)")
                         }
                         return
                     }
                     
-                    self._flutterApi.onOff(deviceId: deviceId, endpointId: endpointId, onOff: status == 1, error: nil) {
+                    self._flutterApi.onOff(deviceId: deviceId, endpointId: endpointId, onOff: status == 1, error: nil) { _ in
                         os_log(.default, "Reported OnOff status: \(status)")
                     }
                 });
