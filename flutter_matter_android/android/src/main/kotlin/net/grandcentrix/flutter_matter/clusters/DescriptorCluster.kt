@@ -42,9 +42,14 @@ class DescriptorCluster:
         callback: (Result<List<DescriptorClusterDeviceTypeStruct>>) -> Unit
     ) {
         scope.launch {
-            val cluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            cluster.readDeviceTypeListAttribute(object :
+            cluster?.readDeviceTypeListAttribute(object :
                 ChipClusters.DescriptorCluster.DeviceTypeListAttributeCallback {
                 override fun onSuccess(valueList: MutableList<ChipStructs.DescriptorClusterDeviceTypeStruct>?) {
                     callback(Result.success(valueList?.map { x ->
@@ -76,9 +81,14 @@ class DescriptorCluster:
         callback: (Result<List<Long>>) -> Unit
     ) {
         scope.launch {
-            val cluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            cluster.readServerListAttribute(object :
+            cluster?.readServerListAttribute(object :
                 ChipClusters.DescriptorCluster.ServerListAttributeCallback {
 
                 override fun onSuccess(valueList: MutableList<Long>?) {
@@ -106,9 +116,14 @@ class DescriptorCluster:
         callback: (Result<List<Long>>) -> Unit
     ) {
         scope.launch {
-            val cluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            cluster.readClientListAttribute(object :
+            cluster?.readClientListAttribute(object :
                 ChipClusters.DescriptorCluster.ClientListAttributeCallback {
 
                 override fun onSuccess(valueList: MutableList<Long>?) {
@@ -136,9 +151,14 @@ class DescriptorCluster:
         callback: (Result<List<Long>>) -> Unit
     ) {
         scope.launch {
-            val cluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            cluster.readPartsListAttribute(object :
+            cluster?.readPartsListAttribute(object :
                 ChipClusters.DescriptorCluster.PartsListAttributeCallback {
 
                 override fun onSuccess(valueList: MutableList<Int>?) {

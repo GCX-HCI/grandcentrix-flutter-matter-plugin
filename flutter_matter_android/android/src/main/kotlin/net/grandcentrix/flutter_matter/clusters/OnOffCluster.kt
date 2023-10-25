@@ -38,10 +38,15 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
 
     override fun off(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
         scope.launch {
-            val onOffCluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            onOffCluster
-                .off(object : ChipClusters.DefaultClusterCallback {
+            cluster
+                ?.off(object : ChipClusters.DefaultClusterCallback {
                     override fun onSuccess() {
                         callback(Result.success(Unit))
                     }
@@ -63,10 +68,15 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
 
     override fun on(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
         scope.launch {
-            val onOffCluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            onOffCluster
-                .on(object : ChipClusters.DefaultClusterCallback {
+            cluster
+                ?.on(object : ChipClusters.DefaultClusterCallback {
                     override fun onSuccess() {
                         callback(Result.success(Unit))
                     }
@@ -88,10 +98,15 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
 
     override fun toggle(deviceId: Long, endpointId: Long, callback: (Result<Unit>) -> Unit) {
         scope.launch {
-            val onOffCluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            onOffCluster
-                .toggle(object : ChipClusters.DefaultClusterCallback {
+            cluster
+                ?.toggle(object : ChipClusters.DefaultClusterCallback {
                     override fun onSuccess() {
                         callback(Result.success(Unit))
                     }
@@ -113,10 +128,15 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
 
     override fun readOnOff(deviceId: Long, endpointId: Long, callback: (Result<Boolean>) -> Unit) {
         scope.launch {
-            val onOffCluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            onOffCluster
-                .readOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
+            cluster
+                ?.readOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
                     override fun onSuccess(value: Boolean) {
                         callback(Result.success(value))
                     }
@@ -142,9 +162,14 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
         callback: (Result<Unit>) -> Unit
     ) {
         scope.launch {
-            val onOffCluster = getCluster(deviceId, endpointId)
+            val cluster = try {
+                getCluster(deviceId, endpointId)
+            } catch (e: Exception) {
+                callback(Result.failure(FlutterError("-1", "Can't connect to device!")))
+                null
+            }
 
-            onOffCluster.subscribeOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
+            cluster?.subscribeOnOffAttribute(object : ChipClusters.BooleanAttributeCallback {
                 override fun onSuccess(value: Boolean) {
                     activity!!.runOnUiThread {
                         flutterOnOffClusterApi.onOff(deviceId, endpointId, value, null) {
@@ -167,7 +192,8 @@ class OnOffCluster(private val flutterOnOffClusterApi: FlutterMatterFlutterOnOff
                 }
             }, 1, 10)
 
-            callback(Result.success(Unit))
+            if (cluster != null)
+                callback(Result.success(Unit))
         }
     }
 
