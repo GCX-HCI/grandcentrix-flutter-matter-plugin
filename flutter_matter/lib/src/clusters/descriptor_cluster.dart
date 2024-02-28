@@ -8,11 +8,11 @@ import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interf
 ///
 /// The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a com­ posed device type.
 /// > For Example: A Refrigerator/Freezer appliance device type may be defined as being com­ posed of multiple Temperature Sensor endpoints, a Metering endpoint, and two Thermostat endpoints.
-final class DescriptorCluster with SpecifyPlatfromException {
-  final FlutterMatterPlatformInterface _instance;
+class DescriptorCluster with SpecifyPlatfromException {
+  final FlutterMatterDescriptorClusterInterface _instance;
 
   /// Should not be used! Access via [FlutterMatter.descriptorCluster]
-  DescriptorCluster(FlutterMatterPlatformInterface instance)
+  DescriptorCluster(FlutterMatterDescriptorClusterInterface instance)
       : _instance = instance;
 
   /// This is a list of device types and corresponding revisions declaring endpoint conformance (see [DeviceTypeStruct]). At least one device type entry SHALL be present.
@@ -23,8 +23,8 @@ final class DescriptorCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await catchSpecifyRethrow(() => _instance.descriptorCluster
-        .readDeviceTypeList(deviceId: deviceId, endpointId: endpointId));
+    final result = await catchSpecifyRethrow(() => _instance.readDeviceTypeList(
+        deviceId: deviceId, endpointId: endpointId));
 
     return result
         .where((element) => element != null)
@@ -37,8 +37,8 @@ final class DescriptorCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await catchSpecifyRethrow(() => _instance.descriptorCluster
-        .readServerList(deviceId: deviceId, endpointId: endpointId));
+    final result = await catchSpecifyRethrow(() =>
+        _instance.readServerList(deviceId: deviceId, endpointId: endpointId));
 
     return result.where((element) => element != null).cast<int>().toList();
   }
@@ -48,8 +48,8 @@ final class DescriptorCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await catchSpecifyRethrow(() => _instance.descriptorCluster
-        .readClientList(deviceId: deviceId, endpointId: endpointId));
+    final result = await catchSpecifyRethrow(() =>
+        _instance.readClientList(deviceId: deviceId, endpointId: endpointId));
     return result.where((element) => element != null).cast<int>().toList();
   }
 
@@ -58,8 +58,8 @@ final class DescriptorCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) async {
-    final result = await catchSpecifyRethrow(() => _instance.descriptorCluster
-        .readPartsList(deviceId: deviceId, endpointId: endpointId));
+    final result = await catchSpecifyRethrow(() =>
+        _instance.readPartsList(deviceId: deviceId, endpointId: endpointId));
 
     return result.where((element) => element != null).cast<int>().toList();
   }

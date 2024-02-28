@@ -2,11 +2,11 @@ import 'package:flutter_matter/src/utils/specifyplatformexception.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
 /// This cluster provides an interface to temperature measurement functionality, including configura­ tion and provision of notifications of temperature measurements
-final class TemperatureCluster with SpecifyPlatfromException {
-  final FlutterMatterPlatformInterface _instance;
+class TemperatureCluster with SpecifyPlatfromException {
+  final FlutterMatterTemperatureClusterInterface _instance;
 
   /// Should not be used! Access via [FlutterMatter.temperatureCluster]
-  TemperatureCluster(FlutterMatterPlatformInterface instance)
+  TemperatureCluster(FlutterMatterTemperatureClusterInterface instance)
       : _instance = instance;
 
   /// Attributes
@@ -17,8 +17,8 @@ final class TemperatureCluster with SpecifyPlatfromException {
   /// The null value indicates that the value is not available.
   Future<int?> readMaxMeasuredValue(
           {required int deviceId, required int endpointId}) =>
-      catchSpecifyRethrow(() => _instance.temperatureCluster
-          .readMaxMeasuredValue(deviceId: deviceId, endpointId: endpointId));
+      catchSpecifyRethrow(() => _instance.readMaxMeasuredValue(
+          deviceId: deviceId, endpointId: endpointId));
 
   /// Read attribute MeasuredValue
   ///
@@ -27,8 +27,8 @@ final class TemperatureCluster with SpecifyPlatfromException {
   /// The null value indicates that the temperature is unknown.
   Future<int?> readMeasuredValue(
           {required int deviceId, required int endpointId}) =>
-      catchSpecifyRethrow(() => _instance.temperatureCluster
-          .readMeasuredValue(deviceId: deviceId, endpointId: endpointId));
+      catchSpecifyRethrow(() => _instance.readMeasuredValue(
+          deviceId: deviceId, endpointId: endpointId));
 
   /// Read attribute MaxMeasuredValue
   ///
@@ -36,8 +36,8 @@ final class TemperatureCluster with SpecifyPlatfromException {
   /// The null value indicates that the value is not available.
   Future<int?> readMinMeasuredValue(
           {required int deviceId, required int endpointId}) =>
-      catchSpecifyRethrow(() => _instance.temperatureCluster
-          .readMinMeasuredValue(deviceId: deviceId, endpointId: endpointId));
+      catchSpecifyRethrow(() => _instance.readMinMeasuredValue(
+          deviceId: deviceId, endpointId: endpointId));
 
   /// Read attribute Tolerance
   ///
@@ -45,6 +45,6 @@ final class TemperatureCluster with SpecifyPlatfromException {
   /// The null value indicates that the value is not available.
   Future<int?> readTolerance(
           {required int deviceId, required int endpointId}) =>
-      catchSpecifyRethrow(() => _instance.temperatureCluster
-          .readTolerance(deviceId: deviceId, endpointId: endpointId));
+      catchSpecifyRethrow(() =>
+          _instance.readTolerance(deviceId: deviceId, endpointId: endpointId));
 }

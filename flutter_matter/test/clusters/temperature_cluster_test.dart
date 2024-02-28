@@ -10,25 +10,19 @@ import 'package:mockito/mockito.dart';
 import 'temperature_cluster_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FlutterMatterPlatformInterface>(),
   MockSpec<FlutterMatterTemperatureClusterInterface>(),
 ])
 void main() {
   late TemperatureCluster sut;
 
-  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatform;
   late MockFlutterMatterTemperatureClusterInterface
       mockFlutterMatterTemperatureClusterInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatformInterface();
     mockFlutterMatterTemperatureClusterInterface =
         MockFlutterMatterTemperatureClusterInterface();
 
-    sut = TemperatureCluster(mockFlutterMatterPlatform);
-
-    when(mockFlutterMatterPlatform.temperatureCluster)
-        .thenReturn(mockFlutterMatterTemperatureClusterInterface);
+    sut = TemperatureCluster(mockFlutterMatterTemperatureClusterInterface);
   });
 
   group('attributes', () {

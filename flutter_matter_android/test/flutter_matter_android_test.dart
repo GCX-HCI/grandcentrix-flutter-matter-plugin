@@ -12,30 +12,16 @@ import './flutter_matter_android_test.mocks.dart';
   MockSpec<FlutterMatterHostApi>(),
   MockSpec<MatterDevice>(),
   MockSpec<OpenPairingWindowResult>(),
-  MockSpec<FlutterMatterOnOffClusterInterface>(),
-  MockSpec<FlutterMatterDescriptorClusterInterface>(),
 ])
 void main() {
   late FlutterMatterAndroid sut;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
-  late MockFlutterMatterOnOffClusterInterface
-      mockFlutterMatterOnOffClusterInterface;
-  late MockFlutterMatterDescriptorClusterInterface
-      mockFlutterMatterDescriptorClusterInterface;
 
   setUp(() {
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
-    mockFlutterMatterOnOffClusterInterface =
-        MockFlutterMatterOnOffClusterInterface();
-    mockFlutterMatterDescriptorClusterInterface =
-        MockFlutterMatterDescriptorClusterInterface();
 
     sut = FlutterMatterAndroid(
       flutterMatterHostApi: mockFlutterMatterHostApi,
-      flutterMatterOnOffClusterInterface:
-          mockFlutterMatterOnOffClusterInterface,
-      flutterMatterDescriptorClusterInterface:
-          mockFlutterMatterDescriptorClusterInterface,
     );
   });
 
@@ -133,28 +119,6 @@ void main() {
         discriminator: 456,
         setupPin: 789,
       )).throws();
-    });
-  });
-
-  group('clusters', () {
-    test(
-        '$FlutterMatterAndroid.onOffCluster is a $FlutterMatterOnOffClusterInterface',
-        () {
-      check(sut.onOffCluster).isA<FlutterMatterOnOffClusterInterface>();
-    });
-
-    test(
-        '$FlutterMatterAndroid.descriptorCluster is a $FlutterMatterDescriptorClusterInterface',
-        () {
-      check(sut.descriptorCluster)
-          .isA<FlutterMatterDescriptorClusterInterface>();
-    });
-
-    test(
-        '$FlutterMatterAndroid.temperatureCluster is a $FlutterMatterTemperatureClusterInterface',
-        () {
-      check(sut.temperatureCluster)
-          .isA<FlutterMatterTemperatureClusterInterface>();
     });
   });
 }

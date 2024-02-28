@@ -10,26 +10,20 @@ import 'package:mockito/mockito.dart';
 import 'descriptor_cluster_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FlutterMatterPlatformInterface>(),
   MockSpec<FlutterMatterDescriptorClusterInterface>(),
   MockSpec<FlutterMatterDescriptorClusterDeviceTypeStruct>(),
 ])
 void main() {
   late DescriptorCluster sut;
 
-  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatform;
   late MockFlutterMatterDescriptorClusterInterface
       mockFlutterMatterDescriptorClusterInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatformInterface();
     mockFlutterMatterDescriptorClusterInterface =
         MockFlutterMatterDescriptorClusterInterface();
 
-    sut = DescriptorCluster(mockFlutterMatterPlatform);
-
-    when(mockFlutterMatterPlatform.descriptorCluster)
-        .thenReturn(mockFlutterMatterDescriptorClusterInterface);
+    sut = DescriptorCluster(mockFlutterMatterDescriptorClusterInterface);
   });
 
   group('attributes', () {

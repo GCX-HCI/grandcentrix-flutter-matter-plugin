@@ -2,11 +2,12 @@ import 'package:flutter_matter/src/utils/specifyplatformexception.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 
 /// Attributes and commands for turning devices on and off
-final class OnOffCluster with SpecifyPlatfromException {
-  final FlutterMatterPlatformInterface _instance;
+class OnOffCluster with SpecifyPlatfromException {
+  final FlutterMatterOnOffClusterInterface _instance;
 
   /// Should not be used! Access via [FlutterMatter.onOffCluster]
-  OnOffCluster(FlutterMatterPlatformInterface instance) : _instance = instance;
+  OnOffCluster(FlutterMatterOnOffClusterInterface instance)
+      : _instance = instance;
 
   // Commands
 
@@ -15,7 +16,7 @@ final class OnOffCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) =>
-      catchSpecifyRethrow(() => _instance.onOffCluster.off(
+      catchSpecifyRethrow(() => _instance.off(
             deviceId: deviceId,
             endpointId: endpointId,
           ));
@@ -25,7 +26,7 @@ final class OnOffCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) =>
-      catchSpecifyRethrow(() => _instance.onOffCluster.on(
+      catchSpecifyRethrow(() => _instance.on(
             deviceId: deviceId,
             endpointId: endpointId,
           ));
@@ -35,7 +36,7 @@ final class OnOffCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) =>
-      catchSpecifyRethrow(() => _instance.onOffCluster.toggle(
+      catchSpecifyRethrow(() => _instance.toggle(
             deviceId: deviceId,
             endpointId: endpointId,
           ));
@@ -47,7 +48,7 @@ final class OnOffCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) =>
-      catchSpecifyRethrow(() => _instance.onOffCluster.readOnOff(
+      catchSpecifyRethrow(() => _instance.readOnOff(
             deviceId: deviceId,
             endpointId: endpointId,
           ));
@@ -57,6 +58,6 @@ final class OnOffCluster with SpecifyPlatfromException {
     required int deviceId,
     required int endpointId,
   }) =>
-      catchSpecifyRethrowStream(_instance.onOffCluster
-          .subscribeOnOff(deviceId: deviceId, endpointId: endpointId));
+      catchSpecifyRethrowStream(
+          _instance.subscribeOnOff(deviceId: deviceId, endpointId: endpointId));
 }

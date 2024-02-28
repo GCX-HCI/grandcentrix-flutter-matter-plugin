@@ -142,26 +142,4 @@ void main() {
       )).throws();
     });
   });
-
-  group('clusters', () {
-    test(
-        '$FlutterMatterIos.onOffCluster is a $FlutterMatterOnOffClusterInterface',
-        () {
-      check(sut.onOffCluster).isA<FlutterMatterOnOffClusterInterface>();
-    });
-
-    test(
-        '$FlutterMatterIos.descriptorCluster is a $FlutterMatterDescriptorClusterInterface',
-        () {
-      check(sut.descriptorCluster)
-          .isA<FlutterMatterDescriptorClusterInterface>();
-    });
-
-    test(
-        '$FlutterMatterIos.temperatureCluster is a $FlutterMatterTemperatureClusterInterface',
-        () {
-      check(sut.temperatureCluster)
-          .isA<FlutterMatterTemperatureClusterInterface>();
-    });
-  });
 }

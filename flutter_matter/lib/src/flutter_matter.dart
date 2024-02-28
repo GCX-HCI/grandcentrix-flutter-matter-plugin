@@ -1,59 +1,51 @@
-import 'dart:io' show Platform;
-
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_matter/src/clusters/descriptor_cluster.dart';
 import 'package:flutter_matter/src/clusters/on_off_cluster.dart';
+import 'package:flutter_matter/src/clusters/temperature_cluster.dart';
+import 'package:flutter_matter/src/utils/cluster_factory.dart';
 import 'package:flutter_matter/src/utils/specifyplatformexception.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
-import 'package:flutter_matter_ios/flutter_matter_ios.dart';
-import 'package:flutter_matter_android/flutter_matter_android.dart';
 
 /// Commisson, share, read, subscribe and control Matter devices
 final class FlutterMatter with SpecifyPlatfromException {
-  final FlutterMatterPlatformInterface _instance;
+  final FlutterMatterPlatformInterface _platfromInterface;
 
-  FlutterMatter._({required FlutterMatterPlatformInterface instance})
-      : _instance = instance {
-    _setupClusters();
-  }
+  FlutterMatter._({
+    required FlutterMatterPlatformInterface platfromInterface,
+    required this.descriptorCluster,
+    required this.onOffCluster,
+    required this.temperatureCluster,
+  }) : _platfromInterface = platfromInterface;
 
   /// Create instance of [FlutterMatter]
   ///
   /// Parameter [appGroup] should be your App Group you defined in the iOS App Group capabilities. See the README for setup.
   /// Throws an [UnimplementedError], when your Platfrom is not iOS or Android!
   ///
-  /// Paramter [instance] is for testing
-  static Future<FlutterMatter> createInstance(
-      {required String appGroup,
-      @visibleForTesting FlutterMatterPlatformInterface? instance}) async {
-    if (instance != null) {
-      return FlutterMatter._(instance: instance);
-    } else if (Platform.isIOS) {
-      final iOSPlatformInterface =
-          await FlutterMatterIos.createInstance(appGroup: appGroup);
-      return FlutterMatter._(instance: iOSPlatformInterface);
-    } else if (Platform.isAndroid) {
-      final androidPlatformInterface = FlutterMatterAndroid();
-      return FlutterMatter._(instance: androidPlatformInterface);
-    }
-
-    throw UnimplementedError(
-        'FlutterMatter currently doesn\'t support your platform!');
-  }
-
-  void _setupClusters() {
-    descriptorCluster = DescriptorCluster(_instance);
-    onOffCluster = OnOffCluster(_instance);
+  /// Paramter [clusterFactory] is only for testing
+  static Future<FlutterMatter> createInstance({
+    required String appGroup,
+    @visibleForTesting ClusterFactory? clusterFactory,
+  }) async {
+    final factory = clusterFactory ?? ClusterFactory();
+    return FlutterMatter._(
+      platfromInterface: await factory.createFlutterMatterPlatformInterface(
+          appGroup: appGroup),
+      descriptorCluster: factory.createDescriptorCluster(),
+      onOffCluster: factory.createOnOffCluster(),
+      temperatureCluster: factory.createTemperatureCluster(),
+    );
   }
 
   /// Sanity check test method
   @visibleForTesting
   Future<String?> getPlatformVersion() =>
-      catchSpecifyRethrow(() => _instance.getPlatformVersion());
+      catchSpecifyRethrow(() => _platfromInterface.getPlatformVersion());
 
   /// Commission a matter device with the provided `deviceId`
   Future<FlutterMatterDevice> commission({required int deviceId}) =>
-      catchSpecifyRethrow(() => _instance.commission(deviceId: deviceId));
+      catchSpecifyRethrow(
+          () => _platfromInterface.commission(deviceId: deviceId));
 
   /// Open a pairing window on the device
   Future<FlutterMatterOpenPairingWindowResult> openPairingWindowWithPin({
@@ -62,7 +54,7 @@ final class FlutterMatter with SpecifyPlatfromException {
     required int discriminator,
     required int setupPin,
   }) =>
-      catchSpecifyRethrow(() => _instance.openPairingWindowWithPin(
+      catchSpecifyRethrow(() => _platfromInterface.openPairingWindowWithPin(
             deviceId: deviceId,
             duration: duration,
             discriminator: discriminator,
@@ -71,7 +63,7 @@ final class FlutterMatter with SpecifyPlatfromException {
 
   /// Removes the app's fabric from the device
   Future<void> unpair({required int deviceId}) =>
-      catchSpecifyRethrow(() => _instance.unpair(deviceId: deviceId));
+      catchSpecifyRethrow(() => _platfromInterface.unpair(deviceId: deviceId));
 
   /// This cluster describes an endpoint instance on the node, independently from other endpoints, but also allows composition of endpoints to conform to complex device type patterns.
   ///
@@ -80,8 +72,11 @@ final class FlutterMatter with SpecifyPlatfromException {
   ///
   /// The cluster supports a PartsList attribute that is a list of zero or more endpoints to support a com­ posed device type.
   /// > For Example: A Refrigerator/Freezer appliance device type may be defined as being com­ posed of multiple Temperature Sensor endpoints, a Metering endpoint, and two Thermostat endpoints.
-  late final DescriptorCluster descriptorCluster;
+  final DescriptorCluster descriptorCluster;
 
   /// Attributes and commands for turning devices on and off.
-  late final OnOffCluster onOffCluster;
+  final OnOffCluster onOffCluster;
+
+  /// Attributes to temperature measurement functionality.
+  final TemperatureCluster temperatureCluster;
 }

@@ -10,25 +10,19 @@ import 'package:mockito/mockito.dart';
 import 'on_off_cluster_test.mocks.dart';
 
 @GenerateNiceMocks([
-  MockSpec<FlutterMatterPlatformInterface>(),
   MockSpec<FlutterMatterOnOffClusterInterface>(),
 ])
 void main() {
   late OnOffCluster sut;
 
-  late MockFlutterMatterPlatformInterface mockFlutterMatterPlatform;
   late MockFlutterMatterOnOffClusterInterface
       mockFlutterMatterOnOffClusterInterface;
 
   setUp(() {
-    mockFlutterMatterPlatform = MockFlutterMatterPlatformInterface();
     mockFlutterMatterOnOffClusterInterface =
         MockFlutterMatterOnOffClusterInterface();
 
-    sut = OnOffCluster(mockFlutterMatterPlatform);
-
-    when(mockFlutterMatterPlatform.onOffCluster)
-        .thenReturn(mockFlutterMatterOnOffClusterInterface);
+    sut = OnOffCluster(mockFlutterMatterOnOffClusterInterface);
   });
 
   group('commands', () {

@@ -1,5 +1,9 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_matter/src/clusters/descriptor_cluster.dart';
+import 'package:flutter_matter/src/clusters/on_off_cluster.dart';
+import 'package:flutter_matter/src/clusters/temperature_cluster.dart';
 import 'package:flutter_matter/src/exceptions/flutter_matter_exceptions.dart';
+import 'package:flutter_matter/src/utils/cluster_factory.dart';
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_matter/src/flutter_matter.dart';
@@ -10,21 +14,42 @@ import 'package:mockito/mockito.dart';
 import 'flutter_matter_test.mocks.dart';
 
 @GenerateNiceMocks([
+  MockSpec<ClusterFactory>(),
   MockSpec<FlutterMatterDevice>(),
   MockSpec<FlutterMatterOpenPairingWindowResult>(),
   MockSpec<FlutterMatterPlatformInterface>(),
+  MockSpec<DescriptorCluster>(),
+  MockSpec<OnOffCluster>(),
+  MockSpec<TemperatureCluster>(),
 ])
 void main() {
   late FlutterMatter sut;
 
+  late MockClusterFactory mockClusterFactory;
   late MockFlutterMatterPlatformInterface mockFlutterMatterPlatformInterface;
+  late MockDescriptorCluster mockDescriptorCluster;
+  late MockOnOffCluster mockOnOffCluster;
+  late MockTemperatureCluster mockTemperatureCluster;
 
   setUp(() async {
+    mockClusterFactory = MockClusterFactory();
     mockFlutterMatterPlatformInterface = MockFlutterMatterPlatformInterface();
+    mockDescriptorCluster = MockDescriptorCluster();
+    mockOnOffCluster = MockOnOffCluster();
+    mockTemperatureCluster = MockTemperatureCluster();
+
+    when(mockClusterFactory.createFlutterMatterPlatformInterface(
+            appGroup: 'test'))
+        .thenAnswer((_) async => mockFlutterMatterPlatformInterface);
+    when(mockClusterFactory.createDescriptorCluster())
+        .thenReturn(mockDescriptorCluster);
+    when(mockClusterFactory.createOnOffCluster()).thenReturn(mockOnOffCluster);
+    when(mockClusterFactory.createTemperatureCluster())
+        .thenReturn(mockTemperatureCluster);
 
     sut = await FlutterMatter.createInstance(
       appGroup: 'test',
-      instance: mockFlutterMatterPlatformInterface,
+      clusterFactory: mockClusterFactory,
     );
   });
 
@@ -168,6 +193,20 @@ void main() {
         discriminator: 456,
         setupPin: 789,
       )).throws<GeneralException>();
+    });
+  });
+
+  group('Clusters', () {
+    test('descriptorCluster should equal instance from ClusterFactory', () {
+      check(sut.descriptorCluster).equals(mockDescriptorCluster);
+    });
+
+    test('onOffCluster should equal instance from ClusterFactory', () {
+      check(sut.onOffCluster).equals(mockOnOffCluster);
+    });
+
+    test('temperatureCluster should equal instance from ClusterFactory', () {
+      check(sut.temperatureCluster).equals(mockTemperatureCluster);
     });
   });
 }

@@ -18,13 +18,4 @@ abstract interface class FlutterMatterPlatformInterface {
     required int discriminator,
     required int setupPin,
   });
-
-  /// Access On/Off cluster
-  FlutterMatterOnOffClusterInterface get onOffCluster;
-
-  /// Access descriptor cluster
-  FlutterMatterDescriptorClusterInterface get descriptorCluster;
-
-  /// Access temperature cluster
-  FlutterMatterTemperatureClusterInterface get temperatureCluster;
 }

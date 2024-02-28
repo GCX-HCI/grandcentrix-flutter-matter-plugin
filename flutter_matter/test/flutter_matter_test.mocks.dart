@@ -3,11 +3,16 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i6;
 
+import 'package:flutter_matter/src/clusters/descriptor_cluster.dart' as _i3;
+import 'package:flutter_matter/src/clusters/on_off_cluster.dart' as _i4;
+import 'package:flutter_matter/src/clusters/temperature_cluster.dart' as _i5;
+import 'package:flutter_matter/src/utils/cluster_factory.dart' as _i7;
 import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interface.dart'
     as _i2;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:mockito/src/dummies.dart' as _i8;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -20,9 +25,9 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeFlutterMatterOnOffClusterInterface_0 extends _i1.SmartFake
-    implements _i2.FlutterMatterOnOffClusterInterface {
-  _FakeFlutterMatterOnOffClusterInterface_0(
+class _FakeFlutterMatterPlatformInterface_0 extends _i1.SmartFake
+    implements _i2.FlutterMatterPlatformInterface {
+  _FakeFlutterMatterPlatformInterface_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -31,9 +36,9 @@ class _FakeFlutterMatterOnOffClusterInterface_0 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterDescriptorClusterInterface_1 extends _i1.SmartFake
-    implements _i2.FlutterMatterDescriptorClusterInterface {
-  _FakeFlutterMatterDescriptorClusterInterface_1(
+class _FakeDescriptorCluster_1 extends _i1.SmartFake
+    implements _i3.DescriptorCluster {
+  _FakeDescriptorCluster_1(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -42,9 +47,8 @@ class _FakeFlutterMatterDescriptorClusterInterface_1 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterTemperatureClusterInterface_2 extends _i1.SmartFake
-    implements _i2.FlutterMatterTemperatureClusterInterface {
-  _FakeFlutterMatterTemperatureClusterInterface_2(
+class _FakeOnOffCluster_2 extends _i1.SmartFake implements _i4.OnOffCluster {
+  _FakeOnOffCluster_2(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -53,9 +57,20 @@ class _FakeFlutterMatterTemperatureClusterInterface_2 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterDevice_3 extends _i1.SmartFake
+class _FakeTemperatureCluster_3 extends _i1.SmartFake
+    implements _i5.TemperatureCluster {
+  _FakeTemperatureCluster_3(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeFlutterMatterDevice_4 extends _i1.SmartFake
     implements _i2.FlutterMatterDevice {
-  _FakeFlutterMatterDevice_3(
+  _FakeFlutterMatterDevice_4(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -64,15 +79,123 @@ class _FakeFlutterMatterDevice_3 extends _i1.SmartFake
         );
 }
 
-class _FakeFlutterMatterOpenPairingWindowResult_4 extends _i1.SmartFake
+class _FakeFlutterMatterOpenPairingWindowResult_5 extends _i1.SmartFake
     implements _i2.FlutterMatterOpenPairingWindowResult {
-  _FakeFlutterMatterOpenPairingWindowResult_4(
+  _FakeFlutterMatterOpenPairingWindowResult_5(
     Object parent,
     Invocation parentInvocation,
   ) : super(
           parent,
           parentInvocation,
         );
+}
+
+class _FakeFuture_6<T1> extends _i1.SmartFake implements _i6.Future<T1> {
+  _FakeFuture_6(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+/// A class which mocks [ClusterFactory].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockClusterFactory extends _i1.Mock implements _i7.ClusterFactory {
+  @override
+  _i6.Future<_i2.FlutterMatterPlatformInterface>
+      createFlutterMatterPlatformInterface({required String? appGroup}) =>
+          (super.noSuchMethod(
+            Invocation.method(
+              #createFlutterMatterPlatformInterface,
+              [],
+              {#appGroup: appGroup},
+            ),
+            returnValue: _i6.Future<_i2.FlutterMatterPlatformInterface>.value(
+                _FakeFlutterMatterPlatformInterface_0(
+              this,
+              Invocation.method(
+                #createFlutterMatterPlatformInterface,
+                [],
+                {#appGroup: appGroup},
+              ),
+            )),
+            returnValueForMissingStub:
+                _i6.Future<_i2.FlutterMatterPlatformInterface>.value(
+                    _FakeFlutterMatterPlatformInterface_0(
+              this,
+              Invocation.method(
+                #createFlutterMatterPlatformInterface,
+                [],
+                {#appGroup: appGroup},
+              ),
+            )),
+          ) as _i6.Future<_i2.FlutterMatterPlatformInterface>);
+  @override
+  _i3.DescriptorCluster createDescriptorCluster() => (super.noSuchMethod(
+        Invocation.method(
+          #createDescriptorCluster,
+          [],
+        ),
+        returnValue: _FakeDescriptorCluster_1(
+          this,
+          Invocation.method(
+            #createDescriptorCluster,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeDescriptorCluster_1(
+          this,
+          Invocation.method(
+            #createDescriptorCluster,
+            [],
+          ),
+        ),
+      ) as _i3.DescriptorCluster);
+  @override
+  _i4.OnOffCluster createOnOffCluster() => (super.noSuchMethod(
+        Invocation.method(
+          #createOnOffCluster,
+          [],
+        ),
+        returnValue: _FakeOnOffCluster_2(
+          this,
+          Invocation.method(
+            #createOnOffCluster,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeOnOffCluster_2(
+          this,
+          Invocation.method(
+            #createOnOffCluster,
+            [],
+          ),
+        ),
+      ) as _i4.OnOffCluster);
+  @override
+  _i5.TemperatureCluster createTemperatureCluster() => (super.noSuchMethod(
+        Invocation.method(
+          #createTemperatureCluster,
+          [],
+        ),
+        returnValue: _FakeTemperatureCluster_3(
+          this,
+          Invocation.method(
+            #createTemperatureCluster,
+            [],
+          ),
+        ),
+        returnValueForMissingStub: _FakeTemperatureCluster_3(
+          this,
+          Invocation.method(
+            #createTemperatureCluster,
+            [],
+          ),
+        ),
+      ) as _i5.TemperatureCluster);
 }
 
 /// A class which mocks [FlutterMatterDevice].
@@ -100,65 +223,24 @@ class MockFlutterMatterOpenPairingWindowResult extends _i1.Mock
 class MockFlutterMatterPlatformInterface extends _i1.Mock
     implements _i2.FlutterMatterPlatformInterface {
   @override
-  _i2.FlutterMatterOnOffClusterInterface get onOffCluster =>
-      (super.noSuchMethod(
-        Invocation.getter(#onOffCluster),
-        returnValue: _FakeFlutterMatterOnOffClusterInterface_0(
-          this,
-          Invocation.getter(#onOffCluster),
-        ),
-        returnValueForMissingStub: _FakeFlutterMatterOnOffClusterInterface_0(
-          this,
-          Invocation.getter(#onOffCluster),
-        ),
-      ) as _i2.FlutterMatterOnOffClusterInterface);
-  @override
-  _i2.FlutterMatterDescriptorClusterInterface get descriptorCluster =>
-      (super.noSuchMethod(
-        Invocation.getter(#descriptorCluster),
-        returnValue: _FakeFlutterMatterDescriptorClusterInterface_1(
-          this,
-          Invocation.getter(#descriptorCluster),
-        ),
-        returnValueForMissingStub:
-            _FakeFlutterMatterDescriptorClusterInterface_1(
-          this,
-          Invocation.getter(#descriptorCluster),
-        ),
-      ) as _i2.FlutterMatterDescriptorClusterInterface);
-  @override
-  _i2.FlutterMatterTemperatureClusterInterface get temperatureCluster =>
-      (super.noSuchMethod(
-        Invocation.getter(#temperatureCluster),
-        returnValue: _FakeFlutterMatterTemperatureClusterInterface_2(
-          this,
-          Invocation.getter(#temperatureCluster),
-        ),
-        returnValueForMissingStub:
-            _FakeFlutterMatterTemperatureClusterInterface_2(
-          this,
-          Invocation.getter(#temperatureCluster),
-        ),
-      ) as _i2.FlutterMatterTemperatureClusterInterface);
-  @override
-  _i3.Future<String?> getPlatformVersion() => (super.noSuchMethod(
+  _i6.Future<String?> getPlatformVersion() => (super.noSuchMethod(
         Invocation.method(
           #getPlatformVersion,
           [],
         ),
-        returnValue: _i3.Future<String?>.value(),
-        returnValueForMissingStub: _i3.Future<String?>.value(),
-      ) as _i3.Future<String?>);
+        returnValue: _i6.Future<String?>.value(),
+        returnValueForMissingStub: _i6.Future<String?>.value(),
+      ) as _i6.Future<String?>);
   @override
-  _i3.Future<_i2.FlutterMatterDevice> commission({required int? deviceId}) =>
+  _i6.Future<_i2.FlutterMatterDevice> commission({required int? deviceId}) =>
       (super.noSuchMethod(
         Invocation.method(
           #commission,
           [],
           {#deviceId: deviceId},
         ),
-        returnValue: _i3.Future<_i2.FlutterMatterDevice>.value(
-            _FakeFlutterMatterDevice_3(
+        returnValue: _i6.Future<_i2.FlutterMatterDevice>.value(
+            _FakeFlutterMatterDevice_4(
           this,
           Invocation.method(
             #commission,
@@ -166,8 +248,8 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
             {#deviceId: deviceId},
           ),
         )),
-        returnValueForMissingStub: _i3.Future<_i2.FlutterMatterDevice>.value(
-            _FakeFlutterMatterDevice_3(
+        returnValueForMissingStub: _i6.Future<_i2.FlutterMatterDevice>.value(
+            _FakeFlutterMatterDevice_4(
           this,
           Invocation.method(
             #commission,
@@ -175,19 +257,19 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
             {#deviceId: deviceId},
           ),
         )),
-      ) as _i3.Future<_i2.FlutterMatterDevice>);
+      ) as _i6.Future<_i2.FlutterMatterDevice>);
   @override
-  _i3.Future<void> unpair({required int? deviceId}) => (super.noSuchMethod(
+  _i6.Future<void> unpair({required int? deviceId}) => (super.noSuchMethod(
         Invocation.method(
           #unpair,
           [],
           {#deviceId: deviceId},
         ),
-        returnValue: _i3.Future<void>.value(),
-        returnValueForMissingStub: _i3.Future<void>.value(),
-      ) as _i3.Future<void>);
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
   @override
-  _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>
+  _i6.Future<_i2.FlutterMatterOpenPairingWindowResult>
       openPairingWindowWithPin({
     required int? deviceId,
     required Duration? duration,
@@ -206,8 +288,8 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
               },
             ),
             returnValue:
-                _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
-                    _FakeFlutterMatterOpenPairingWindowResult_4(
+                _i6.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
+                    _FakeFlutterMatterOpenPairingWindowResult_5(
               this,
               Invocation.method(
                 #openPairingWindowWithPin,
@@ -221,8 +303,8 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
               ),
             )),
             returnValueForMissingStub:
-                _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
-                    _FakeFlutterMatterOpenPairingWindowResult_4(
+                _i6.Future<_i2.FlutterMatterOpenPairingWindowResult>.value(
+                    _FakeFlutterMatterOpenPairingWindowResult_5(
               this,
               Invocation.method(
                 #openPairingWindowWithPin,
@@ -235,5 +317,407 @@ class MockFlutterMatterPlatformInterface extends _i1.Mock
                 },
               ),
             )),
-          ) as _i3.Future<_i2.FlutterMatterOpenPairingWindowResult>);
+          ) as _i6.Future<_i2.FlutterMatterOpenPairingWindowResult>);
+}
+
+/// A class which mocks [DescriptorCluster].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDescriptorCluster extends _i1.Mock implements _i3.DescriptorCluster {
+  @override
+  _i6.Future<
+      List<_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>> deviceTypeList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deviceTypeList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<
+                List<_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>>.value(
+            <_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>[]),
+        returnValueForMissingStub: _i6.Future<
+                List<_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>>.value(
+            <_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>[]),
+      ) as _i6
+          .Future<List<_i2.FlutterMatterDescriptorClusterDeviceTypeStruct>>);
+  @override
+  _i6.Future<List<int>> serverList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #serverList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<List<int>>.value(<int>[]),
+        returnValueForMissingStub: _i6.Future<List<int>>.value(<int>[]),
+      ) as _i6.Future<List<int>>);
+  @override
+  _i6.Future<List<int>> clientList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #clientList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<List<int>>.value(<int>[]),
+        returnValueForMissingStub: _i6.Future<List<int>>.value(<int>[]),
+      ) as _i6.Future<List<int>>);
+  @override
+  _i6.Future<List<int>> partsList({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #partsList,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<List<int>>.value(<int>[]),
+        returnValueForMissingStub: _i6.Future<List<int>>.value(<int>[]),
+      ) as _i6.Future<List<int>>);
+  @override
+  _i6.Future<T> catchSpecifyRethrow<T>(_i6.FutureOr<T> Function()? f) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrow,
+          [f],
+        ),
+        returnValue: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+        returnValueForMissingStub: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+      ) as _i6.Future<T>);
+  @override
+  _i6.Stream<T> catchSpecifyRethrowStream<T>(_i6.Stream<T>? s) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrowStream,
+          [s],
+        ),
+        returnValue: _i6.Stream<T>.empty(),
+        returnValueForMissingStub: _i6.Stream<T>.empty(),
+      ) as _i6.Stream<T>);
+}
+
+/// A class which mocks [OnOffCluster].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockOnOffCluster extends _i1.Mock implements _i4.OnOffCluster {
+  @override
+  _i6.Future<void> off({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #off,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+  @override
+  _i6.Future<void> on({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #on,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+  @override
+  _i6.Future<void> toggle({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #toggle,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<void>.value(),
+        returnValueForMissingStub: _i6.Future<void>.value(),
+      ) as _i6.Future<void>);
+  @override
+  _i6.Future<bool> readOnOff({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readOnOff,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<bool>.value(false),
+        returnValueForMissingStub: _i6.Future<bool>.value(false),
+      ) as _i6.Future<bool>);
+  @override
+  _i6.Stream<bool> subscribeOnOff({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #subscribeOnOff,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Stream<bool>.empty(),
+        returnValueForMissingStub: _i6.Stream<bool>.empty(),
+      ) as _i6.Stream<bool>);
+  @override
+  _i6.Future<T> catchSpecifyRethrow<T>(_i6.FutureOr<T> Function()? f) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrow,
+          [f],
+        ),
+        returnValue: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+        returnValueForMissingStub: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+      ) as _i6.Future<T>);
+  @override
+  _i6.Stream<T> catchSpecifyRethrowStream<T>(_i6.Stream<T>? s) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrowStream,
+          [s],
+        ),
+        returnValue: _i6.Stream<T>.empty(),
+        returnValueForMissingStub: _i6.Stream<T>.empty(),
+      ) as _i6.Stream<T>);
+}
+
+/// A class which mocks [TemperatureCluster].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockTemperatureCluster extends _i1.Mock
+    implements _i5.TemperatureCluster {
+  @override
+  _i6.Future<int?> readMaxMeasuredValue({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readMaxMeasuredValue,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<int?>.value(),
+        returnValueForMissingStub: _i6.Future<int?>.value(),
+      ) as _i6.Future<int?>);
+  @override
+  _i6.Future<int?> readMeasuredValue({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readMeasuredValue,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<int?>.value(),
+        returnValueForMissingStub: _i6.Future<int?>.value(),
+      ) as _i6.Future<int?>);
+  @override
+  _i6.Future<int?> readMinMeasuredValue({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readMinMeasuredValue,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<int?>.value(),
+        returnValueForMissingStub: _i6.Future<int?>.value(),
+      ) as _i6.Future<int?>);
+  @override
+  _i6.Future<int?> readTolerance({
+    required int? deviceId,
+    required int? endpointId,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #readTolerance,
+          [],
+          {
+            #deviceId: deviceId,
+            #endpointId: endpointId,
+          },
+        ),
+        returnValue: _i6.Future<int?>.value(),
+        returnValueForMissingStub: _i6.Future<int?>.value(),
+      ) as _i6.Future<int?>);
+  @override
+  _i6.Future<T> catchSpecifyRethrow<T>(_i6.FutureOr<T> Function()? f) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrow,
+          [f],
+        ),
+        returnValue: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+        returnValueForMissingStub: _i8.ifNotNull(
+              _i8.dummyValueOrNull<T>(
+                this,
+                Invocation.method(
+                  #catchSpecifyRethrow,
+                  [f],
+                ),
+              ),
+              (T v) => _i6.Future<T>.value(v),
+            ) ??
+            _FakeFuture_6<T>(
+              this,
+              Invocation.method(
+                #catchSpecifyRethrow,
+                [f],
+              ),
+            ),
+      ) as _i6.Future<T>);
+  @override
+  _i6.Stream<T> catchSpecifyRethrowStream<T>(_i6.Stream<T>? s) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #catchSpecifyRethrowStream,
+          [s],
+        ),
+        returnValue: _i6.Stream<T>.empty(),
+        returnValueForMissingStub: _i6.Stream<T>.empty(),
+      ) as _i6.Stream<T>);
 }
