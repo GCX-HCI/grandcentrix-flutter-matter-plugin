@@ -4,11 +4,13 @@ name: flutter_matter
 sdkPath: .fvm/flutter_sdk
 
 packages:
-  # - flutter_matter_platfrom_interface
-  # - flutter_matter
-  # - flutter_matter_android
-  # - flutter_matter_ios
-  - ./**
+  - flutter_matter_platfrom_interface/
+  - flutter_matter/
+  - flutter_matter/example/
+  - flutter_matter_android/
+  - flutter_matter_android/example/
+  - flutter_matter_ios/
+  - flutter_matter_ios/example/
 
 ignore:
   - .fvm/**
@@ -19,6 +21,21 @@ command:
     # https://github.com/dart-lang/pub/issues/3404). Disabling this feature
     # makes the CI much more stable.
     # runPubGetInParallel: false
+    environment:
+      sdk: ">=3.1.0 <4.0.0"
+      flutter: ">=3.3.0"
+    dependencies:
+      shared_preferences: ^2.2.1
+      url_launcher: ^6.2.5
+      rxdart: ^0.27.7
+    dev_dependencies:
+      async: ^2.11.0
+      build_runner: ^2.4.6
+      checks: ^0.2.2
+      flutter_lints: ^2.0.0
+      mockito: ^5.4.2
+      pigeon: ^12.0.1
+      plugin_platform_interface: ^2.1.6
     hooks:
       # Run build_runner after bootstrap
       post: melos run run:build_runner --no-select
