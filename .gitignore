@@ -45,8 +45,8 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# Flutter version manager
-.fvm/flutter_sdk
-
 # melos
 pubspec_overrides.yaml
+
+# FVM Version Cache
+.fvm/
