@@ -63,5 +63,5 @@ enum class CommissioningWindowStatus(val status: Int) {
     EnhancedWindowOpen(1),
 
     /** A Basic Commissioning Method window is open */
-    BasicWindowOpen(2)
+    BasicWindowOpen(2),
 }

@@ -22,7 +22,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
     private val scope =
         CoroutineScope(Dispatchers.IO + Job())
 
-    /* 0xFFF4 is a test vendor ID, replace with your assigned company ID */
+    // 0xFFF4 is a test vendor ID, replace with your assigned company ID
     private val VENDOR_ID = 0xFFF4
 
     // FlutterMatterHostApi
@@ -30,11 +30,15 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         callback(Result.success("Android ${android.os.Build.VERSION.RELEASE}"))
     }
 
-    override fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit) {
+    override fun commission(
+        request: CommissionRequest,
+        callback: (Result<MatterDevice>) -> Unit,
+    ) {
         Timber.d("CommissionDevice: starting")
-        val commissioningRequest = CommissioningRequest.builder()
-            .setCommissioningService(ComponentName(activity!!, AppCommissioningService::class.java))
-            .build()
+        val commissioningRequest =
+            CommissioningRequest.builder()
+                .setCommissioningService(ComponentName(activity!!, AppCommissioningService::class.java))
+                .build()
 
         AppCommissioningService.deviceId = request.id
 
@@ -43,7 +47,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         Matter.getCommissioningClient(activity!!)
             .commissionDevice(commissioningRequest)
             .addOnSuccessListener { result ->
-                Timber.d("ShareDevice: Success getting the IntentSender: result [${result}]")
+                Timber.d("ShareDevice: Success getting the IntentSender: result [$result]")
                 this.callback = callback
                 activity!!.startIntentSenderForResult(
                     result,
@@ -52,7 +56,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                     Integer.valueOf(0),
                     Integer.valueOf(0),
                     Integer.valueOf(0),
-                    null
+                    null,
                 )
             }
             .addOnFailureListener { error ->
@@ -61,14 +65,17 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
             }
     }
 
-    override fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit) {
+    override fun unpair(
+        deviceId: Long,
+        callback: (Result<Unit>) -> Unit,
+    ) {
         scope.launch {
             try {
                 val chipClient = ChipClient(activity!!)
                 chipClient.awaitUnpairDevice(deviceId)
                 callback(Result.success(Unit))
             } catch (e: Exception) {
-                Timber.e( e,"Failed to unpair device")
+                Timber.e(e, "Failed to unpair device")
                 callback(Result.failure(FlutterError("-1", "Failed to unpair device")))
             }
         }
@@ -79,23 +86,33 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         duration: Long,
         discriminator: Long,
         setupPin: Long,
-        callback: (Result<OpenPairingWindowResult>) -> Unit
+        callback: (Result<OpenPairingWindowResult>) -> Unit,
     ) {
         scope.launch {
             try {
                 val chipClient = ChipClient(activity!!)
                 val devicePtr = chipClient.getConnectedDevicePointer(deviceId)
-                val (_: Long, manualPairingCode: String?, qrCode: String?) = chipClient.awaitOpenPairingWindowWithPIN(devicePtr,
-                    duration.toInt(), 10000L, discriminator.toInt(), setupPin)
+                val (_: Long, manualPairingCode: String?, qrCode: String?) =
+                    chipClient.awaitOpenPairingWindowWithPIN(
+                        devicePtr,
+                        duration.toInt(),
+                        10000L,
+                        discriminator.toInt(),
+                        setupPin,
+                    )
                 callback(Result.success(OpenPairingWindowResult(manualPairingCode, qrCode)))
             } catch (e: Exception) {
-                Timber.e( e,"Failed to openPairingWindowWithPin for device")
+                Timber.e(e, "Failed to openPairingWindowWithPin for device")
                 callback(Result.failure(FlutterError("-1", "Failed to openPairingWindowWithPin for device")))
             }
         }
     }
 
-    fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+    fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ): Boolean {
         when (resultCode) {
             null -> {
                 Timber.e("Failed to set up device: Timeout")
@@ -109,7 +126,7 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                     val result: CommissioningResult =
                         CommissioningResult.fromIntentSenderResult(
                             resultCode,
-                            data
+                            data,
                         )
                     Timber.i("Commissioned Device data: $result")
 
@@ -120,9 +137,9 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
                             Result.failure(
                                 FlutterError(
                                     "-1",
-                                    "Failed to set up device: No token in response"
-                                )
-                            )
+                                    "Failed to set up device: No token in response",
+                                ),
+                            ),
                         )
                         return false
                     } else {

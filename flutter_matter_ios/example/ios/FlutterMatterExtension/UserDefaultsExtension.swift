@@ -12,23 +12,23 @@ extension UserDefaults {
     private static let successKey = "success"
     private static let fabricId = "fabricId"
     static let group = UserDefaults(suiteName: "group.example.flutterMatterIosExample")!
-    
-    static func setDeviceId(_ deviceId: Int64) -> Void {
+
+    static func setDeviceId(_ deviceId: Int64) {
         UserDefaults.group.set(deviceId, forKey: UserDefaults.deviceIdKey)
     }
-    
+
     static func getDeviceId() -> Int64? {
         return UserDefaults.group.object(forKey: UserDefaults.deviceIdKey) as? Int64
     }
-    
-    static func resetSuccess() -> Void {
+
+    static func resetSuccess() {
         UserDefaults.group.removeObject(forKey: UserDefaults.successKey)
     }
-    
-    static func setSuccess() -> Void {
+
+    static func setSuccess() {
         UserDefaults.group.set(true, forKey: UserDefaults.successKey)
     }
-    
+
     static func success() -> Bool {
         return UserDefaults.group.bool(forKey: UserDefaults.successKey)
     }

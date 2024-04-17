@@ -11,71 +11,74 @@ import net.grandcentrix.flutter_matter.clusters.OnOffCluster
 import net.grandcentrix.flutter_matter.clusters.TemperatureCluster
 import timber.log.Timber
 
-
 /** FlutterMatterPlugin */
-class FlutterMatterPlugin: FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener {
-  private lateinit var flutterMatterHostApi: FlutterMatterHostApiImpl
-  private lateinit var descriptorClusterApi: DescriptorCluster
-  private lateinit var onOffClusterApi: OnOffCluster
-  private lateinit var temperatureApi: TemperatureCluster
+class FlutterMatterPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener {
+    private lateinit var flutterMatterHostApi: FlutterMatterHostApiImpl
+    private lateinit var descriptorClusterApi: DescriptorCluster
+    private lateinit var onOffClusterApi: OnOffCluster
+    private lateinit var temperatureApi: TemperatureCluster
 
-  private fun setActivity(activity: Activity?) {
-    flutterMatterHostApi.activity = activity
-    descriptorClusterApi.activity = activity
-    onOffClusterApi.activity = activity
-    temperatureApi.activity = activity
-  }
-
-  // FlutterPlugin
-  override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    Timber.plant(Timber.DebugTree())
-
-    flutterMatterHostApi = FlutterMatterHostApiImpl()
-    descriptorClusterApi = DescriptorCluster()
-    val flutterOnOffClusterApi =  FlutterMatterFlutterOnOffClusterApi(flutterPluginBinding.binaryMessenger)
-    onOffClusterApi = OnOffCluster(flutterOnOffClusterApi)
-    temperatureApi = TemperatureCluster()
-
-    if(flutterPluginBinding.applicationContext is Activity) {
-      setActivity(flutterPluginBinding.applicationContext as Activity)
+    private fun setActivity(activity: Activity?) {
+        flutterMatterHostApi.activity = activity
+        descriptorClusterApi.activity = activity
+        onOffClusterApi.activity = activity
+        temperatureApi.activity = activity
     }
 
-    FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, flutterMatterHostApi)
-    FlutterMatterHostDescriptorClusterApi.setUp(flutterPluginBinding.binaryMessenger, descriptorClusterApi)
-    FlutterMatterHostOnOffClusterApi.setUp(flutterPluginBinding.binaryMessenger, onOffClusterApi)
-    FlutterMatterHostTemperatureClusterApi.setUp(flutterPluginBinding.binaryMessenger, temperatureApi)
-  }
+    // FlutterPlugin
+    override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        Timber.plant(Timber.DebugTree())
 
-  override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-    flutterMatterHostApi.close()
-    descriptorClusterApi.close()
-    onOffClusterApi.close()
-    temperatureApi.close()
+        flutterMatterHostApi = FlutterMatterHostApiImpl()
+        descriptorClusterApi = DescriptorCluster()
+        val flutterOnOffClusterApi = FlutterMatterFlutterOnOffClusterApi(flutterPluginBinding.binaryMessenger)
+        onOffClusterApi = OnOffCluster(flutterOnOffClusterApi)
+        temperatureApi = TemperatureCluster()
 
-    FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
-  }
+        if (flutterPluginBinding.applicationContext is Activity) {
+            setActivity(flutterPluginBinding.applicationContext as Activity)
+        }
 
-  // ActivityAware
-  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-    setActivity(binding.activity)
-    binding.addActivityResultListener(this)
-  }
+        FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, flutterMatterHostApi)
+        FlutterMatterHostDescriptorClusterApi.setUp(flutterPluginBinding.binaryMessenger, descriptorClusterApi)
+        FlutterMatterHostOnOffClusterApi.setUp(flutterPluginBinding.binaryMessenger, onOffClusterApi)
+        FlutterMatterHostTemperatureClusterApi.setUp(flutterPluginBinding.binaryMessenger, temperatureApi)
+    }
 
-  override fun onDetachedFromActivityForConfigChanges() {
-    setActivity(null)
-  }
+    override fun onDetachedFromEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+        flutterMatterHostApi.close()
+        descriptorClusterApi.close()
+        onOffClusterApi.close()
+        temperatureApi.close()
 
-  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    setActivity(binding.activity)
-    binding.addActivityResultListener(this)
-  }
+        FlutterMatterHostApi.setUp(flutterPluginBinding.binaryMessenger, null)
+    }
 
-  override fun onDetachedFromActivity() {
-    setActivity(null);
-  }
+    // ActivityAware
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        setActivity(binding.activity)
+        binding.addActivityResultListener(this)
+    }
 
-  // PluginRegistry.ActivityResultListener
-  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
-    return flutterMatterHostApi.onActivityResult(requestCode, resultCode, data)
-  }
+    override fun onDetachedFromActivityForConfigChanges() {
+        setActivity(null)
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        setActivity(binding.activity)
+        binding.addActivityResultListener(this)
+    }
+
+    override fun onDetachedFromActivity() {
+        setActivity(null)
+    }
+
+    // PluginRegistry.ActivityResultListener
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?,
+    ): Boolean {
+        return flutterMatterHostApi.onActivityResult(requestCode, resultCode, data)
+    }
 }

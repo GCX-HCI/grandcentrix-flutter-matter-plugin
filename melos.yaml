@@ -70,8 +70,8 @@ scripts:
     exec:
       concurrency: 6
       failFast: true
-    run: dart format . --fix
-    description: Run `dart format` for all packages.
+    run: dart format . --fix && swiftformat . && ktlint --format
+    description: Run `dart format` for all packages & swiftformat & ktlint --format
 
   format-check:
     exec:

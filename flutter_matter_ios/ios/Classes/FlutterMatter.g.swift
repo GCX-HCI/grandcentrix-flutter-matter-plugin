@@ -3,680 +3,692 @@
 
 import Foundation
 #if os(iOS)
-import Flutter
+    import Flutter
 #elseif os(macOS)
-import FlutterMacOS
+    import FlutterMacOS
 #else
-#error("Unsupported platform.")
+    #error("Unsupported platform.")
 #endif
 
 private func isNullish(_ value: Any?) -> Bool {
-  return value is NSNull || value == nil
+    return value is NSNull || value == nil
 }
 
 private func wrapResult(_ result: Any?) -> [Any?] {
-  return [result]
+    return [result]
 }
 
 private func wrapError(_ error: Any) -> [Any?] {
-  if let flutterError = error as? FlutterError {
+    if let flutterError = error as? FlutterError {
+        return [
+            flutterError.code,
+            flutterError.message,
+            flutterError.details,
+        ]
+    }
     return [
-      flutterError.code,
-      flutterError.message,
-      flutterError.details
+        "\(error)",
+        "\(type(of: error))",
+        "Stacktrace: \(Thread.callStackSymbols)",
     ]
-  }
-  return [
-    "\(error)",
-    "\(type(of: error))",
-    "Stacktrace: \(Thread.callStackSymbols)"
-  ]
 }
 
 private func nilOrValue<T>(_ value: Any?) -> T? {
-  if value is NSNull { return nil }
-  return value as! T?
+    if value is NSNull { return nil }
+    return value as! T?
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct MatterDevice {
-  var id: Int64
+    var id: Int64
 
-  static func fromList(_ list: [Any?]) -> MatterDevice? {
-    let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+    static func fromList(_ list: [Any?]) -> MatterDevice? {
+        let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
 
-    return MatterDevice(
-      id: id
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      id,
-    ]
-  }
+        return MatterDevice(
+            id: id
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            id,
+        ]
+    }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct CommissionRequest {
-  var id: Int64
+    var id: Int64
 
-  static func fromList(_ list: [Any?]) -> CommissionRequest? {
-    let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+    static func fromList(_ list: [Any?]) -> CommissionRequest? {
+        let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
 
-    return CommissionRequest(
-      id: id
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      id,
-    ]
-  }
+        return CommissionRequest(
+            id: id
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            id,
+        ]
+    }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct OpenPairingWindowResult {
-  var manualPairingCode: String? = nil
-  var qrCode: String? = nil
+    var manualPairingCode: String? = nil
+    var qrCode: String? = nil
 
-  static func fromList(_ list: [Any?]) -> OpenPairingWindowResult? {
-    let manualPairingCode: String? = nilOrValue(list[0])
-    let qrCode: String? = nilOrValue(list[1])
+    static func fromList(_ list: [Any?]) -> OpenPairingWindowResult? {
+        let manualPairingCode: String? = nilOrValue(list[0])
+        let qrCode: String? = nilOrValue(list[1])
 
-    return OpenPairingWindowResult(
-      manualPairingCode: manualPairingCode,
-      qrCode: qrCode
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      manualPairingCode,
-      qrCode,
-    ]
-  }
+        return OpenPairingWindowResult(
+            manualPairingCode: manualPairingCode,
+            qrCode: qrCode
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            manualPairingCode,
+            qrCode,
+        ]
+    }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct IosError {
-  /// An error code.
-  var code: String
-  /// A human-readable error message, possibly null.
-  var message: String? = nil
+    /// An error code.
+    var code: String
+    /// A human-readable error message, possibly null.
+    var message: String? = nil
 
-  static func fromList(_ list: [Any?]) -> IosError? {
-    let code = list[0] as! String
-    let message: String? = nilOrValue(list[1])
+    static func fromList(_ list: [Any?]) -> IosError? {
+        let code = list[0] as! String
+        let message: String? = nilOrValue(list[1])
 
-    return IosError(
-      code: code,
-      message: message
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      code,
-      message,
-    ]
-  }
+        return IosError(
+            code: code,
+            message: message
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            code,
+            message,
+        ]
+    }
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct DescriptorClusterDeviceTypeStruct {
-  var deviceType: Int64
-  var revision: Int64
+    var deviceType: Int64
+    var revision: Int64
 
-  static func fromList(_ list: [Any?]) -> DescriptorClusterDeviceTypeStruct? {
-    let deviceType = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
-    let revision = list[1] is Int64 ? list[1] as! Int64 : Int64(list[1] as! Int32)
+    static func fromList(_ list: [Any?]) -> DescriptorClusterDeviceTypeStruct? {
+        let deviceType = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+        let revision = list[1] is Int64 ? list[1] as! Int64 : Int64(list[1] as! Int32)
 
-    return DescriptorClusterDeviceTypeStruct(
-      deviceType: deviceType,
-      revision: revision
-    )
-  }
-  func toList() -> [Any?] {
-    return [
-      deviceType,
-      revision,
-    ]
-  }
+        return DescriptorClusterDeviceTypeStruct(
+            deviceType: deviceType,
+            revision: revision
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            deviceType,
+            revision,
+        ]
+    }
 }
 
 private class FlutterMatterHostApiCodecReader: FlutterStandardReader {
-  override func readValue(ofType type: UInt8) -> Any? {
-    switch type {
-      case 128:
-        return CommissionRequest.fromList(self.readValue() as! [Any?])
-      case 129:
-        return MatterDevice.fromList(self.readValue() as! [Any?])
-      case 130:
-        return OpenPairingWindowResult.fromList(self.readValue() as! [Any?])
-      default:
-        return super.readValue(ofType: type)
+    override func readValue(ofType type: UInt8) -> Any? {
+        switch type {
+        case 128:
+            return CommissionRequest.fromList(readValue() as! [Any?])
+        case 129:
+            return MatterDevice.fromList(readValue() as! [Any?])
+        case 130:
+            return OpenPairingWindowResult.fromList(readValue() as! [Any?])
+        default:
+            return super.readValue(ofType: type)
+        }
     }
-  }
 }
 
 private class FlutterMatterHostApiCodecWriter: FlutterStandardWriter {
-  override func writeValue(_ value: Any) {
-    if let value = value as? CommissionRequest {
-      super.writeByte(128)
-      super.writeValue(value.toList())
-    } else if let value = value as? MatterDevice {
-      super.writeByte(129)
-      super.writeValue(value.toList())
-    } else if let value = value as? OpenPairingWindowResult {
-      super.writeByte(130)
-      super.writeValue(value.toList())
-    } else {
-      super.writeValue(value)
+    override func writeValue(_ value: Any) {
+        if let value = value as? CommissionRequest {
+            super.writeByte(128)
+            super.writeValue(value.toList())
+        } else if let value = value as? MatterDevice {
+            super.writeByte(129)
+            super.writeValue(value.toList())
+        } else if let value = value as? OpenPairingWindowResult {
+            super.writeByte(130)
+            super.writeValue(value.toList())
+        } else {
+            super.writeValue(value)
+        }
     }
-  }
 }
 
 private class FlutterMatterHostApiCodecReaderWriter: FlutterStandardReaderWriter {
-  override func reader(with data: Data) -> FlutterStandardReader {
-    return FlutterMatterHostApiCodecReader(data: data)
-  }
+    override func reader(with data: Data) -> FlutterStandardReader {
+        return FlutterMatterHostApiCodecReader(data: data)
+    }
 
-  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return FlutterMatterHostApiCodecWriter(data: data)
-  }
+    override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+        return FlutterMatterHostApiCodecWriter(data: data)
+    }
 }
 
 class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
-  static let shared = FlutterMatterHostApiCodec(readerWriter: FlutterMatterHostApiCodecReaderWriter())
+    static let shared = FlutterMatterHostApiCodec(readerWriter: FlutterMatterHostApiCodecReaderWriter())
 }
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostApi {
-  func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
-  func initUserDefaults(appGroup: String) throws
-  func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
-  func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
+    func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
+    func initUserDefaults(appGroup: String) throws
+    func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
+    func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FlutterMatterHostApiSetup {
-  /// The codec used by FlutterMatterHostApi.
-  static var codec: FlutterStandardMessageCodec { FlutterMatterHostApiCodec.shared }
-  /// Sets up an instance of `FlutterMatterHostApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostApi?) {
-    let getPlatformVersionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.getPlatformVersion", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      getPlatformVersionChannel.setMessageHandler { _, reply in
-        api.getPlatformVersion() { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+    /// The codec used by FlutterMatterHostApi.
+    static var codec: FlutterStandardMessageCodec { FlutterMatterHostApiCodec.shared }
+    /// Sets up an instance of `FlutterMatterHostApi` to handle messages through the `binaryMessenger`.
+    static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostApi?) {
+        let getPlatformVersionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.getPlatformVersion", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            getPlatformVersionChannel.setMessageHandler { _, reply in
+                api.getPlatformVersion { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            getPlatformVersionChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      getPlatformVersionChannel.setMessageHandler(nil)
-    }
-    let initUserDefaultsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.initUserDefaults", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      initUserDefaultsChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let appGroupArg = args[0] as! String
-        do {
-          try api.initUserDefaults(appGroup: appGroupArg)
-          reply(wrapResult(nil))
-        } catch {
-          reply(wrapError(error))
+        let initUserDefaultsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.initUserDefaults", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            initUserDefaultsChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let appGroupArg = args[0] as! String
+                do {
+                    try api.initUserDefaults(appGroup: appGroupArg)
+                    reply(wrapResult(nil))
+                } catch {
+                    reply(wrapError(error))
+                }
+            }
+        } else {
+            initUserDefaultsChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      initUserDefaultsChannel.setMessageHandler(nil)
-    }
-    let commissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.commission", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      commissionChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let requestArg = args[0] as! CommissionRequest
-        api.commission(request: requestArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let commissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.commission", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            commissionChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let requestArg = args[0] as! CommissionRequest
+                api.commission(request: requestArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            commissionChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      commissionChannel.setMessageHandler(nil)
-    }
-    let unpairChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.unpair", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      unpairChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        api.unpair(deviceId: deviceIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let unpairChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.unpair", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            unpairChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                api.unpair(deviceId: deviceIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            unpairChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      unpairChannel.setMessageHandler(nil)
-    }
-    let openPairingWindowWithPinChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.openPairingWindowWithPin", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      openPairingWindowWithPinChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let durationArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        let discriminatorArg = args[2] is Int64 ? args[2] as! Int64 : Int64(args[2] as! Int32)
-        let setupPinArg = args[3] is Int64 ? args[3] as! Int64 : Int64(args[3] as! Int32)
-        api.openPairingWindowWithPin(deviceId: deviceIdArg, duration: durationArg, discriminator: discriminatorArg, setupPin: setupPinArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let openPairingWindowWithPinChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.openPairingWindowWithPin", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            openPairingWindowWithPinChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let durationArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                let discriminatorArg = args[2] is Int64 ? args[2] as! Int64 : Int64(args[2] as! Int32)
+                let setupPinArg = args[3] is Int64 ? args[3] as! Int64 : Int64(args[3] as! Int32)
+                api.openPairingWindowWithPin(deviceId: deviceIdArg, duration: durationArg, discriminator: discriminatorArg, setupPin: setupPinArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            openPairingWindowWithPinChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      openPairingWindowWithPinChannel.setMessageHandler(nil)
     }
-  }
 }
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostOnOffClusterApi {
-  func off(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func on(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func toggle(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func readOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Bool, Error>) -> Void)
-  func subscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
-  func unsubscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func off(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func on(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func toggle(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func readOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Bool, Error>) -> Void)
+    func subscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
+    func unsubscribeToOnOff(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FlutterMatterHostOnOffClusterApiSetup {
-  /// The codec used by FlutterMatterHostOnOffClusterApi.
-  /// Sets up an instance of `FlutterMatterHostOnOffClusterApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostOnOffClusterApi?) {
-    let offChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.off", binaryMessenger: binaryMessenger)
-    if let api = api {
-      offChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.off(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+    /// The codec used by FlutterMatterHostOnOffClusterApi.
+    /// Sets up an instance of `FlutterMatterHostOnOffClusterApi` to handle messages through the `binaryMessenger`.
+    static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostOnOffClusterApi?) {
+        let offChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.off", binaryMessenger: binaryMessenger)
+        if let api = api {
+            offChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.off(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            offChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      offChannel.setMessageHandler(nil)
-    }
-    let onChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.on", binaryMessenger: binaryMessenger)
-    if let api = api {
-      onChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.on(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let onChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.on", binaryMessenger: binaryMessenger)
+        if let api = api {
+            onChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.on(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            onChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      onChannel.setMessageHandler(nil)
-    }
-    let toggleChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.toggle", binaryMessenger: binaryMessenger)
-    if let api = api {
-      toggleChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.toggle(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let toggleChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.toggle", binaryMessenger: binaryMessenger)
+        if let api = api {
+            toggleChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.toggle(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            toggleChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      toggleChannel.setMessageHandler(nil)
-    }
-    let readOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.readOnOff", binaryMessenger: binaryMessenger)
-    if let api = api {
-      readOnOffChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.readOnOff", binaryMessenger: binaryMessenger)
+        if let api = api {
+            readOnOffChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readOnOffChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readOnOffChannel.setMessageHandler(nil)
-    }
-    let subscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.subscribeToOnOff", binaryMessenger: binaryMessenger)
-    if let api = api {
-      subscribeToOnOffChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.subscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let subscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.subscribeToOnOff", binaryMessenger: binaryMessenger)
+        if let api = api {
+            subscribeToOnOffChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.subscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            subscribeToOnOffChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      subscribeToOnOffChannel.setMessageHandler(nil)
-    }
-    let unsubscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.unsubscribeToOnOff", binaryMessenger: binaryMessenger)
-    if let api = api {
-      unsubscribeToOnOffChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.unsubscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success:
-              reply(wrapResult(nil))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let unsubscribeToOnOffChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostOnOffClusterApi.unsubscribeToOnOff", binaryMessenger: binaryMessenger)
+        if let api = api {
+            unsubscribeToOnOffChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.unsubscribeToOnOff(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case .success:
+                        reply(wrapResult(nil))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            unsubscribeToOnOffChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      unsubscribeToOnOffChannel.setMessageHandler(nil)
     }
-  }
 }
+
 private class FlutterMatterFlutterOnOffClusterApiCodecReader: FlutterStandardReader {
-  override func readValue(ofType type: UInt8) -> Any? {
-    switch type {
-      case 128:
-        return IosError.fromList(self.readValue() as! [Any?])
-      default:
-        return super.readValue(ofType: type)
+    override func readValue(ofType type: UInt8) -> Any? {
+        switch type {
+        case 128:
+            return IosError.fromList(readValue() as! [Any?])
+        default:
+            return super.readValue(ofType: type)
+        }
     }
-  }
 }
 
 private class FlutterMatterFlutterOnOffClusterApiCodecWriter: FlutterStandardWriter {
-  override func writeValue(_ value: Any) {
-    if let value = value as? IosError {
-      super.writeByte(128)
-      super.writeValue(value.toList())
-    } else {
-      super.writeValue(value)
+    override func writeValue(_ value: Any) {
+        if let value = value as? IosError {
+            super.writeByte(128)
+            super.writeValue(value.toList())
+        } else {
+            super.writeValue(value)
+        }
     }
-  }
 }
 
 private class FlutterMatterFlutterOnOffClusterApiCodecReaderWriter: FlutterStandardReaderWriter {
-  override func reader(with data: Data) -> FlutterStandardReader {
-    return FlutterMatterFlutterOnOffClusterApiCodecReader(data: data)
-  }
+    override func reader(with data: Data) -> FlutterStandardReader {
+        return FlutterMatterFlutterOnOffClusterApiCodecReader(data: data)
+    }
 
-  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return FlutterMatterFlutterOnOffClusterApiCodecWriter(data: data)
-  }
+    override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+        return FlutterMatterFlutterOnOffClusterApiCodecWriter(data: data)
+    }
 }
 
 class FlutterMatterFlutterOnOffClusterApiCodec: FlutterStandardMessageCodec {
-  static let shared = FlutterMatterFlutterOnOffClusterApiCodec(readerWriter: FlutterMatterFlutterOnOffClusterApiCodecReaderWriter())
+    static let shared = FlutterMatterFlutterOnOffClusterApiCodec(readerWriter: FlutterMatterFlutterOnOffClusterApiCodecReaderWriter())
 }
 
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol FlutterMatterFlutterOnOffClusterApiProtocol {
-  func onOff(deviceId deviceIdArg: Int64, endpointId endpointIdArg: Int64, onOff onOffArg: Bool?, error errorArg: IosError?, completion: @escaping (Result<Void, FlutterError>) -> Void) 
+    func onOff(deviceId deviceIdArg: Int64, endpointId endpointIdArg: Int64, onOff onOffArg: Bool?, error errorArg: IosError?, completion: @escaping (Result<Void, FlutterError>) -> Void)
 }
+
 class FlutterMatterFlutterOnOffClusterApi: FlutterMatterFlutterOnOffClusterApiProtocol {
-  private let binaryMessenger: FlutterBinaryMessenger
-  init(binaryMessenger: FlutterBinaryMessenger){
-    self.binaryMessenger = binaryMessenger
-  }
-  var codec: FlutterStandardMessageCodec {
-    return FlutterMatterFlutterOnOffClusterApiCodec.shared
-  }
-  func onOff(deviceId deviceIdArg: Int64, endpointId endpointIdArg: Int64, onOff onOffArg: Bool?, error errorArg: IosError?, completion: @escaping (Result<Void, FlutterError>) -> Void)  {
-    let channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterFlutterOnOffClusterApi.onOff", binaryMessenger: binaryMessenger, codec: codec)
-    channel.sendMessage([deviceIdArg, endpointIdArg, onOffArg, errorArg] as [Any?]) { _ in
-      completion(.success(Void()))
+    private let binaryMessenger: FlutterBinaryMessenger
+    init(binaryMessenger: FlutterBinaryMessenger) {
+        self.binaryMessenger = binaryMessenger
     }
-  }
+
+    var codec: FlutterStandardMessageCodec {
+        return FlutterMatterFlutterOnOffClusterApiCodec.shared
+    }
+
+    func onOff(deviceId deviceIdArg: Int64, endpointId endpointIdArg: Int64, onOff onOffArg: Bool?, error errorArg: IosError?, completion: @escaping (Result<Void, FlutterError>) -> Void) {
+        let channel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterFlutterOnOffClusterApi.onOff", binaryMessenger: binaryMessenger, codec: codec)
+        channel.sendMessage([deviceIdArg, endpointIdArg, onOffArg, errorArg] as [Any?]) { _ in
+            completion(.success(()))
+        }
+    }
 }
+
 private class FlutterMatterHostDescriptorClusterApiCodecReader: FlutterStandardReader {
-  override func readValue(ofType type: UInt8) -> Any? {
-    switch type {
-      case 128:
-        return DescriptorClusterDeviceTypeStruct.fromList(self.readValue() as! [Any?])
-      default:
-        return super.readValue(ofType: type)
+    override func readValue(ofType type: UInt8) -> Any? {
+        switch type {
+        case 128:
+            return DescriptorClusterDeviceTypeStruct.fromList(readValue() as! [Any?])
+        default:
+            return super.readValue(ofType: type)
+        }
     }
-  }
 }
 
 private class FlutterMatterHostDescriptorClusterApiCodecWriter: FlutterStandardWriter {
-  override func writeValue(_ value: Any) {
-    if let value = value as? DescriptorClusterDeviceTypeStruct {
-      super.writeByte(128)
-      super.writeValue(value.toList())
-    } else {
-      super.writeValue(value)
+    override func writeValue(_ value: Any) {
+        if let value = value as? DescriptorClusterDeviceTypeStruct {
+            super.writeByte(128)
+            super.writeValue(value.toList())
+        } else {
+            super.writeValue(value)
+        }
     }
-  }
 }
 
 private class FlutterMatterHostDescriptorClusterApiCodecReaderWriter: FlutterStandardReaderWriter {
-  override func reader(with data: Data) -> FlutterStandardReader {
-    return FlutterMatterHostDescriptorClusterApiCodecReader(data: data)
-  }
+    override func reader(with data: Data) -> FlutterStandardReader {
+        return FlutterMatterHostDescriptorClusterApiCodecReader(data: data)
+    }
 
-  override func writer(with data: NSMutableData) -> FlutterStandardWriter {
-    return FlutterMatterHostDescriptorClusterApiCodecWriter(data: data)
-  }
+    override func writer(with data: NSMutableData) -> FlutterStandardWriter {
+        return FlutterMatterHostDescriptorClusterApiCodecWriter(data: data)
+    }
 }
 
 class FlutterMatterHostDescriptorClusterApiCodec: FlutterStandardMessageCodec {
-  static let shared = FlutterMatterHostDescriptorClusterApiCodec(readerWriter: FlutterMatterHostDescriptorClusterApiCodecReaderWriter())
+    static let shared = FlutterMatterHostDescriptorClusterApiCodec(readerWriter: FlutterMatterHostDescriptorClusterApiCodecReaderWriter())
 }
 
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostDescriptorClusterApi {
-  func readDeviceTypeList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[DescriptorClusterDeviceTypeStruct], Error>) -> Void)
-  func readServerList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
-  func readClientList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
-  func readPartsList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
+    func readDeviceTypeList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[DescriptorClusterDeviceTypeStruct], Error>) -> Void)
+    func readServerList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
+    func readClientList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
+    func readPartsList(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<[Int64], Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FlutterMatterHostDescriptorClusterApiSetup {
-  /// The codec used by FlutterMatterHostDescriptorClusterApi.
-  static var codec: FlutterStandardMessageCodec { FlutterMatterHostDescriptorClusterApiCodec.shared }
-  /// Sets up an instance of `FlutterMatterHostDescriptorClusterApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostDescriptorClusterApi?) {
-    let readDeviceTypeListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readDeviceTypeList", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      readDeviceTypeListChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readDeviceTypeList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+    /// The codec used by FlutterMatterHostDescriptorClusterApi.
+    static var codec: FlutterStandardMessageCodec { FlutterMatterHostDescriptorClusterApiCodec.shared }
+    /// Sets up an instance of `FlutterMatterHostDescriptorClusterApi` to handle messages through the `binaryMessenger`.
+    static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostDescriptorClusterApi?) {
+        let readDeviceTypeListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readDeviceTypeList", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            readDeviceTypeListChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readDeviceTypeList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readDeviceTypeListChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readDeviceTypeListChannel.setMessageHandler(nil)
-    }
-    let readServerListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readServerList", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      readServerListChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readServerList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readServerListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readServerList", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            readServerListChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readServerList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readServerListChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readServerListChannel.setMessageHandler(nil)
-    }
-    let readClientListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readClientList", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      readClientListChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readClientList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readClientListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readClientList", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            readClientListChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readClientList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readClientListChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readClientListChannel.setMessageHandler(nil)
-    }
-    let readPartsListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readPartsList", binaryMessenger: binaryMessenger, codec: codec)
-    if let api = api {
-      readPartsListChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readPartsList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readPartsListChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostDescriptorClusterApi.readPartsList", binaryMessenger: binaryMessenger, codec: codec)
+        if let api = api {
+            readPartsListChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readPartsList(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readPartsListChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readPartsListChannel.setMessageHandler(nil)
     }
-  }
 }
+
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostTemperatureClusterApi {
-  func readMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
-  func readMinMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
-  func readMaxMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
-  func readTolerance(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
+    func readMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
+    func readMinMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
+    func readMaxMeasuredValue(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
+    func readTolerance(deviceId: Int64, endpointId: Int64, completion: @escaping (Result<Int64?, Error>) -> Void)
 }
 
 /// Generated setup class from Pigeon to handle messages through the `binaryMessenger`.
 class FlutterMatterHostTemperatureClusterApiSetup {
-  /// The codec used by FlutterMatterHostTemperatureClusterApi.
-  /// Sets up an instance of `FlutterMatterHostTemperatureClusterApi` to handle messages through the `binaryMessenger`.
-  static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostTemperatureClusterApi?) {
-    let readMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMeasuredValue", binaryMessenger: binaryMessenger)
-    if let api = api {
-      readMeasuredValueChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+    /// The codec used by FlutterMatterHostTemperatureClusterApi.
+    /// Sets up an instance of `FlutterMatterHostTemperatureClusterApi` to handle messages through the `binaryMessenger`.
+    static func setUp(binaryMessenger: FlutterBinaryMessenger, api: FlutterMatterHostTemperatureClusterApi?) {
+        let readMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMeasuredValue", binaryMessenger: binaryMessenger)
+        if let api = api {
+            readMeasuredValueChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readMeasuredValueChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readMeasuredValueChannel.setMessageHandler(nil)
-    }
-    let readMinMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMinMeasuredValue", binaryMessenger: binaryMessenger)
-    if let api = api {
-      readMinMeasuredValueChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readMinMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readMinMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMinMeasuredValue", binaryMessenger: binaryMessenger)
+        if let api = api {
+            readMinMeasuredValueChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readMinMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readMinMeasuredValueChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readMinMeasuredValueChannel.setMessageHandler(nil)
-    }
-    let readMaxMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMaxMeasuredValue", binaryMessenger: binaryMessenger)
-    if let api = api {
-      readMaxMeasuredValueChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readMaxMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readMaxMeasuredValueChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readMaxMeasuredValue", binaryMessenger: binaryMessenger)
+        if let api = api {
+            readMaxMeasuredValueChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readMaxMeasuredValue(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readMaxMeasuredValueChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readMaxMeasuredValueChannel.setMessageHandler(nil)
-    }
-    let readToleranceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readTolerance", binaryMessenger: binaryMessenger)
-    if let api = api {
-      readToleranceChannel.setMessageHandler { message, reply in
-        let args = message as! [Any?]
-        let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
-        let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
-        api.readTolerance(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
-          switch result {
-            case .success(let res):
-              reply(wrapResult(res))
-            case .failure(let error):
-              reply(wrapError(error))
-          }
+        let readToleranceChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostTemperatureClusterApi.readTolerance", binaryMessenger: binaryMessenger)
+        if let api = api {
+            readToleranceChannel.setMessageHandler { message, reply in
+                let args = message as! [Any?]
+                let deviceIdArg = args[0] is Int64 ? args[0] as! Int64 : Int64(args[0] as! Int32)
+                let endpointIdArg = args[1] is Int64 ? args[1] as! Int64 : Int64(args[1] as! Int32)
+                api.readTolerance(deviceId: deviceIdArg, endpointId: endpointIdArg) { result in
+                    switch result {
+                    case let .success(res):
+                        reply(wrapResult(res))
+                    case let .failure(error):
+                        reply(wrapError(error))
+                    }
+                }
+            }
+        } else {
+            readToleranceChannel.setMessageHandler(nil)
         }
-      }
-    } else {
-      readToleranceChannel.setMessageHandler(nil)
     }
-  }
 }

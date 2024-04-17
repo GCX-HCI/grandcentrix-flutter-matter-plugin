@@ -6,22 +6,21 @@
 //
 
 import Foundation
-import OSLog
 import Matter
+import OSLog
 
 let storage: MTRStorage = MTRStorageImpl()
 
 func InitializeMTR() throws -> MTRDeviceController {
-
     let deviceControllerFactoryParams = MTRDeviceControllerFactoryParams(storage: storage)
     let deviceControllerFactory = MTRDeviceControllerFactory.sharedInstance()
     try deviceControllerFactory.start(deviceControllerFactoryParams)
-    
+
     let keyPair = MTRKeypairImpl()
-    
+
     let deviceControllerStartupParams = MTRDeviceControllerStartupParams(ipk: keyPair.ipk!, fabricID: 1, nocSigner: keyPair)
     deviceControllerStartupParams.vendorID = 0xFFF1 // TODO: Read vom UserDefaults
-    
+
     do {
         // Create a MTRDeviceController on an existing fabric. Returns nil on failure.
         // This method will fail if there is no such fabric or if there is already a controller started for that fabric.
