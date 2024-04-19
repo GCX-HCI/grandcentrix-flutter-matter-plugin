@@ -106,12 +106,18 @@ class _FakeFuture_6<T1> extends _i1.SmartFake implements _i6.Future<T1> {
 class MockClusterFactory extends _i1.Mock implements _i7.ClusterFactory {
   @override
   _i6.Future<_i2.FlutterMatterPlatformInterface>
-      createFlutterMatterPlatformInterface({required String? appGroup}) =>
+      createFlutterMatterPlatformInterface({
+    required String? appGroup,
+    required String? ecoSystemName,
+  }) =>
           (super.noSuchMethod(
             Invocation.method(
               #createFlutterMatterPlatformInterface,
               [],
-              {#appGroup: appGroup},
+              {
+                #appGroup: appGroup,
+                #ecoSystemName: ecoSystemName,
+              },
             ),
             returnValue: _i6.Future<_i2.FlutterMatterPlatformInterface>.value(
                 _FakeFlutterMatterPlatformInterface_0(
@@ -119,7 +125,10 @@ class MockClusterFactory extends _i1.Mock implements _i7.ClusterFactory {
               Invocation.method(
                 #createFlutterMatterPlatformInterface,
                 [],
-                {#appGroup: appGroup},
+                {
+                  #appGroup: appGroup,
+                  #ecoSystemName: ecoSystemName,
+                },
               ),
             )),
             returnValueForMissingStub:
@@ -129,7 +138,10 @@ class MockClusterFactory extends _i1.Mock implements _i7.ClusterFactory {
               Invocation.method(
                 #createFlutterMatterPlatformInterface,
                 [],
-                {#appGroup: appGroup},
+                {
+                  #appGroup: appGroup,
+                  #ecoSystemName: ecoSystemName,
+                },
               ),
             )),
           ) as _i6.Future<_i2.FlutterMatterPlatformInterface>);

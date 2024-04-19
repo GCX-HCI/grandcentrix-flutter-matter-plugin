@@ -43,13 +43,19 @@ class MatterDevice {
 class CommissionRequest {
   CommissionRequest({
     required this.id,
+    required this.ecoSystemName,
   });
 
+  /// The planned node id for the node.
   int id;
+
+  /// The name of your ecosystem. This is a localized string that appears during device setup.
+  String ecoSystemName;
 
   Object encode() {
     return <Object?>[
       id,
+      ecoSystemName,
     ];
   }
 
@@ -57,6 +63,7 @@ class CommissionRequest {
     result as List<Object?>;
     return CommissionRequest(
       id: result[0]! as int,
+      ecoSystemName: result[1]! as String,
     );
   }
 }

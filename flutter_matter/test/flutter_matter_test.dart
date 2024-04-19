@@ -39,8 +39,9 @@ void main() {
     mockTemperatureCluster = MockTemperatureCluster();
 
     when(mockClusterFactory.createFlutterMatterPlatformInterface(
-            appGroup: 'test'))
-        .thenAnswer((_) async => mockFlutterMatterPlatformInterface);
+      appGroup: 'test',
+      ecoSystemName: 'testEcoSystemName',
+    )).thenAnswer((_) async => mockFlutterMatterPlatformInterface);
     when(mockClusterFactory.createDescriptorCluster())
         .thenReturn(mockDescriptorCluster);
     when(mockClusterFactory.createOnOffCluster()).thenReturn(mockOnOffCluster);
@@ -49,6 +50,7 @@ void main() {
 
     sut = await FlutterMatter.createInstance(
       appGroup: 'test',
+      ecoSystemName: 'testEcoSystemName',
       clusterFactory: mockClusterFactory,
     );
   });

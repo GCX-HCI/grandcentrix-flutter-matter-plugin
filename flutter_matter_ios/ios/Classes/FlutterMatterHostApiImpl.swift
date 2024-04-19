@@ -30,7 +30,7 @@ class FlutterMatterHostApiImpl: FlutterMatterHostApi {
                 return
             }
 
-            let topology = MatterAddDeviceRequest.Topology(ecosystemName: "MyEcosystemName", homes: [])
+            let topology = MatterAddDeviceRequest.Topology(ecosystemName: request.ecoSystemName, homes: [])
 
             let matterDeviceRequest = MatterAddDeviceRequest(topology: topology)
 

@@ -18,25 +18,14 @@ import './flutter_matter_ios_test.mocks.dart';
 void main() {
   late FlutterMatterIos sut;
   late MockFlutterMatterHostApi mockFlutterMatterHostApi;
-  late MockFlutterMatterOnOffClusterInterface
-      mockFlutterMatterOnOffClusterInterface;
-  late MockFlutterMatterDescriptorClusterInterface
-      mockFlutterMatterDescriptorClusterInterface;
 
   setUp(() async {
     mockFlutterMatterHostApi = MockFlutterMatterHostApi();
-    mockFlutterMatterOnOffClusterInterface =
-        MockFlutterMatterOnOffClusterInterface();
-    mockFlutterMatterDescriptorClusterInterface =
-        MockFlutterMatterDescriptorClusterInterface();
 
     sut = await FlutterMatterIos.createInstance(
       appGroup: 'test',
+      ecoSystemName: 'testEcoSystemName',
       flutterMatterHostApi: mockFlutterMatterHostApi,
-      flutterMatterOnOffClusterInterface:
-          mockFlutterMatterOnOffClusterInterface,
-      flutterMatterDescriptorClusterInterface:
-          mockFlutterMatterDescriptorClusterInterface,
     );
   });
 

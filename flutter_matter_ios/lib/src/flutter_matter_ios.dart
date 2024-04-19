@@ -7,23 +7,23 @@ import 'package:flutter_matter_platfrom_interface/flutter_matter_platfrom_interf
 /// An implementation of [FlutterMatterPlatformInterface] for iOS.
 class FlutterMatterIos implements FlutterMatterPlatformInterface {
   final FlutterMatterHostApi _flutterMatterHostApi;
+  final String _ecoSystemName;
 
   /// Creates a new plugin implementation instance.
   FlutterMatterIos._({
+    required String ecoSystemName,
     @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
-  }) : _flutterMatterHostApi = flutterMatterHostApi ?? FlutterMatterHostApi();
+  })  : _ecoSystemName = ecoSystemName,
+        _flutterMatterHostApi = flutterMatterHostApi ?? FlutterMatterHostApi();
 
   /// Async factory method to create a [FlutterMatterIos] instance and initialize the iOS UserDefaults
   static Future<FlutterMatterIos> createInstance({
     required String appGroup,
+    required String ecoSystemName,
     @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
-    @visibleForTesting
-    FlutterMatterOnOffClusterInterface? flutterMatterOnOffClusterInterface,
-    @visibleForTesting
-    FlutterMatterDescriptorClusterInterface?
-        flutterMatterDescriptorClusterInterface,
   }) async {
     final instance = FlutterMatterIos._(
+      ecoSystemName: ecoSystemName,
       flutterMatterHostApi: flutterMatterHostApi,
     );
     await instance._flutterMatterHostApi.initUserDefaults(appGroup);
@@ -38,7 +38,10 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
 
   @override
   Future<FlutterMatterDevice> commission({required int deviceId}) async {
-    final request = CommissionRequest(id: deviceId);
+    final request = CommissionRequest(
+      id: deviceId,
+      ecoSystemName: _ecoSystemName,
+    );
     final device = await _flutterMatterHostApi.commission(request);
     return device.toFlutterMatterDevice();
   }

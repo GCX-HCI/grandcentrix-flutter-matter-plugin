@@ -20,17 +20,21 @@ final class FlutterMatter with SpecifyPlatfromException {
   /// Create instance of [FlutterMatter]
   ///
   /// Parameter [appGroup] should be your App Group you defined in the iOS App Group capabilities. See the README for setup.
+  /// Paramter [ecoSystemName] is name of your ecosystem. This is a localized string that appears during device setup on iOS.
   /// Throws an [UnimplementedError], when your Platfrom is not iOS or Android!
   ///
   /// Paramter [clusterFactory] is only for testing
   static Future<FlutterMatter> createInstance({
     required String appGroup,
+    required String ecoSystemName,
     @visibleForTesting ClusterFactory? clusterFactory,
   }) async {
     final factory = clusterFactory ?? ClusterFactory();
     return FlutterMatter._(
       platfromInterface: await factory.createFlutterMatterPlatformInterface(
-          appGroup: appGroup),
+        appGroup: appGroup,
+        ecoSystemName: ecoSystemName,
+      ),
       descriptorCluster: factory.createDescriptorCluster(),
       onOffCluster: factory.createOnOffCluster(),
       temperatureCluster: factory.createTemperatureCluster(),

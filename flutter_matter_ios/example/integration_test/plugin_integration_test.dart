@@ -17,7 +17,9 @@ void main() {
 
   testWidgets('getPlatformVersion test', (WidgetTester tester) async {
     final FlutterMatterIos plugin = await FlutterMatterIos.createInstance(
-        appGroup: 'group.example.flutterMatterExample');
+      appGroup: 'group.example.flutterMatterExample',
+      ecoSystemName: 'testEcoSystemName',
+    );
     await check(plugin.getPlatformVersion()).completes(
       it()..isNotNull().isNotEmpty(),
     );

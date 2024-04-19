@@ -59,19 +59,25 @@ struct MatterDevice {
 
 /// Generated class from Pigeon that represents data sent in messages.
 struct CommissionRequest {
+    /// The planned node id for the node.
     var id: Int64
+    /// The name of your ecosystem. This is a localized string that appears during device setup.
+    var ecoSystemName: String
 
     static func fromList(_ list: [Any?]) -> CommissionRequest? {
         let id = list[0] is Int64 ? list[0] as! Int64 : Int64(list[0] as! Int32)
+        let ecoSystemName = list[1] as! String
 
         return CommissionRequest(
-            id: id
+            id: id,
+            ecoSystemName: ecoSystemName
         )
     }
 
     func toList() -> [Any?] {
         return [
             id,
+            ecoSystemName,
         ]
     }
 }

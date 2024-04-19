@@ -16,9 +16,16 @@ class MatterDevice {
 }
 
 class CommissionRequest {
+  /// The planned node id for the node.
   final int id;
 
-  CommissionRequest({required this.id});
+  /// The name of your ecosystem. This is a localized string that appears during device setup.
+  final String ecoSystemName;
+
+  CommissionRequest({
+    required this.id,
+    required this.ecoSystemName,
+  });
 }
 
 class OpenPairingWindowResult {

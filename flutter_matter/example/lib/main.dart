@@ -15,7 +15,9 @@ void main() async {
 
   // IMPORTANT: Change the parameter `appGroup` to your App Group defined in the iOS App Group capabilities. See the README for setup!
   _flutterMatterPlugin = await FlutterMatter.createInstance(
-      appGroup: 'group.example.flutterMatterExample');
+    appGroup: 'group.example.flutterMatterExample',
+    ecoSystemName: 'testEcoSystemName',
+  );
 
   runApp(const MyApp());
 }
