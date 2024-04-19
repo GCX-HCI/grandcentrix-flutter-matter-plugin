@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter.chip
+package net.grandcentrix.fluttermatter.chip
 
 import chip.devicecontroller.ChipDeviceController
 import timber.log.Timber
@@ -72,7 +72,11 @@ abstract class BaseCompletionListener : ChipDeviceController.CompletionListener 
         threadEndpointId: Int,
     ) {
         Timber.d(
-            "onReadCommissioningInfo: vendorId [$vendorId]  productId [$productId]  wifiEndpointId [$wifiEndpointId] threadEndpointId [$threadEndpointId]",
+            "onReadCommissioningInfo:" +
+                " vendorId [$vendorId]" +
+                "  productId [$productId]" +
+                "  wifiEndpointId [$wifiEndpointId]" +
+                " threadEndpointId [$threadEndpointId]",
         )
     }
 

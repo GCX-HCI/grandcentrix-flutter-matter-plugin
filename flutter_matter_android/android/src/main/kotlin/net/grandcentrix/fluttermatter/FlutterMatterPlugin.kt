@@ -1,4 +1,4 @@
-package net.grandcentrix.flutter_matter
+package net.grandcentrix.fluttermatter
 
 import android.app.Activity
 import android.content.Intent
@@ -6,9 +6,9 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.PluginRegistry
-import net.grandcentrix.flutter_matter.clusters.DescriptorCluster
-import net.grandcentrix.flutter_matter.clusters.OnOffCluster
-import net.grandcentrix.flutter_matter.clusters.TemperatureCluster
+import net.grandcentrix.fluttermatter.clusters.DescriptorCluster
+import net.grandcentrix.fluttermatter.clusters.OnOffCluster
+import net.grandcentrix.fluttermatter.clusters.TemperatureCluster
 import timber.log.Timber
 
 /** FlutterMatterPlugin */

@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter.chip
+package net.grandcentrix.fluttermatter.chip
 
 import chip.devicecontroller.ChipClusters
 import chip.devicecontroller.ChipClusters.BasicInformationCluster
 import chip.devicecontroller.ChipStructs
-import net.grandcentrix.flutter_matter.CommissioningWindowStatus
+import net.grandcentrix.fluttermatter.CommissioningWindowStatus
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -1,4 +1,4 @@
-package net.grandcentrix.flutter_matter.clusters
+package net.grandcentrix.fluttermatter.clusters
 
 import chip.devicecontroller.ChipClusters
 import kotlinx.coroutines.CoroutineScope
@@ -6,9 +6,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import net.grandcentrix.flutter_matter.FlutterError
-import net.grandcentrix.flutter_matter.FlutterMatterHostTemperatureClusterApi
-import net.grandcentrix.flutter_matter.chip.ChipClient
+import net.grandcentrix.fluttermatter.FlutterError
+import net.grandcentrix.fluttermatter.FlutterMatterHostTemperatureClusterApi
+import net.grandcentrix.fluttermatter.chip.ChipClient
 import timber.log.Timber
 import java.io.Closeable
 

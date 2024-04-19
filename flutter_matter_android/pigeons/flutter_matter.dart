@@ -2,9 +2,9 @@ import 'package:pigeon/pigeon.dart';
 
 @ConfigurePigeon(PigeonOptions(
   dartOut: 'lib/src/flutter_matter.g.dart',
-  kotlinOptions: KotlinOptions(package: 'net.grandcentrix.flutter_matter'),
+  kotlinOptions: KotlinOptions(package: 'net.grandcentrix.fluttermatter'),
   kotlinOut:
-      'android/src/main/kotlin/net/grandcentrix/flutter_matter/FlutterMatter.g.kt',
+      'android/src/main/kotlin/net/grandcentrix/fluttermatter/FlutterMatter.g.kt',
   // copyrightHeader: 'pigeons/copyright.txt',
 ))
 class MatterDevice {

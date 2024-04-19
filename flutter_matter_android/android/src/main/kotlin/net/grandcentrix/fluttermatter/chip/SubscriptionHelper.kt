@@ -1,4 +1,4 @@
-package net.grandcentrix.flutter_matter.chip
+package net.grandcentrix.fluttermatter.chip
 
 import chip.devicecontroller.ChipIdLookup
 import chip.devicecontroller.ReportCallback
@@ -127,7 +127,10 @@ class SubscriptionHelper
                 nextResubscribeIntervalMsec: Int,
             ) {
                 Timber.d(
-                    "onResubscriptionAttempt(): device [$deviceId] terminationCause [$terminationCause] nextResubscribeIntervalMsec [$nextResubscribeIntervalMsec]",
+                    "onResubscriptionAttempt():" +
+                        " device [$deviceId]" +
+                        " terminationCause [$terminationCause]" +
+                        " nextResubscribeIntervalMsec [$nextResubscribeIntervalMsec]",
                 )
             }
         }

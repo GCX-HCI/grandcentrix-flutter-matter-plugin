@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter.commissioning
+package net.grandcentrix.fluttermatter.commissioning
 
 import android.app.Service
 import android.content.Intent
@@ -28,14 +28,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import net.grandcentrix.flutter_matter.chip.ChipClient
+import net.grandcentrix.fluttermatter.chip.ChipClient
 import timber.log.Timber
 
 /**
  * The CommissioningService that's responsible for commissioning the device on the app's custom
  * fabric. AppCommissioningService is specified when building the
  * [com.google.android.gms.home.matter.commissioning.CommissioningRequest] in
- * [net.grandcentrix.flutter_matter.FlutterMatterHostApiImpl].
+ * [net.grandcentrix.fluttermatter.FlutterMatterHostApiImpl].
  */
 @AndroidEntryPoint
 class AppCommissioningService : Service(), CommissioningService.Callback {
@@ -47,7 +47,6 @@ class AppCommissioningService : Service(), CommissioningService.Callback {
     private lateinit var commissioningServiceDelegate: CommissioningService
 
     companion object {
-
         var deviceId: Long = -1
     }
 

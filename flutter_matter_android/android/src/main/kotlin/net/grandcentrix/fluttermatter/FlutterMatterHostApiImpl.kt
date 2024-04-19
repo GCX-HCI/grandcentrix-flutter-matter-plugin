@@ -1,4 +1,4 @@
-package net.grandcentrix.flutter_matter
+package net.grandcentrix.fluttermatter
 
 import android.content.ComponentName
 import android.content.Intent
@@ -10,8 +10,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import net.grandcentrix.flutter_matter.chip.ChipClient
-import net.grandcentrix.flutter_matter.commissioning.AppCommissioningService
+import net.grandcentrix.fluttermatter.chip.ChipClient
+import net.grandcentrix.fluttermatter.commissioning.AppCommissioningService
 import timber.log.Timber
 import java.io.Closeable
 
@@ -21,9 +21,6 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
 
     private val scope =
         CoroutineScope(Dispatchers.IO + Job())
-
-    // 0xFFF4 is a test vendor ID, replace with your assigned company ID
-    private val VENDOR_ID = 0xFFF4
 
     // FlutterMatterHostApi
     override fun getPlatformVersion(callback: (Result<String>) -> Unit) {

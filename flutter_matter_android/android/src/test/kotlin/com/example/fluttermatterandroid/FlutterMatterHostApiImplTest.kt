@@ -1,6 +1,6 @@
-package com.example.flutter_matter_android
+package com.example.fluttermatterandroid
 
-import net.grandcentrix.flutter_matter.FlutterMatterHostApiImpl
+import net.grandcentrix.fluttermatter.FlutterMatterHostApiImpl
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter.chip
+package net.grandcentrix.fluttermatter.chip
 
 import android.content.Context
 import chip.devicecontroller.ChipDeviceController
@@ -43,7 +43,7 @@ import chip.platform.NsdManagerServiceResolver
 import chip.platform.PreferencesConfigurationManager
 import chip.platform.PreferencesKeyValueStoreManager
 import dagger.hilt.android.qualifiers.ApplicationContext
-import net.grandcentrix.flutter_matter.stripLinkLocalInIpAddress
+import net.grandcentrix.fluttermatter.stripLinkLocalInIpAddress
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -58,10 +58,11 @@ class ChipClient
     constructor(
         @ApplicationContext context: Context,
     ) {
-        // 0xFFF4 is a test vendor ID, replace with your assigned company ID
-        private val VENDOR_ID = 0xFFF4
-
-        private val DEFAULT_TIMEOUT = 1000
+        companion object {
+            // 0xFFF4 is a test vendor ID, replace with your assigned company ID
+            const val VENDOR_ID = 0xFFF4
+            const val DEFAULT_TIMEOUT = 1000
+        }
 
         // Lazily instantiate [ChipDeviceController] and hold a reference to it.
         val chipDeviceController: ChipDeviceController by lazy {
@@ -251,7 +252,7 @@ class ChipClient
             iteration: Long,
             discriminator: Int,
             setupPinCode: Long,
-        ): Triple<Long, String?, String?>  {
+        ): Triple<Long, String?, String?> {
             return suspendCoroutine { continuation ->
                 Timber.d("Calling chipDeviceController.openPairingWindowWithPIN")
                 val callback: OpenCommissioningCallback =

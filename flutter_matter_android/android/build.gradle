@@ -1,4 +1,4 @@
-group 'net.grandcentrix.flutter_matter'
+group 'net.grandcentrix.fluttermatter'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -26,7 +26,7 @@ apply plugin: 'kotlin-android'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'net.grandcentrix.flutter_matter'
+        namespace 'net.grandcentrix.fluttermatter'
     }
 
     compileSdk 33

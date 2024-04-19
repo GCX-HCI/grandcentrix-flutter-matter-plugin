@@ -27,7 +27,7 @@ flutter:
   plugin:
     platforms:
       android:
-        package: net.grandcentrix.flutter_matter
+        package: net.grandcentrix.fluttermatter
         pluginClass: FlutterMatterPlugin
 
 topics:

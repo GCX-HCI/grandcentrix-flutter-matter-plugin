@@ -57,7 +57,7 @@
         </activity>
         <!-- Add service -->
         <service
-            android:name="net.grandcentrix.flutter_matter.commissioning.AppCommissioningService"
+            android:name="net.grandcentrix.fluttermatter.commissioning.AppCommissioningService"
             android:exported="true" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

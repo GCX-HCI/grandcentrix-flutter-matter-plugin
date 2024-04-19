@@ -1,4 +1,4 @@
-package com.example.flutter_matter_android_example
+package com.example.fluttermatterexample
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter
+package net.grandcentrix.fluttermatter
 
 import android.content.Intent
 

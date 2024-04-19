@@ -70,8 +70,8 @@ scripts:
     exec:
       concurrency: 6
       failFast: true
-    run: dart format . --fix && swiftformat . && ktlint --format
-    description: Run `dart format` for all packages & swiftformat & ktlint --format
+    run: dart format . --fix && swiftformat . && ktlint --format "**/*.kt" "**/*.kts" "!**/*.g.kt" "!**/*.g.kts"
+    description: Run `dart format` for all packages & swiftformat & ktlint --format "**/*.kt" "**/*.kts" "!**/*.g.kt" "!**/*.g.kts"
 
   format-check:
     exec:

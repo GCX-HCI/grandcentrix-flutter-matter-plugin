@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.grandcentrix.flutter_matter.chip
+package net.grandcentrix.fluttermatter.chip
 
 object MatterConstants {
     val DeviceTypesMap =
