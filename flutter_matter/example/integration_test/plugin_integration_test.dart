@@ -19,6 +19,8 @@ void main() {
     final FlutterMatter plugin = await FlutterMatter.createInstance(
       appGroup: 'group.example.flutterMatterExample',
       ecoSystemName: 'testEcoSystemName',
+      fabricId: 1,
+      vendorId: 0xFFF1, // Test Vendor ID
     );
     await check(plugin.getPlatformVersion()).completes(
       it()..isNotNull().isNotEmpty(),

@@ -19,6 +19,32 @@ List<Object?> wrapResponse(
   return <Object?>[error.code, error.message, error.details];
 }
 
+class InitParams {
+  InitParams({
+    required this.fabricId,
+    required this.vendorId,
+  });
+
+  int fabricId;
+
+  int vendorId;
+
+  Object encode() {
+    return <Object?>[
+      fabricId,
+      vendorId,
+    ];
+  }
+
+  static InitParams decode(Object result) {
+    result as List<Object?>;
+    return InitParams(
+      fabricId: result[0]! as int,
+      vendorId: result[1]! as int,
+    );
+  }
+}
+
 class MatterDevice {
   MatterDevice({
     required this.id,
@@ -148,11 +174,14 @@ class _FlutterMatterHostApiCodec extends StandardMessageCodec {
     if (value is CommissionRequest) {
       buffer.putUint8(128);
       writeValue(buffer, value.encode());
-    } else if (value is MatterDevice) {
+    } else if (value is InitParams) {
       buffer.putUint8(129);
       writeValue(buffer, value.encode());
-    } else if (value is OpenPairingWindowResult) {
+    } else if (value is MatterDevice) {
       buffer.putUint8(130);
+      writeValue(buffer, value.encode());
+    } else if (value is OpenPairingWindowResult) {
+      buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
@@ -165,8 +194,10 @@ class _FlutterMatterHostApiCodec extends StandardMessageCodec {
       case 128:
         return CommissionRequest.decode(readValue(buffer)!);
       case 129:
-        return MatterDevice.decode(readValue(buffer)!);
+        return InitParams.decode(readValue(buffer)!);
       case 130:
+        return MatterDevice.decode(readValue(buffer)!);
+      case 131:
         return OpenPairingWindowResult.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
@@ -208,6 +239,29 @@ class FlutterMatterHostApi {
       );
     } else {
       return (replyList[0] as String?)!;
+    }
+  }
+
+  Future<void> initParams(InitParams arg_params) async {
+    final BasicMessageChannel<Object?> channel = BasicMessageChannel<Object?>(
+        'dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.initParams',
+        codec,
+        binaryMessenger: _binaryMessenger);
+    final List<Object?>? replyList =
+        await channel.send(<Object?>[arg_params]) as List<Object?>?;
+    if (replyList == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+      );
+    } else if (replyList.length > 1) {
+      throw PlatformException(
+        code: replyList[0]! as String,
+        message: replyList[1] as String?,
+        details: replyList[2],
+      );
+    } else {
+      return;
     }
   }
 

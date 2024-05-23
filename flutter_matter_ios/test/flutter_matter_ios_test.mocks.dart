@@ -71,11 +71,11 @@ class MockFlutterMatterHostApi extends _i1.Mock
         returnValueForMissingStub: _i3.Future<String>.value(''),
       ) as _i3.Future<String>);
   @override
-  _i3.Future<void> initUserDefaults(String? arg_appGroup) =>
+  _i3.Future<void> initParams(_i2.InitParams? arg_params) =>
       (super.noSuchMethod(
         Invocation.method(
-          #initUserDefaults,
-          [arg_appGroup],
+          #initParams,
+          [arg_params],
         ),
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),

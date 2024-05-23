@@ -13,6 +13,7 @@ class UserDefaultsService {
     private static let deviceIdKey = "deviceId"
     private static let successKey = "success"
     private static let fabricId = "fabricId"
+    private static let vendorId = "vendorId"
 
     let group: UserDefaults
 
@@ -50,5 +51,21 @@ class UserDefaultsService {
 
     func success() -> Bool {
         return group.bool(forKey: UserDefaultsService.successKey)
+    }
+
+    func setFabricId(_ fabricId: Int64){
+        group.set(fabricId, forKey: UserDefaultsService.fabricId)
+    }
+
+    func getFabricId() -> Int64? {
+        return group.object(forKey: UserDefaultsService.fabricId) as? Int64
+    }
+
+    func setVendorId(_ vendorId: Int64){
+        group.set(vendorId, forKey: UserDefaultsService.vendorId)
+    }
+
+    func getVendorId() -> Int64? {
+        return group.object(forKey: UserDefaultsService.vendorId) as? Int64
     }
 }

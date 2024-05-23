@@ -110,7 +110,7 @@ scripts:
 
   generate:pigeon:
     run: |
-      melos exec -- "flutter pub run pigeon --input ./pigeons/flutter_matter.dart" && \
+      melos exec -- "flutter pub run pigeon --input ./pigeons/flutter_matter.dart && flutter pub run build_runner build --delete-conflicting-outputs" && \
       melos run format --no-select
     packageFilters:
       fileExists: "pigeons/flutter_matter.dart"

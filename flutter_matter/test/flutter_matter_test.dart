@@ -51,6 +51,8 @@ void main() {
     sut = await FlutterMatter.createInstance(
       appGroup: 'test',
       ecoSystemName: 'testEcoSystemName',
+      fabricId: 1,
+      vendorId: 0xFFF1, // Test Vendor ID
       clusterFactory: mockClusterFactory,
     );
   });

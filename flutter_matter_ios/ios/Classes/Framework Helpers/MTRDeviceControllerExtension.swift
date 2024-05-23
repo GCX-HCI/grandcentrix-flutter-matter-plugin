@@ -10,9 +10,26 @@ import Matter
 import OSLog
 
 extension MTRDeviceController {
+
+    enum MTRDeviceControllerError: Error {
+        case dataNotSet(String)
+    }
+
     private static var instance: MTRDeviceController?
 
+    private static var fabricID: NSNumber?
+    private static var vendorID: NSNumber?
+
+    public static func setData(fabricID: Int64, vendorID: Int64) {
+        self.fabricID = NSNumber(value: fabricID)
+        self.vendorID = NSNumber(value: vendorID)
+    }
+
     public static func shared() throws -> MTRDeviceController {
+        guard let fabricID = fabricID, let vendorID = vendorID else {
+            throw MTRDeviceControllerError.dataNotSet("Set fabricID and vendorID via setData first!")
+        }
+
         if instance != nil {
             return instance!
         }
@@ -24,8 +41,8 @@ extension MTRDeviceController {
 
         let keyPair = MTRKeypairImpl()
 
-        let deviceControllerStartupParams = MTRDeviceControllerStartupParams(ipk: keyPair.ipk!, fabricID: 1, nocSigner: keyPair)
-        deviceControllerStartupParams.vendorID = 0xFFF1 // TODO: Read vom UserDefaults
+        let deviceControllerStartupParams = MTRDeviceControllerStartupParams(ipk: keyPair.ipk!, fabricID: fabricID, nocSigner: keyPair)
+        deviceControllerStartupParams.vendorID = vendorID
 
         do {
             // Create a MTRDeviceController on an existing fabric. Returns nil on failure.

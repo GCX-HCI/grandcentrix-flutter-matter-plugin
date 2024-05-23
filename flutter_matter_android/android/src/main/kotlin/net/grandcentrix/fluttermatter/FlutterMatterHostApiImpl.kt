@@ -2,6 +2,9 @@ package net.grandcentrix.fluttermatter
 
 import android.content.ComponentName
 import android.content.Intent
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import com.google.android.gms.home.matter.Matter
 import com.google.android.gms.home.matter.commissioning.CommissioningRequest
 import com.google.android.gms.home.matter.commissioning.CommissioningResult
@@ -10,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.grandcentrix.fluttermatter.chip.ChipClient
 import net.grandcentrix.fluttermatter.commissioning.AppCommissioningService
 import timber.log.Timber
@@ -25,6 +29,15 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
     // FlutterMatterHostApi
     override fun getPlatformVersion(callback: (Result<String>) -> Unit) {
         callback(Result.success("Android ${android.os.Build.VERSION.RELEASE}"))
+    }
+
+    override fun initParams(params: InitParams) {
+        runBlocking {
+            activity?.dataStore?.edit { preferences ->
+                preferences[intPreferencesKey("vendor_id")] = params.vendorId.toInt()
+                preferences[longPreferencesKey("fabric_id")] = params.fabricId
+            }
+        }
     }
 
     override fun commission(
@@ -111,11 +124,6 @@ class FlutterMatterHostApiImpl : FlutterMatterHostApi, Closeable {
         data: Intent?,
     ): Boolean {
         when (resultCode) {
-            null -> {
-                Timber.e("Failed to set up device: Timeout")
-                callback!!(Result.failure(FlutterError("-4", "Failed to set up device: Timeout")))
-            }
-
             android.app.Activity.RESULT_OK -> {
                 // Proceed to get this device's details
                 if (data != null) {

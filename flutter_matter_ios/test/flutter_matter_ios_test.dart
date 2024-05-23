@@ -25,13 +25,15 @@ void main() {
     sut = await FlutterMatterIos.createInstance(
       appGroup: 'test',
       ecoSystemName: 'testEcoSystemName',
+      fabricId: 1,
+      vendorId: 0xFFF1, // Test Vendor ID
       flutterMatterHostApi: mockFlutterMatterHostApi,
     );
   });
 
   group('createInstance', () {
-    test('should call initUserDefaults', () {
-      verify(mockFlutterMatterHostApi.initUserDefaults('test'));
+    test('should call initParams', () {
+      verify(mockFlutterMatterHostApi.initParams(any));
     });
   });
 

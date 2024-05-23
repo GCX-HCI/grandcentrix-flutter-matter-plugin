@@ -17,6 +17,8 @@
 package net.grandcentrix.fluttermatter.chip
 
 import android.content.Context
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import chip.devicecontroller.ChipDeviceController
 import chip.devicecontroller.ControllerParams
 import chip.devicecontroller.DiscoveredDevice
@@ -43,6 +45,10 @@ import chip.platform.NsdManagerServiceResolver
 import chip.platform.PreferencesConfigurationManager
 import chip.platform.PreferencesKeyValueStoreManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
+import net.grandcentrix.fluttermatter.dataStore
 import net.grandcentrix.fluttermatter.stripLinkLocalInIpAddress
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,8 +65,6 @@ class ChipClient
         @ApplicationContext context: Context,
     ) {
         companion object {
-            // 0xFFF4 is a test vendor ID, replace with your assigned company ID
-            const val VENDOR_ID = 0xFFF4
             const val DEFAULT_TIMEOUT = 1000
         }
 
@@ -76,8 +80,23 @@ class ChipClient
                 ChipMdnsCallbackImpl(),
                 DiagnosticDataProviderImpl(context),
             )
+
+            var vendorId: Int
+            var fabricId: Long
+
+            // Get the vendor ID and fabric ID from the preferences.
+            runBlocking {
+                val preferences = context.dataStore.data.first()
+                vendorId = preferences[intPreferencesKey("vendor_id")] ?: 0xFFF1
+                fabricId = preferences[longPreferencesKey("fabric_id")] ?: 1
+            }
+
             ChipDeviceController(
-                ControllerParams.newBuilder().setUdpListenPort(0).setControllerVendorId(VENDOR_ID).build(),
+                ControllerParams.newBuilder()
+                    .setUdpListenPort(0)
+                    .setFabricId(fabricId)
+                    .setControllerVendorId(vendorId)
+                    .build(),
             )
         }
 

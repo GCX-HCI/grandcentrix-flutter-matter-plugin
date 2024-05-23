@@ -7,6 +7,19 @@ import 'package:pigeon/pigeon.dart';
       'android/src/main/kotlin/net/grandcentrix/fluttermatter/FlutterMatter.g.kt',
   // copyrightHeader: 'pigeons/copyright.txt',
 ))
+class InitParams {
+  int fabricId;
+  int vendorId;
+
+  InitParams({
+    /// Fabric id for the controller
+    required this.fabricId,
+
+    /// Vendor ID (allocated by the Connectivity Standards Alliance) for this controller
+    required this.vendorId,
+  });
+}
+
 class MatterDevice {
   final int id;
   // final String deviceName;
@@ -36,6 +49,8 @@ class OpenPairingWindowResult {
 abstract class FlutterMatterHostApi {
   @async
   String getPlatformVersion();
+
+  void initParams(InitParams params);
 
   @async
   MatterDevice commission(CommissionRequest request);

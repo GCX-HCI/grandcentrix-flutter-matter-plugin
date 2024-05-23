@@ -10,15 +10,23 @@ extension FlutterError: Error {}
 class FlutterMatterHostApiImpl: FlutterMatterHostApi {
     private var userDefaultsService: UserDefaultsService?
 
-    func initUserDefaults(appGroup: String) throws {
-        userDefaultsService = UserDefaultsService(appGroup: appGroup)
-        MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService!)
-    }
-
     // MARK: FlutterMatterHostApi Methods
 
     func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void) {
         completion(.success("iOS " + UIDevice.current.systemVersion))
+    }
+
+    func initParams(params: InitParams) throws {
+        userDefaultsService = UserDefaultsService(appGroup: params.appGroup)
+        MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService!)
+
+        guard let userDefaultsService else {
+            return
+        }
+
+        userDefaultsService.setFabricId(params.fabricId)
+        userDefaultsService.setVendorId(params.vendorId)
+        MTRDeviceController.setData(fabricID: params.fabricId, vendorID: params.vendorId)
     }
 
     func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void) {
@@ -26,7 +34,7 @@ class FlutterMatterHostApiImpl: FlutterMatterHostApi {
             os_log(.default, "Starting to add device...")
 
             guard let userDefaultsService else {
-                completion(Result.failure(FlutterError(code: "-1", message: "initUserDefaults wasn't called!", details: nil)))
+                completion(Result.failure(FlutterError(code: "-1", message: "initParams wasn't called!", details: nil)))
                 return
             }
 

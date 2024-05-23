@@ -1,7 +1,11 @@
 package net.grandcentrix.fluttermatter
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -10,6 +14,8 @@ import net.grandcentrix.fluttermatter.clusters.DescriptorCluster
 import net.grandcentrix.fluttermatter.clusters.OnOffCluster
 import net.grandcentrix.fluttermatter.clusters.TemperatureCluster
 import timber.log.Timber
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "flutter_matter_settings")
 
 /** FlutterMatterPlugin */
 class FlutterMatterPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener {

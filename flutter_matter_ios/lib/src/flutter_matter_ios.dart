@@ -20,13 +20,25 @@ class FlutterMatterIos implements FlutterMatterPlatformInterface {
   static Future<FlutterMatterIos> createInstance({
     required String appGroup,
     required String ecoSystemName,
+
+    /// Fabric id for the controller
+    required int fabricId,
+
+    /// Vendor ID (allocated by the Connectivity Standards Alliance) for this controller
+    required int vendorId,
     @visibleForTesting FlutterMatterHostApi? flutterMatterHostApi,
   }) async {
     final instance = FlutterMatterIos._(
       ecoSystemName: ecoSystemName,
       flutterMatterHostApi: flutterMatterHostApi,
     );
-    await instance._flutterMatterHostApi.initUserDefaults(appGroup);
+    await instance._flutterMatterHostApi.initParams(
+      InitParams(
+        appGroup: appGroup,
+        fabricId: fabricId,
+        vendorId: vendorId,
+      ),
+    );
     return instance;
   }
 

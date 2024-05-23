@@ -50,9 +50,9 @@ class RequestHandler: MatterAddDeviceExtensionRequestHandler {
 
             do {
                 MTRStorageImpl.initInstance(withUserDefaultsService: userDefaultsService)
+                MTRDeviceController.setData(fabricID: userDefaultsService.getFabricId()!, vendorID: userDefaultsService.getVendorId()!)
                 let controller = try MTRDeviceController.shared()
-
-                // let queue = DispatchQueue(label: "com.example.flutterMatterIosExample.DeviceControllerDelegate", attributes: .concurrent)
+                
                 controller.setDeviceControllerDelegate(self, queue: DispatchQueue.main)
 
                 let payload = try MTRSetupPayload(onboardingPayload: onboardingPayload)

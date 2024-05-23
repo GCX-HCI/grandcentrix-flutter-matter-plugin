@@ -39,6 +39,33 @@ private func nilOrValue<T>(_ value: Any?) -> T? {
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
+struct InitParams {
+    var appGroup: String
+    var fabricId: Int64
+    var vendorId: Int64
+
+    static func fromList(_ list: [Any?]) -> InitParams? {
+        let appGroup = list[0] as! String
+        let fabricId = list[1] is Int64 ? list[1] as! Int64 : Int64(list[1] as! Int32)
+        let vendorId = list[2] is Int64 ? list[2] as! Int64 : Int64(list[2] as! Int32)
+
+        return InitParams(
+            appGroup: appGroup,
+            fabricId: fabricId,
+            vendorId: vendorId
+        )
+    }
+
+    func toList() -> [Any?] {
+        return [
+            appGroup,
+            fabricId,
+            vendorId,
+        ]
+    }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
 struct MatterDevice {
     var id: Int64
 
@@ -159,8 +186,10 @@ private class FlutterMatterHostApiCodecReader: FlutterStandardReader {
         case 128:
             return CommissionRequest.fromList(readValue() as! [Any?])
         case 129:
-            return MatterDevice.fromList(readValue() as! [Any?])
+            return InitParams.fromList(readValue() as! [Any?])
         case 130:
+            return MatterDevice.fromList(readValue() as! [Any?])
+        case 131:
             return OpenPairingWindowResult.fromList(readValue() as! [Any?])
         default:
             return super.readValue(ofType: type)
@@ -173,11 +202,14 @@ private class FlutterMatterHostApiCodecWriter: FlutterStandardWriter {
         if let value = value as? CommissionRequest {
             super.writeByte(128)
             super.writeValue(value.toList())
-        } else if let value = value as? MatterDevice {
+        } else if let value = value as? InitParams {
             super.writeByte(129)
             super.writeValue(value.toList())
-        } else if let value = value as? OpenPairingWindowResult {
+        } else if let value = value as? MatterDevice {
             super.writeByte(130)
+            super.writeValue(value.toList())
+        } else if let value = value as? OpenPairingWindowResult {
+            super.writeByte(131)
             super.writeValue(value.toList())
         } else {
             super.writeValue(value)
@@ -202,7 +234,7 @@ class FlutterMatterHostApiCodec: FlutterStandardMessageCodec {
 /// Generated protocol from Pigeon that represents a handler of messages from Flutter.
 protocol FlutterMatterHostApi {
     func getPlatformVersion(completion: @escaping (Result<String, Error>) -> Void)
-    func initUserDefaults(appGroup: String) throws
+    func initParams(params: InitParams) throws
     func commission(request: CommissionRequest, completion: @escaping (Result<MatterDevice, Error>) -> Void)
     func unpair(deviceId: Int64, completion: @escaping (Result<Void, Error>) -> Void)
     func openPairingWindowWithPin(deviceId: Int64, duration: Int64, discriminator: Int64, setupPin: Int64, completion: @escaping (Result<OpenPairingWindowResult, Error>) -> Void)
@@ -229,20 +261,20 @@ class FlutterMatterHostApiSetup {
         } else {
             getPlatformVersionChannel.setMessageHandler(nil)
         }
-        let initUserDefaultsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.initUserDefaults", binaryMessenger: binaryMessenger, codec: codec)
+        let initParamsChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.initParams", binaryMessenger: binaryMessenger, codec: codec)
         if let api = api {
-            initUserDefaultsChannel.setMessageHandler { message, reply in
+            initParamsChannel.setMessageHandler { message, reply in
                 let args = message as! [Any?]
-                let appGroupArg = args[0] as! String
+                let paramsArg = args[0] as! InitParams
                 do {
-                    try api.initUserDefaults(appGroup: appGroupArg)
+                    try api.initParams(params: paramsArg)
                     reply(wrapResult(nil))
                 } catch {
                     reply(wrapError(error))
                 }
             }
         } else {
-            initUserDefaultsChannel.setMessageHandler(nil)
+            initParamsChannel.setMessageHandler(nil)
         }
         let commissionChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.flutter_matter_ios.FlutterMatterHostApi.commission", binaryMessenger: binaryMessenger, codec: codec)
         if let api = api {

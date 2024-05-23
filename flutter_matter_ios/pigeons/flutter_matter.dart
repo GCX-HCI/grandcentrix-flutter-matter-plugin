@@ -6,6 +6,23 @@ import 'package:pigeon/pigeon.dart';
   swiftOut: 'ios/Classes/FlutterMatter.g.swift',
   // copyrightHeader: 'pigeons/copyright.txt',
 ))
+class InitParams {
+  String appGroup;
+  int fabricId;
+  int vendorId;
+
+  InitParams({
+    /// Name of the app group defined in the app's capabilities
+    required this.appGroup,
+
+    /// Fabric id for the controller
+    required this.fabricId,
+
+    /// Vendor ID (allocated by the Connectivity Standards Alliance) for this controller
+    required this.vendorId,
+  });
+}
+
 class MatterDevice {
   final int id;
   // final String deviceName;
@@ -43,7 +60,7 @@ abstract class FlutterMatterHostApi {
   @async
   String getPlatformVersion();
 
-  void initUserDefaults(String appGroup);
+  void initParams(InitParams params);
 
   @async
   MatterDevice commission(CommissionRequest request);

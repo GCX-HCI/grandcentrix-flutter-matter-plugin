@@ -17,6 +17,8 @@ void main() async {
   _flutterMatterPlugin = await FlutterMatter.createInstance(
     appGroup: 'group.example.flutterMatterExample',
     ecoSystemName: 'testEcoSystemName',
+    fabricId: 1,
+    vendorId: 0xFFF1, // Test Vendor ID
   );
 
   runApp(const MyApp());

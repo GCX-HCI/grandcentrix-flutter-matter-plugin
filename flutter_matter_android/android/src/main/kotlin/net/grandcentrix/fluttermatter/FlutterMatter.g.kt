@@ -44,6 +44,28 @@ class FlutterError (
 ) : Throwable()
 
 /** Generated class from Pigeon that represents data sent in messages. */
+data class InitParams (
+  val fabricId: Long,
+  val vendorId: Long
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): InitParams {
+      val fabricId = list[0].let { if (it is Int) it.toLong() else it as Long }
+      val vendorId = list[1].let { if (it is Int) it.toLong() else it as Long }
+      return InitParams(fabricId, vendorId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      fabricId,
+      vendorId,
+    )
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
 data class MatterDevice (
   val id: Long
 
@@ -160,10 +182,15 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
       }
       129.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
-          MatterDevice.fromList(it)
+          InitParams.fromList(it)
         }
       }
       130.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          MatterDevice.fromList(it)
+        }
+      }
+      131.toByte() -> {
         return (readValue(buffer) as? List<Any?>)?.let {
           OpenPairingWindowResult.fromList(it)
         }
@@ -177,12 +204,16 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
         stream.write(128)
         writeValue(stream, value.toList())
       }
-      is MatterDevice -> {
+      is InitParams -> {
         stream.write(129)
         writeValue(stream, value.toList())
       }
-      is OpenPairingWindowResult -> {
+      is MatterDevice -> {
         stream.write(130)
+        writeValue(stream, value.toList())
+      }
+      is OpenPairingWindowResult -> {
+        stream.write(131)
         writeValue(stream, value.toList())
       }
       else -> super.writeValue(stream, value)
@@ -193,6 +224,7 @@ private object FlutterMatterHostApiCodec : StandardMessageCodec() {
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface FlutterMatterHostApi {
   fun getPlatformVersion(callback: (Result<String>) -> Unit)
+  fun initParams(params: InitParams)
   fun commission(request: CommissionRequest, callback: (Result<MatterDevice>) -> Unit)
   fun unpair(deviceId: Long, callback: (Result<Unit>) -> Unit)
   fun openPairingWindowWithPin(deviceId: Long, duration: Long, discriminator: Long, setupPin: Long, callback: (Result<OpenPairingWindowResult>) -> Unit)
@@ -218,6 +250,25 @@ interface FlutterMatterHostApi {
                 reply.reply(wrapResult(data))
               }
             }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.flutter_matter_android.FlutterMatterHostApi.initParams", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val paramsArg = args[0] as InitParams
+            var wrapped: List<Any?>
+            try {
+              api.initParams(paramsArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
           }
         } else {
           channel.setMessageHandler(null)
